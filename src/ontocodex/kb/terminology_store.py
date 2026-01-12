@@ -1,7 +1,3 @@
-# TerminologyStore (Layer 1: CSV/XLSX deterministic)
-# #load: *_omop.csv, LOINC_CUI.xlsx, medDRA.xlsx, MedDRA_CTCAE_mapping_v5.xlsx
-# build normalized indices
-
 # src/ontocodex/kb/terminology_store.py
 from __future__ import annotations
 
@@ -43,10 +39,6 @@ def normalize_term(text: str) -> str:
     return s
 
 
-def token_set(s: str) -> set[str]:
-    return set(normalize_term(s).split())
-
-
 def jaccard(a: set[str], b: set[str]) -> float:
     if not a or not b:
         return 0.0
@@ -56,10 +48,10 @@ def jaccard(a: set[str], b: set[str]) -> float:
 
 
 # -------------------------
-# Store implementation
+# Data record
 # -------------------------
 
-@dataclass(frozen=True)
+@dataclass
 class TermRecord:
     system: str
     code: str
@@ -74,21 +66,22 @@ class TerminologyStore:
     """
     Deterministic terminology lookup store for OntoCodex.
 
-    Supports:
-      - term -> top-k records (scored)
-      - code -> record
-      - optional: synonyms, concept_id, etc. via 'extra'
-
-    Returns dict hits with Evidence objects serialized as dicts.
+    Primary sources:
+      - *_omop.csv (RxNorm/SNOMED/LOINC/ATC/measurement)
+    Enrichment source for LOINC:
+      - LOINC_CUI.csv (Class ID / Preferred Label / Synonyms / CUI)
     """
 
     def __init__(self) -> None:
         # term_norm -> list[TermRecord]
         self._term_index: Dict[str, List[TermRecord]] = {}
-        # code_key -> TermRecord
+        # system|code -> TermRecord
         self._code_index: Dict[str, TermRecord] = {}
-        # for debugging/inspection
         self._loaded_sources: List[str] = []
+
+        # LOINC enrichment
+        self._loinc_meta: Dict[str, Dict[str, Any]] = {}
+        self._loinc_syn_index: Dict[str, List[str]] = {}  # norm_syn -> [loinc_code]
 
     # -------------------------
     # Construction
@@ -98,7 +91,7 @@ class TerminologyStore:
     def from_dir(cls, data_dir: str = "data") -> "TerminologyStore":
         store = cls()
 
-        # 1) Load *_omop.csv files (primary deterministic mapping layer)
+        # 1) Load OMOP mapping CSVs (authoritative deterministic layer)
         csv_files = [
             "snomed_omop.csv",
             "rxnorm_omop.csv",
@@ -109,24 +102,29 @@ class TerminologyStore:
         for fn in csv_files:
             path = os.path.join(data_dir, fn)
             if os.path.exists(path) and os.path.getsize(path) > 0:
-                system = fn.split("_")[0].upper()  # SNOMED/RXNORM/LOINC/ATC/MEASUREMENT
+                # initial system label from filename (fallback only)
+                system = fn.split("_")[0].upper()
                 store._load_omop_csv(path=path, system=system)
             else:
-                # non-fatal (some are empty in repo)
                 store._loaded_sources.append(f"SKIP (missing/empty): {fn}")
 
-        # 2) Optional XLSX loaders (best-effort; won't break if schema differs)
-        xlsx_files = [
-            "LOINC_CUI.xlsx",
-            "medDRA.xlsx",
-            "MedDRA_CTCAE_mapping_v5.xlsx",
-        ]
-        for fn in xlsx_files:
+        # 2) Load LOINC_CUI enrichment CSV (optional)
+        loinc_cui_csv = os.path.join(data_dir, "LOINC_CUI.csv")
+        if os.path.exists(loinc_cui_csv) and os.path.getsize(loinc_cui_csv) > 0:
+            store._load_loinc_cui_csv(loinc_cui_csv)
+        else:
+            store._loaded_sources.append("SKIP (missing/empty): LOINC_CUI.csv")
+
+        # 3) Optional XLSX (best-effort; safe to keep but not required)
+        for fn in ["medDRA.xlsx", "MedDRA_CTCAE_mapping_v5.xlsx"]:
             path = os.path.join(data_dir, fn)
             if os.path.exists(path) and os.path.getsize(path) > 0:
-                store._load_xlsx_best_effort(path=path)
+                store._load_xlsx_best_effort(path)
             else:
                 store._loaded_sources.append(f"SKIP (missing/empty): {fn}")
+
+        # 4) Post-process: attach LOINC CUI metadata to any LOINC records loaded from loinc_omop.csv
+        store._attach_loinc_meta_to_existing_records()
 
         return store
 
@@ -134,11 +132,20 @@ class TerminologyStore:
     # Public API
     # -------------------------
 
+    def stats(self) -> Dict[str, Any]:
+        return {
+            "loaded_sources": self._loaded_sources,
+            "term_index_keys": len(self._term_index),
+            "code_index_keys": len(self._code_index),
+            "total_records": sum(len(v) for v in self._term_index.values()),
+            "loinc_meta_rows": len(self._loinc_meta),
+            "loinc_syn_index_keys": len(self._loinc_syn_index),
+        }
+
     def lookup(self, term: str, system: Optional[str] = None, k: int = 5) -> List[Dict[str, Any]]:
         """
-        Lookup a term (string) and return top-k candidate records.
-
-        system: optional filter (e.g. "SNOMED", "RXNORM", "LOINC", "ATC").
+        Deterministic lookup. For LOINC, optionally fallback to LOINC_CUI synonyms
+        if no OMOP hit.
         """
         if not term or not str(term).strip():
             return []
@@ -147,21 +154,16 @@ class TerminologyStore:
         if not q_norm:
             return []
 
-        # Candidate pools:
-        candidates: List[TermRecord] = []
+        sys_norm = system.strip().upper() if system else None
 
-        # Exact normalized match
+        # 1) Exact normalized hits
+        candidates: List[TermRecord] = []
         candidates.extend(self._term_index.get(q_norm, []))
 
-        # If no exact hits, do lightweight fuzzy candidates:
-        # - find keys that share tokens with query (bounded scan over keys)
-        # This is deterministic but can be costly if huge. For large stores, replace
-        # with an inverted index or SQLite FTS. For now, keep it simple.
+        # 2) Lightweight fuzzy candidates if exact missing (bounded scan)
         if not candidates:
             q_tokens = set(q_norm.split())
             if q_tokens:
-                # bounded scan: only evaluate up to N keys to avoid worst-case blowups
-                # (tune as you scale)
                 MAX_KEYS = 20000
                 for i, key in enumerate(self._term_index.keys()):
                     if i > MAX_KEYS:
@@ -170,135 +172,120 @@ class TerminologyStore:
                     if q_tokens & key_tokens:
                         candidates.extend(self._term_index[key])
 
-        # Apply system filter
-        if system:
-            sys_norm = system.strip().upper()
+        # System filter
+        if sys_norm:
             candidates = [r for r in candidates if r.system.upper() == sys_norm]
 
-        if not candidates:
-            return []
+        if candidates:
+            # Score and return
+            scored: List[Tuple[float, TermRecord]] = []
+            q_tokens = set(q_norm.split())
+            for r in candidates:
+                score = self._score_record(query_norm=q_norm, query_tokens=q_tokens, rec=r)
+                scored.append((score, r))
+            scored.sort(key=lambda x: x[0], reverse=True)
+            top = scored[: max(1, k)]
+            return [self._to_hit_dict(score=s, rec=r, query=term) for s, r in top if s > 0]
 
-        # Score candidates
-        scored: List[Tuple[float, TermRecord]] = []
-        q_tokens = set(q_norm.split())
-        for r in candidates:
-            score = self._score_record(query_norm=q_norm, query_tokens=q_tokens, rec=r)
-            scored.append((score, r))
+        # 3) LOINC synonym fallback (optional): only if system is LOINC or not specified
+        if (sys_norm is None or sys_norm == "LOINC") and self._loinc_syn_index:
+            codes = self._loinc_syn_index.get(q_norm, [])
+            hits: List[Dict[str, Any]] = []
+            for code in codes[: max(1, k)]:
+                meta = self._loinc_meta.get(code, {})
+                ev = Evidence(
+                    source_type="csv",
+                    source_file=meta.get("source_file", "LOINC_CUI.csv"),
+                    id=str(meta.get("row_id", "")),
+                    field="Preferred Label/Synonyms",
+                    snippet=f"LOINC={code} | CUI={meta.get('cui','')}",
+                    extra={"system": "LOINC", "code": code, "cui": meta.get("cui")},
+                ).to_dict()
 
-        scored.sort(key=lambda x: x[0], reverse=True)
-        top = scored[: max(1, k)]
+                hits.append({
+                    "kind": "terminology",
+                    "query": term,
+                    "term": meta.get("preferred_label", term),
+                    "system": "LOINC",
+                    "code": code,
+                    "score": 0.95,  # exact synonym normalization match
+                    "evidence": ev,
+                    "extra": meta,
+                })
+            if hits:
+                return hits
 
-        return [self._to_hit_dict(score=s, rec=r, query=term) for s, r in top if s > 0]
+        return []
 
     def lookup_code(self, code: str, system: Optional[str] = None) -> Optional[Dict[str, Any]]:
         """
         Reverse lookup by code.
-        system: optional filter.
         """
         if not code or not str(code).strip():
             return None
         code_str = str(code).strip()
 
-        if system:
-            key = self._code_key(system=system, code=code_str)
-            rec = self._code_index.get(key)
+        sys_norm = system.strip().upper() if system else None
+        if sys_norm == "LOINC":
+            code_str = self._normalize_loinc_code(code_str)
+
+        if sys_norm:
+            rec = self._code_index.get(self._code_key(system=sys_norm, code=code_str))
             if not rec:
                 return None
             return self._to_hit_dict(score=1.0, rec=rec, query=code_str)
 
-        # no system: try any system match (first)
-        # Prefer exact code match by scanning keys ending with "|<code>"
+        # no system: find first match by suffix
         suffix = "|" + code_str
         for k, rec in self._code_index.items():
             if k.endswith(suffix):
                 return self._to_hit_dict(score=1.0, rec=rec, query=code_str)
 
         return None
-    
-    def lookup_code_hierarchy(self, code: str, system: str = "ATC") -> List[Dict[str, Any]]:
-        """
-        Hierarchical reverse lookup for ATC codes.
-        Returns hits for the code and its parent codes (if present in store).
-        """
-        sys_norm = (system or "").strip().upper()
-        if sys_norm != "ATC":
-            # For non-ATC systems, just do normal reverse lookup
-            hit = self.lookup_code(code=code, system=system)
-            return [hit] if hit else []
-
-        hits: List[Dict[str, Any]] = []
-        for c in self._atc_hierarchy_codes(code):
-            h = self.lookup_code(code=c, system="ATC")
-            if h:
-                hits.append(h)
-        return hits
-
-    def stats(self) -> Dict[str, Any]:
-        return {
-            "loaded_sources": self._loaded_sources,
-            "term_index_keys": len(self._term_index),
-            "code_index_keys": len(self._code_index),
-            "total_records": sum(len(v) for v in self._term_index.values()),
-        }
 
     # -------------------------
-    # Internal loaders
+    # OMOP CSV Loader
     # -------------------------
 
     def _load_omop_csv(self, path: str, system: str) -> None:
         """
         Robust loader for OMOP-ish CSV mapping files.
 
-        Supports:
-        - Standard OMOP concept export: concept_code + concept_name (+ concept_id, vocabulary_id)
-        - Vocab-specific code column exports like your rxnorm_omop.csv:
-            concept_id, concept_name, domain_id, concept_class_id, RxNorm
-            where "RxNorm" is the RXCUI/code column.
+        Handles your schemas:
+          RxNorm: concept_id, concept_name, domain_id, concept_class_id, RxNorm
+          SNOMED: concept_id, concept_name, domain_id, concept_class_id, standard_concept, snomed_ct_us
+          ATC:    concept_id, concept_name, domain_id, concept_class_id, ATC
+          LOINC:  concept_id, concept_name, domain_id, concept_class_id, LOINC
         """
         df = pd.read_csv(path, dtype=str, keep_default_na=False)
         df.columns = [c.strip() for c in df.columns]
 
-        # 1) Prefer explicit vocab-named code columns if present (e.g., "RxNorm")
+        # Prefer explicit vocab-named code columns if present
         explicit_vocab_cols = [
-                # RxNorm
-                "RxNorm", "RXNORM", "rxcui", "RXCUI",
-                # SNOMED variants
-                "snomed_ct_us", "SNOMED_CT_US", "snomed", "SNOMED",
-                "snomedct", "SNOMEDCT",
-                # LOINC / ATC / NDC
-                "loinc", "LOINC",
-                "atc", "ATC",
-                "ndc", "NDC",
-            ]
-
+            "RxNorm", "RXNORM", "rxcui", "RXCUI",
+            "snomed_ct_us", "SNOMED_CT_US", "snomed", "SNOMED", "snomedct", "SNOMEDCT",
+            "LOINC", "loinc", "loinc_code", "LOINC_CODE",
+            "ATC", "atc",
+            "NDC", "ndc",
+        ]
         code_col = None
         for c in explicit_vocab_cols:
             if c in df.columns:
                 code_col = c
                 break
 
-        # 2) Fallback to generic OMOP-ish code column names
+        # Fallback to generic OMOP-ish code column names
         if code_col is None:
-            code_col = self._pick_col(df.columns, [
-                "concept_code", "code", "vocabulary_code", "conceptcode"
-            ])
+            code_col = self._pick_col(df.columns, ["concept_code", "code", "vocabulary_code", "conceptcode"])
 
-        # 3) Term/name column (must exist)
-        term_col = self._pick_col(df.columns, [
-            "concept_name", "name", "term", "label", "conceptname"
-        ])
+        term_col = self._pick_col(df.columns, ["concept_name", "name", "term", "label", "conceptname"])
 
-        # 4) Optional metadata columns
-        concept_id_col = self._pick_col(df.columns, [
-            "concept_id", "conceptid", "omop_concept_id"
-        ])
+        concept_id_col = self._pick_col(df.columns, ["concept_id", "conceptid", "omop_concept_id"])
         domain_col = self._pick_col(df.columns, ["domain_id", "domain"])
         class_col = self._pick_col(df.columns, ["concept_class_id", "concept_class"])
         vocab_col = self._pick_col(df.columns, ["vocabulary_id", "vocabulary", "system"])
         standard_col = self._pick_col(df.columns, ["standard_concept", "standardconcept"])
 
-
-        # Validate essential columns
         if code_col is None or term_col is None:
             self._loaded_sources.append(
                 f"SKIP (unrecognized OMOP CSV schema): {os.path.basename(path)} "
@@ -306,33 +293,36 @@ class TerminologyStore:
             )
             return
 
+        loaded = 0
         for idx, row in df.iterrows():
             code = str(row.get(code_col, "")).strip()
             term = str(row.get(term_col, "")).strip()
             if not code or not term:
                 continue
 
-            # Determine system:
-            # (a) If the code column is literally a vocab name (RxNorm/SNOMED/LOINC/ATC), use that.
-            # (b) Else if vocabulary_id/system column exists, use it.
-            # (c) Else fallback to filename-derived system passed in.
+            # Determine canonical system from code column name if applicable
             row_system = system.strip().upper()
-            col = code_col.lower()
-            if col in {"rxnorm", "rxcui"}:
-                row_system = "RXNORM"
-            elif col in {"snomed", "snomedct", "snomed_ct_us"}:
-                row_system = "SNOMEDCT"
-            elif col == "loinc":
-                row_system = "LOINC"
-            elif col == "atc":
-                row_system = "ATC"
-            elif col == "ndc":
-                row_system = "NDC"
+            if code_col:
+                col = code_col.lower()
+                if col in {"rxnorm", "rxcui"}:
+                    row_system = "RXNORM"
+                elif col in {"snomed", "snomedct", "snomed_ct_us"}:
+                    row_system = "SNOMEDCT"
+                elif col in {"loinc", "loinc_code"}:
+                    row_system = "LOINC"
+                elif col == "atc":
+                    row_system = "ATC"
+                elif col == "ndc":
+                    row_system = "NDC"
 
-            elif vocab_col:
+            # If still generic and vocabulary_id exists, use it
+            if vocab_col and row_system in {"RXNORM", "SNOMED", "SNOMEDCT", "LOINC", "ATC", "NDC", "MEASUREMENT"} is False:
                 v = str(row.get(vocab_col, "")).strip()
                 if v:
                     row_system = v.upper()
+
+            if row_system == "LOINC":
+                code = self._normalize_loinc_code(code)
 
             term_norm = normalize_term(term)
             if not term_norm:
@@ -357,7 +347,6 @@ class TerminologyStore:
                 if sv:
                     extra["standard_concept"] = sv
 
-
             rec = TermRecord(
                 system=row_system,
                 code=code,
@@ -368,17 +357,111 @@ class TerminologyStore:
                 extra=extra,
             )
             self._add_record(rec)
+            loaded += 1
 
-        self._loaded_sources.append(f"LOADED: {os.path.basename(path)} ({len(df)} rows)")
+        self._loaded_sources.append(f"LOADED: {os.path.basename(path)} (rows_indexed={loaded})")
 
+    # -------------------------
+    # LOINC_CUI Loader + attachment
+    # -------------------------
+
+    @staticmethod
+    def _normalize_loinc_code(code: str) -> str:
+        c = (code or "").strip()
+        if not c:
+            return ""
+        if "-" in c:
+            return c
+        if c.isdigit() and len(c) >= 2:
+            return f"{c[:-1]}-{c[-1]}"
+        return c
+
+    def _load_loinc_cui_csv(self, path: str) -> None:
+        """
+        Load LOINC_CUI.csv with columns:
+          Class ID, Preferred Label, Synonyms, CUI
+
+        Builds:
+          - _loinc_meta[loinc_code] = {cui, preferred_label, synonyms, class_id, source_file, row_id}
+          - _loinc_syn_index[normalize_term(label_or_syn)] -> [loinc_code]
+        """
+        df = pd.read_csv(path, dtype=str, keep_default_na=False)
+        df.columns = [str(c).strip() for c in df.columns]
+
+        class_id_col = self._pick_col(df.columns, ["Class ID", "ClassID", "class_id", "class id"])
+        pref_col = self._pick_col(df.columns, ["Preferred Label", "PreferredLabel", "preferred_label", "label"])
+        syn_col = self._pick_col(df.columns, ["Synonyms", "synonyms", "Synonym"])
+        cui_col = self._pick_col(df.columns, ["CUI", "cui"])
+
+        if not class_id_col or not pref_col or not cui_col:
+            self._loaded_sources.append(
+                f"SKIP (LOINC_CUI schema mismatch): {os.path.basename(path)} (cols={list(df.columns)})"
+            )
+            return
+
+        loaded = 0
+        for idx, row in df.iterrows():
+            class_id = str(row.get(class_id_col, "")).strip()
+            if not class_id:
+                continue
+
+            loinc_code = class_id.rsplit("/", 1)[-1].strip()
+            loinc_code = self._normalize_loinc_code(loinc_code)
+            if not loinc_code:
+                continue
+
+            pref = str(row.get(pref_col, "")).strip()
+            cui = str(row.get(cui_col, "")).strip()
+            syn_raw = str(row.get(syn_col, "")).strip() if syn_col else ""
+            synonyms = [s.strip() for s in syn_raw.split("|") if s.strip()] if syn_raw else []
+
+            self._loinc_meta[loinc_code] = {
+                "cui": cui,
+                "preferred_label": pref,
+                "synonyms": synonyms,
+                "class_id": class_id,
+                "source_file": os.path.basename(path),
+                "row_id": str(idx),
+            }
+
+            # Build synonym index (optional fallback lookup)
+            for s in ([pref] if pref else []) + synonyms:
+                ns = normalize_term(s)
+                if ns:
+                    self._loinc_syn_index.setdefault(ns, []).append(loinc_code)
+
+            loaded += 1
+
+        self._loaded_sources.append(f"LOADED: {os.path.basename(path)} (loinc_meta_rows={loaded})")
+
+    def _attach_loinc_meta_to_existing_records(self) -> None:
+        """
+        After both loinc_omop.csv and LOINC_CUI.csv are loaded, attach CUI/label info to LOINC records.
+        """
+        if not self._loinc_meta:
+            return
+
+        # Update code_index records for LOINC
+        for key, rec in list(self._code_index.items()):
+            if rec.system != "LOINC":
+                continue
+            meta = self._loinc_meta.get(rec.code)
+            if not meta:
+                continue
+            # attach lightweight metadata
+            rec.extra.setdefault("cui", meta.get("cui"))
+            rec.extra.setdefault("preferred_label", meta.get("preferred_label"))
+            rec.extra.setdefault("synonym_count", len(meta.get("synonyms") or []))
+            rec.extra.setdefault("loinc_class_id", meta.get("class_id"))
+
+    # -------------------------
+    # XLSX best-effort loader (optional)
+    # -------------------------
 
     def _load_xlsx_best_effort(self, path: str) -> None:
         """
         Best-effort XLSX loader.
-        We do not know your exact sheets/columns, so we:
-          - read all sheets
-          - try to detect (term, code, system) columns
-          - index if we can
+        Not required for LOINC OMOP/CUI flow; safe to keep for MedDRA artifacts.
         """
         xls = pd.ExcelFile(path)
         loaded_any = False
@@ -390,33 +473,28 @@ class TerminologyStore:
                 continue
 
             df.columns = [str(c).strip() for c in df.columns]
-
-            # Heuristics for term/code columns
-            code_col = self._pick_col(df.columns, ["code", "concept_code", "loinc", "rxnorm", "snomed", "meddra", "cui"])
+            code_col = self._pick_col(df.columns, ["code", "concept_code", "meddra", "cui", "loinc"])
             term_col = self._pick_col(df.columns, ["term", "name", "label", "concept_name", "preferred_term", "pt", "llt"])
 
             if code_col is None or term_col is None:
-                # Try alternative: two-code mapping sheets (e.g., MedDRA <-> CTCAE)
-                # We won't index those generically without known semantics.
                 continue
 
-            # Try infer system from filename or sheet name
             base = os.path.basename(path).lower()
             system = "UNKNOWN"
-            if "loinc" in base:
-                system = "LOINC"
-            elif "rxnorm" in base:
-                system = "RXNORM"
-            elif "snomed" in base:
-                system = "SNOMED"
-            elif "meddra" in base:
+            if "meddra" in base:
                 system = "MEDDRA"
+            elif "loinc" in base:
+                system = "LOINC"
 
             for idx, row in df.iterrows():
                 code = str(row.get(code_col, "")).strip()
                 term = str(row.get(term_col, "")).strip()
                 if not code or not term:
                     continue
+
+                if system == "LOINC":
+                    code = self._normalize_loinc_code(code)
+
                 term_norm = normalize_term(term)
                 if not term_norm:
                     continue
@@ -439,7 +517,7 @@ class TerminologyStore:
             self._loaded_sources.append(f"SKIP (no recognizable sheets): {os.path.basename(path)}")
 
     # -------------------------
-    # Internal indexing helpers
+    # Indexing & scoring
     # -------------------------
 
     def _add_record(self, rec: TermRecord) -> None:
@@ -449,39 +527,10 @@ class TerminologyStore:
     @staticmethod
     def _code_key(system: str, code: str) -> str:
         return f"{system.strip().upper()}|{str(code).strip()}"
-    
-    @staticmethod
-    def _atc_hierarchy_codes(code: str) -> List[str]:
-        """
-        ATC hierarchy: A, A01, A01A, A01AB, ...
-        Return code plus all parents by truncating from the end.
-        Example: "A01" -> ["A01", "A"]
-                 "A01AB" -> ["A01AB", "A01A", "A01", "A"]
-        """
-        c = (code or "").strip().upper()
-        if not c:
-            return []
-        parents = [c]
-        # Keep truncating until length 1 (top level, e.g. "A")
-        while len(c) > 1:
-            c = c[:-1]
-            parents.append(c)
-        # De-dup while preserving order
-        out = []
-        seen = set()
-        for x in parents:
-            if x not in seen:
-                out.append(x)
-                seen.add(x)
-        return out
-
 
     @staticmethod
     def _pick_col(columns: Iterable[str], candidates: List[str]) -> Optional[str]:
-        """
-        Pick the first matching column name from candidates (case-insensitive).
-        """
-        col_map = {c.lower(): c for c in columns}
+        col_map = {str(c).lower(): str(c) for c in columns}
         for cand in candidates:
             if cand.lower() in col_map:
                 return col_map[cand.lower()]
@@ -489,30 +538,34 @@ class TerminologyStore:
 
     @staticmethod
     def _score_record(query_norm: str, query_tokens: set[str], rec: TermRecord) -> float:
-        """
-        Deterministic scoring:
-          - exact normalized match => 1.0
-          - token Jaccard => [0..1)
-          - small bonus if term startswith query or vice versa
-        """
         if rec.term_norm == query_norm:
             return 1.0
 
         rec_tokens = set(rec.term_norm.split())
         base = jaccard(query_tokens, rec_tokens)
 
-        # Prefix bonus for close variants
         if rec.term_norm.startswith(query_norm) or query_norm.startswith(rec.term_norm):
             base = min(1.0, base + 0.15)
 
-        # Very short queries are risky; dampen slightly unless strong overlap
         if len(query_tokens) <= 1 and base < 0.8:
             base *= 0.75
 
         return float(base)
 
-    @staticmethod
-    def _to_hit_dict(score: float, rec: TermRecord, query: str) -> Dict[str, Any]:
+    def _to_hit_dict(self, score: float, rec: TermRecord, query: str) -> Dict[str, Any]:
+        # Ensure LOINC has normalized code and enriched meta if available
+        extra = dict(rec.extra or {})
+        if rec.system == "LOINC":
+            extra_code = self._normalize_loinc_code(rec.code)
+            if extra_code != rec.code:
+                extra["normalized_code"] = extra_code
+            meta = self._loinc_meta.get(extra_code)
+            if meta:
+                extra.setdefault("cui", meta.get("cui"))
+                extra.setdefault("preferred_label", meta.get("preferred_label"))
+                extra.setdefault("synonym_count", len(meta.get("synonyms") or []))
+                extra.setdefault("loinc_class_id", meta.get("class_id"))
+
         snippet = f"term={rec.term} | code={rec.system}:{rec.code}"
         ev = Evidence(
             source_type="csv/xlsx",
@@ -520,7 +573,7 @@ class TerminologyStore:
             id=rec.row_id,
             field="term/code",
             snippet=snippet,
-            extra={"system": rec.system, "code": rec.code, **(rec.extra or {})},
+            extra={"system": rec.system, "code": rec.code, **extra},
         ).to_dict()
 
         return {
@@ -531,5 +584,5 @@ class TerminologyStore:
             "code": rec.code,
             "score": float(score),
             "evidence": ev,
-            "extra": rec.extra or {},
+            "extra": extra,
         }
