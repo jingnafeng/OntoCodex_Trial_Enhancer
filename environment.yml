@@ -1,0 +1,20 @@
+name: ontocodex
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.11
+  - pip
+  - pydantic
+  - pandas
+  - numpy
+  - tqdm
+  - rich
+  - requests
+  - rdflib
+  - owlready2
+  - pip:
+      - langgraph
+      - langchain
+      - langchain-community
+      - python-dotenv
