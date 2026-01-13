@@ -27,23 +27,11 @@ def build_graph():
     g.set_entry_point("ontology_reader")
     g.add_edge("ontology_reader", "decision")
 
-    # Conditional routing from decision
-    def route(state: OntoCodexState) -> str:
-        # decision_node sets state.routing
-        if state.routing.get("skip_kb", False):
-            return "terminology"
-        return "knowledgebase"
-
-    g.add_conditional_edges("decision", route, {
-        "knowledgebase": "knowledgebase",
-        "terminology": "terminology",
-    })
-
-    # Continue
+    # Linear pipeline (see overview)
+    g.add_edge("decision", "knowledgebase")
     g.add_edge("knowledgebase", "terminology")
     g.add_edge("terminology", "knowledge_agent")
     g.add_edge("knowledge_agent", "validator")
-    g.add_edge("terminology", "validator")
 
     # If validator passes -> script, else stop
     def after_validate(state: OntoCodexState) -> str:

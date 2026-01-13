@@ -1,16 +1,12 @@
 from __future__ import annotations
 
-from typing import Any, Dict, List, Optional, Set, Tuple
-
-from rdflib import Graph, URIRef, Literal
-from rdflib.namespace import RDF, RDFS, OWL
+from typing import Any, Dict, List, Optional
 
 from ontocodex.engine.state import OntoCodexState
 from ontocodex.kb.kb_api import KnowledgeBase
 
-# Lazy singleton KB + ontology graph cache (local server friendly)
+# Lazy singleton KB (local server friendly)
 _KB: Optional[KnowledgeBase] = None
-_OWL_CACHE: Dict[str, Graph] = {}
 
 
 def _get_kb(data_dir: str = "data") -> KnowledgeBase:
@@ -20,29 +16,27 @@ def _get_kb(data_dir: str = "data") -> KnowledgeBase:
     return _KB
 
 
-def _load_owl(path: str) -> Graph:
-    if path in _OWL_CACHE:
-        return _OWL_CACHE[path]
-    g = Graph()
-    g.parse(path)  # rdflib infers format from extension/content
-    _OWL_CACHE[path] = g
-    return g
+def knowledgebase_node(state: OntoCodexState) -> OntoCodexState:
+    """
+    Term-level retrieval only:
+      - For each candidate, lookup terminology hits in the KB
+      - Store hits on the candidate as `kb_hits`
+    """
+    if not state.candidates:
+        state.warnings.append("KnowledgeBaseAgent: no candidates to retrieve.")
+        return state
 
+    data_dir = state.options.get("data_dir", "data")
+    system = state.options.get("kb_system")  # optional system constraint
+    top_k = int(state.options.get("kb_top_k", 5))
 
-def _local_name(uri: URIRef) -> str:
-    s = str(uri)
-    if "#" in s:
-        return s.rsplit("#", 1)[-1]
-    return s.rsplit("/", 1)[-1]
+    kb = _get_kb(data_dir=data_dir)
 
+    for cand in state.candidates:
+        term = cand.get("term") or cand.get("label") or cand.get("concept_name")
+        if not term:
+            continue
+        hits = kb.lookup(term=term, system=system, k=top_k)
+        cand["kb_hits"] = hits
 
-def _best_label(g: Graph, uri: URIRef) -> str:
-    # Prefer rdfs:label; fallback to localname
-    for o in g.objects(uri, RDFS.label):
-        if isinstance(o, Literal) and str(o).strip():
-            return str(o).strip()
-    return _local_name(uri)
-
-
-def _is_owl_class(g: Graph, uri: URIRef) -> bool:
-    # strict: typed owl:Class OR appears as a subclass subject
+    return state
