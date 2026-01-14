@@ -85,9 +85,12 @@ def _kb_best_hit(kb: KnowledgeBase, term: str, system: Optional[str], k: int = 5
 
 def knowledge_agent_node(state: OntoCodexState) -> OntoCodexState:
     """
-    Disease-centric Knowledge Agent:
-      1) For each disease candidate (class), pull linked medication/lab classes from OWL restrictions
-      2) Look up meds/labs in KB (RxNorm/LOINC OMOP tables + LOINC_CUI enrichment)
+    Knowledge Base Agent:
+    Retrieves candidate concepts and relationships from curated sources such as:
+      - MedlinePlus (API / cached TTL)
+      - PubMed
+      - NIH / CDC / ADA / ACC / AHA resources
+      - Disease Ontology (DOID)
       3) Build enrichment payloads that will be applied as annotations to the disease class later
 
     Output:

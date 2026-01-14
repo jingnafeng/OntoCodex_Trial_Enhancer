@@ -7,6 +7,18 @@ def _hit_score(hit: dict) -> float:
         return 0.0
 
 def terminology_node(state: OntoCodexState) -> OntoCodexState:
+    """
+    Terminology Agent:
+    Normalizes extracted concepts to standard vocabularies using CSV, OWL, or TTL datasets.
+    
+    Supported Standards & Vocabularies:
+      - ICD-9 / ICD-10
+      - SNOMED CT
+      - RxNorm
+      - ATC
+      - LOINC
+      - DOID
+    """
     # Build a dedup set from existing mappings (in case node re-runs)
     seen = set()
     for m in state.mappings:

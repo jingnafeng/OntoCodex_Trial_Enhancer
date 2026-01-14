@@ -2,6 +2,10 @@ from ontocodex.io.owl_writer import load_graph, save_graph, add_omop_annotations
 from ontocodex.engine.evidence_log import build_evidence_rows, write_jsonl
 
 def script_node(state):
+    """
+    Script Generation Agent:
+    Generates executable Python scripts to update ontologies with new classes, axioms, annotations, and provenance.
+    """
     g = load_graph(state.ontology_path)
 
     for m in state.mappings:

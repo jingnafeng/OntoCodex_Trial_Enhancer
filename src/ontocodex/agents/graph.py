@@ -1,7 +1,6 @@
 from langgraph.graph import StateGraph, END
 
-# Assuming OntoCodexState is defined in a central location
-# from ontocodex.engine.state import OntoCodexState
+from ontocodex.engine.state import OntoCodexState
 
 from .decision_agent import decision_node
 from .knowledge_agent import knowledge_agent_node
@@ -10,11 +9,6 @@ from .ontology_reader_agent import ontology_reader_node
 from .script_agent import script_node
 from .terminology_agent import terminology_node
 from .validator_agent import validator_node
-
-
-# A placeholder for the state class, as its definition was not provided.
-class OntoCodexState(dict):
-    pass
 
 
 # Conditional routing function

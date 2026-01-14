@@ -54,6 +54,10 @@ def _llm_route(state: OntoCodexState) -> Optional[Dict[str, Any]]:
     return data
 
 def decision_node(state: OntoCodexState) -> OntoCodexState:
+    """
+    Decision Agent:
+    Interprets enrichment goals and orchestrates agent interactions.
+    """
     # Simple deterministic routing first; LLM routing optional
     llm_enabled = bool(state.options.get("llm_routing"))
     if llm_enabled:
