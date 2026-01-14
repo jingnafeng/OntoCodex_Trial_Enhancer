@@ -1,63 +1,21 @@
 from __future__ import annotations
 
-from typing import Any, Dict, List, Optional, Set, Tuple
+from typing import Any, Dict, List, Optional, Set
 
-from rdflib import Graph, URIRef, Literal
+from rdflib import Graph, URIRef
 from rdflib.namespace import RDF, RDFS, OWL
 
 from ontocodex.engine.state import OntoCodexState
 from ontocodex.kb.kb_api import KnowledgeBase
-
-# Lazy singleton KB + ontology graph cache (local server friendly)
-_KB: Optional[KnowledgeBase] = None
-_OWL_CACHE: Dict[str, Graph] = {}
-
-
-def _get_kb(data_dir: str = "data") -> KnowledgeBase:
-    global _KB
-    if _KB is None:
-        _KB = KnowledgeBase.from_local_data(data_dir=data_dir, enable_vector=False)
-    return _KB
-
-
-def _load_owl(path: str) -> Graph:
-    if path in _OWL_CACHE:
-        return _OWL_CACHE[path]
-    g = Graph()
-    g.parse(path)  # rdflib infers format from extension/content
-    _OWL_CACHE[path] = g
-    return g
-
-
-def _local_name(uri: URIRef) -> str:
-    s = str(uri)
-    if "#" in s:
-        return s.rsplit("#", 1)[-1]
-    return s.rsplit("/", 1)[-1]
-
-
-def _best_label(g: Graph, uri: URIRef) -> str:
-    # Prefer rdfs:label; fallback to localname
-    for o in g.objects(uri, RDFS.label):
-        if isinstance(o, Literal) and str(o).strip():
-            return str(o).strip()
-    return _local_name(uri)
-
-
-def _is_owl_class(g: Graph, uri: URIRef) -> bool:
-    # strict: typed owl:Class OR appears as a subclass subject
-    if (uri, RDF.type, OWL.Class) in g:
-        return True
-    if (uri, RDFS.subClassOf, None) in g:
-        return True
-    return False
+from ontocodex.kb.utils import get_kb
+from ontocodex.utils.owl_utils import best_label, is_owl_class, load_owl, local_name
 
 
 def _property_matches(p: URIRef, wanted_local_names: Set[str], wanted_full_iris: Set[str]) -> bool:
     ps = str(p)
     if ps in wanted_full_iris:
         return True
-    return _local_name(p) in wanted_local_names
+    return local_name(p) in wanted_local_names
 
 
 def _extract_fillers_via_restrictions(
@@ -140,7 +98,7 @@ def knowledge_agent_node(state: OntoCodexState) -> OntoCodexState:
         state.errors.append("KnowledgeAgent: ontology_path is missing.")
         return state
 
-    g = _load_owl(state.ontology_path)
+    g = load_owl(state.ontology_path)
 
     # Config knobs (override via state.options)
     data_dir = state.options.get("data_dir", "data")
@@ -154,7 +112,7 @@ def knowledge_agent_node(state: OntoCodexState) -> OntoCodexState:
     med_props_full = state.options.get("medication_properties_full", [])
     lab_props_full = state.options.get("lab_properties_full", [])
 
-    kb = _get_kb(data_dir=data_dir)
+    kb = get_kb(data_dir=data_dir)
 
     enrichments: List[Dict[str, Any]] = state.artifacts.get("enrichments", []) or []
 
@@ -164,11 +122,11 @@ def knowledge_agent_node(state: OntoCodexState) -> OntoCodexState:
             continue
 
         disease_uri = URIRef(disease_iri)
-        if not _is_owl_class(g, disease_uri):
+        if not is_owl_class(g, disease_uri):
             # classes only: skip anything that isn't a class
             continue
 
-        disease_term = cand.get("term") or cand.get("label") or _best_label(g, disease_uri)
+        disease_term = cand.get("term") or cand.get("label") or best_label(g, disease_uri)
 
         # --- 1) map disease itself (optional here; you may already do this earlier) ---
         disease_hit = _kb_best_hit(kb, term=disease_term, system=None)  # or system constraint if you want
@@ -197,10 +155,10 @@ def knowledge_agent_node(state: OntoCodexState) -> OntoCodexState:
         medications: List[Dict[str, Any]] = []
         for miri in med_iris:
             muri = URIRef(miri)
-            if not _is_owl_class(g, muri):
+            if not is_owl_class(g, muri):
                 continue
 
-            m_label = _best_label(g, muri)
+            m_label = best_label(g, muri)
             hit = _kb_best_hit(kb, term=m_label, system="RXNORM")
             item = {
                 "term": m_label,
@@ -231,10 +189,10 @@ def knowledge_agent_node(state: OntoCodexState) -> OntoCodexState:
         labs: List[Dict[str, Any]] = []
         for liri in lab_iris:
             luri = URIRef(liri)
-            if not _is_owl_class(g, luri):
+            if not is_owl_class(g, luri):
                 continue
 
-            l_label = _best_label(g, luri)
+            l_label = best_label(g, luri)
             hit = _kb_best_hit(kb, term=l_label, system="LOINC")
             item = {
                 "term": l_label,
