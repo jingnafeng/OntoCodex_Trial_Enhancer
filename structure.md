@@ -84,3 +84,37 @@ OntoCodexLocal/
   scripts/
     dev.sh                       # convenience: run api or cli
     format.sh
+
+
+┌─────────────────────────────┐
+│ macOS system                │
+│  ├─ Ollama.app              │  ← model + server
+│  │   └─ models in ~/.ollama │
+│  └─ localhost:11434         │
+└─────────────▲───────────────┘
+              │ HTTP
+┌─────────────┴───────────────┐
+│ Conda env (ontocodex)        │
+│  ├─ Python                  │
+│  ├─ requests                │
+│  └─ OntoCodex code           │
+└─────────────────────────────┘
+
+4️⃣ Decide where LLM is allowed to run (important)
+✅ Allowed nodes
+
+KnowledgeAgent (reasoning only)
+
+Optional: guideline parsing agent
+
+❌ Forbidden nodes
+
+KnowledgeBaseAgent
+
+TerminologyAgent
+
+ValidatorAgent
+
+Script/OWL Writer
+
+This keeps OntoCodex non-hallucinating.
