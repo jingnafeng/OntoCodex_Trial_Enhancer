@@ -6,7 +6,7 @@ from rdflib import Graph, URIRef
 from rdflib.namespace import RDF, RDFS, OWL
 
 from ontocodex.engine.state import OntoCodexState
-from ontocodex.utils.owl_utils import best_label, is_owl_class, load_owl
+from ontocodex.agents.owl_utils import best_label, is_owl_class, load_owl
 
 
 def _norm(text: str) -> str:

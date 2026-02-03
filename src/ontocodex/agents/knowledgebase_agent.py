@@ -4,6 +4,18 @@ from ontocodex.engine.state import OntoCodexState
 from ontocodex.kb.utils import get_kb
 
 
+def _uniq_terms(terms):
+    seen = set()
+    out = []
+    for t in terms:
+        norm = str(t or "").strip()
+        if not norm or norm in seen:
+            continue
+        seen.add(norm)
+        out.append(norm)
+    return out
+
+
 def knowledgebase_node(state: OntoCodexState) -> OntoCodexState:
     """
     Term-level retrieval only:
@@ -24,7 +36,24 @@ def knowledgebase_node(state: OntoCodexState) -> OntoCodexState:
         term = cand.get("term") or cand.get("label") or cand.get("concept_name")
         if not term:
             continue
-        hits = kb.lookup(term=term, system=system, k=top_k)
-        cand["kb_hits"] = hits
+        hits = kb.term_store.lookup(term=term, system=system, k=top_k)
+        if hits:
+            cand["kb_hits"] = hits
+            continue
+
+        onto_hits = kb.onto_store.lookup(term=term, k=top_k)
+        related_terms = []
+        for h in onto_hits:
+            label = h.get("term")
+            iri = h.get("iri")
+            if label:
+                related_terms.append(label)
+            if iri:
+                for parent_iri in kb.onto_store.get_parents(iri, depth=1):
+                    parent = kb.onto_store.get_entity(parent_iri)
+                    if parent and parent.get("label"):
+                        related_terms.append(parent["label"])
+        related_terms = _uniq_terms(related_terms)
+        cand["fallback_terms"] = related_terms
 
     return state

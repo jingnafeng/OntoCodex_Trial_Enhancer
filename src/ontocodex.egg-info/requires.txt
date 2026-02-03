@@ -1,0 +1,8 @@
+pydantic
+pandas
+rdflib
+requests
+pyyaml
+langgraph
+langchain
+python-dotenv

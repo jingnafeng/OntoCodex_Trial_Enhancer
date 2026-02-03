@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 from dataclasses import dataclass
 from typing import Optional
 
@@ -32,6 +33,7 @@ def load_graph(path: str) -> Graph:
 
 def save_graph(g: Graph, path: str, fmt: str = "xml") -> None:
     """Saves the graph to the specified path in the given format."""
+    os.makedirs(os.path.dirname(path) or ".", exist_ok=True)
     g.serialize(destination=path, format=fmt)
 
 

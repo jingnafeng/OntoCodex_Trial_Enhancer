@@ -18,7 +18,9 @@ def route_after_decision(state: OntoCodexState) -> str:
     needs_term = routing_decision.get("needs_terminology", False)
     needs_know = routing_decision.get("needs_knowledge_agent", False)
 
-    if needs_term and not routing_decision.get("skip_kb", False):
+    if needs_term:
+        if routing_decision.get("skip_kb", False):
+            return "to_terminology_only"
         return "to_terminology_path"
     if needs_know:
         return "to_knowledge_path"
@@ -50,6 +52,7 @@ def create_graph():
         route_after_decision,
         {
             "to_terminology_path": "lookup_kb",
+            "to_terminology_only": "map_terminology",
             "to_knowledge_path": "enrich_knowledge",
             "to_validator": "validate_mappings",
         },

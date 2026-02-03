@@ -3,6 +3,7 @@ from typing import Any, Dict, Optional
 
 from ontocodex.engine.state import OntoCodexState
 from ontocodex.providers.local_llm import LocalLLM, LocalLLMError
+from ontocodex.kb.utils import get_kb
 
 
 def _parse_routing_json(text: str) -> Optional[Dict[str, Any]]:
@@ -58,6 +59,36 @@ def decision_node(state: OntoCodexState) -> OntoCodexState:
     Decision Agent:
     Interprets enrichment goals and orchestrates agent interactions.
     """
+    input_term = (state.options or {}).get("input_term")
+    if isinstance(input_term, str) and input_term.strip():
+        term = input_term.strip()
+        data_dir = state.options.get("data_dir", "data")
+        kb = get_kb(data_dir=data_dir)
+        hits = kb.term_store.lookup(term, system=state.options.get("kb_system"))
+
+        state.candidates = [{
+            "term": term,
+            "label": term,
+            "target_iri": None,
+            "kb_hits": hits,
+        }]
+
+        if hits:
+            state.routing = {
+                "skip_kb": True,
+                "needs_terminology": True,
+                "needs_knowledge_agent": False,
+            }
+            return state
+
+        state.warnings.append(f"TerminologyStore: no hits for term '{term}'.")
+        state.routing = {
+            "skip_kb": False,
+            "needs_terminology": True,
+            "needs_knowledge_agent": False,
+        }
+        return state
+
     # Simple deterministic routing first; LLM routing optional
     llm_enabled = bool(state.options.get("llm_routing"))
     if llm_enabled:

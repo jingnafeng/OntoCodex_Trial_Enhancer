@@ -1,4 +1,5 @@
 from ontocodex.engine.state import OntoCodexState
+from ontocodex.kb.utils import get_kb
 
 def _hit_score(hit: dict) -> float:
     try:
@@ -25,8 +26,15 @@ def terminology_node(state: OntoCodexState) -> OntoCodexState:
         extra = m.get("extra", {}) or {}
         seen.add((m.get("target_iri"), m.get("system"), m.get("code"), extra.get("concept_id")))
 
+    data_dir = state.options.get("data_dir", "data")
+    kb = get_kb(data_dir=data_dir)
+
     for cand in state.candidates:
         hits = cand.get("kb_hits", []) or []
+        if not hits:
+            fallback_terms = cand.get("fallback_terms", []) or []
+            for term in fallback_terms:
+                hits.extend(kb.term_store.lookup(term, system=state.options.get("kb_system"), k=5))
         if not hits:
             continue
 

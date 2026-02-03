@@ -57,3 +57,10 @@ class OntoCodexState(BaseModel):
 
     def add_warning(self, msg: str) -> None:
         self.warnings.append(msg)
+
+    def get(self, key: str, default: Any = None) -> Any:
+        value = getattr(self, key, None)
+        if value is not None:
+            return value
+        extra = getattr(self, "model_extra", None) or {}
+        return extra.get(key, default)

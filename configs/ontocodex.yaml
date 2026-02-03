@@ -1,0 +1,14 @@
+# LLM Settings (Ollama)
+llm_base_url: "http://localhost:11434"
+llm_model: "llama3"
+llm_api_type: "ollama"
+llm_routing: true
+
+# Pipeline Options
+kb_system: "SNOMEDCT" 
+kb_top_k: 5
+input_term: "Somatic hallucination"
+
+# Output Paths
+out_owl_path: "artifacts/enriched.owl"
+evidence_path: "artifacts/evidence.jsonl"

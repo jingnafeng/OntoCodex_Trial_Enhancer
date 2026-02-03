@@ -154,7 +154,7 @@ class TerminologyStore:
         if not q_norm:
             return []
 
-        sys_norm = system.strip().upper() if system else None
+        sys_norm = self._normalize_system(system) if system else None
 
         # 1) Exact normalized hits
         candidates: List[TermRecord] = []
@@ -225,7 +225,7 @@ class TerminologyStore:
             return None
         code_str = str(code).strip()
 
-        sys_norm = system.strip().upper() if system else None
+        sys_norm = self._normalize_system(system) if system else None
         if sys_norm == "LOINC":
             code_str = self._normalize_loinc_code(code_str)
 
@@ -301,7 +301,7 @@ class TerminologyStore:
                 continue
 
             # Determine canonical system from code column name if applicable
-            row_system = system.strip().upper()
+            row_system = self._normalize_system(system)
             if code_col:
                 col = code_col.lower()
                 if col in {"rxnorm", "rxcui"}:
@@ -319,7 +319,7 @@ class TerminologyStore:
             if vocab_col and row_system in {"RXNORM", "SNOMED", "SNOMEDCT", "LOINC", "ATC", "NDC", "MEASUREMENT"} is False:
                 v = str(row.get(vocab_col, "")).strip()
                 if v:
-                    row_system = v.upper()
+                    row_system = self._normalize_system(v)
 
             if row_system == "LOINC":
                 code = self._normalize_loinc_code(code)
@@ -526,7 +526,14 @@ class TerminologyStore:
 
     @staticmethod
     def _code_key(system: str, code: str) -> str:
-        return f"{system.strip().upper()}|{str(code).strip()}"
+        return f"{TerminologyStore._normalize_system(system)}|{str(code).strip()}"
+
+    @staticmethod
+    def _normalize_system(system: Optional[str]) -> str:
+        sys = str(system or "").strip().upper()
+        if sys == "SNOMED":
+            return "SNOMEDCT"
+        return sys
 
     @staticmethod
     def _pick_col(columns: Iterable[str], candidates: List[str]) -> Optional[str]:

@@ -1,12 +1,21 @@
 from __future__ import annotations
 
 import requests
+from dataclasses import dataclass
 from typing import Any, Dict, List, Optional
 
 
 class LocalLLMError(Exception):
     """Raised when the Local LLM provider fails."""
     pass
+
+
+@dataclass
+class LocalLLMConfig:
+    """Configuration for LocalLLM."""
+    base_url: str
+    model: str
+    api_type: str = "ollama"
 
 
 class LocalLLM:
