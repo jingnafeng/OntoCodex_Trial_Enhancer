@@ -1,0 +1,9 @@
+term,system,code,synonyms
+Non-small cell lung cancer,ICD10CM,C34.0x-C34.9x,NSCLC;non small cell lung cancer
+Advanced non-small cell lung cancer,ICD10CM,C34.0x-C34.9x,advanced NSCLC
+Metastatic disease,ICD10CM,C79.9,metastatic cancer;metastasis
+Outpatient oncology care,CPT4,99215,outpatient oncology visit;oncology follow up
+Inpatient oncology care,CPT4,99223,inpatient oncology admission
+Inpatient visit,CPT4,99223,initial hospital inpatient care
+Outpatient visit,CPT4,99215,established patient outpatient visit
+Malignant neoplasm of bronchus and lung,ICD10CM,C34.9,lung malignancy;lung cancer diagnosis

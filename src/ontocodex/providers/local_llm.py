@@ -1,8 +1,10 @@
 from __future__ import annotations
 
+import os
 import requests
 from dataclasses import dataclass
 from typing import Any, Dict, List, Optional
+from dotenv import find_dotenv, load_dotenv
 
 
 class LocalLLMError(Exception):
@@ -16,6 +18,7 @@ class LocalLLMConfig:
     base_url: str
     model: str
     api_type: str = "ollama"
+    api_key: Optional[str] = None
 
 
 class LocalLLM:
@@ -23,10 +26,11 @@ class LocalLLM:
     A simple client for a local LLM server (e.g., Ollama, LM Studio, LocalAI).
     Defaults to Ollama's API format.
     """
-    def __init__(self, base_url: str, model: str, api_type: str = "ollama"):
+    def __init__(self, base_url: str, model: str, api_type: str = "ollama", api_key: Optional[str] = None):
         self.base_url = base_url.rstrip("/")
         self.model = model
         self.api_type = api_type
+        self.api_key = api_key
 
     @classmethod
     def from_options(cls, options: Dict[str, Any], prefix: str = "llm") -> LocalLLM:
@@ -40,10 +44,14 @@ class LocalLLM:
         
         Fallbacks to generic "llm_*" keys if specific prefix not found.
         """
+        # Load .env from current working tree when available.
+        load_dotenv(find_dotenv(usecwd=True), override=False)
+
         # 1. Try specific prefix
         base_url = options.get(f"{prefix}_base_url")
         model = options.get(f"{prefix}_model")
         api_type = options.get(f"{prefix}_api_type")
+        api_key = options.get(f"{prefix}_api_key")
 
         # 2. Fallback to generic 'llm_'
         if not base_url:
@@ -52,8 +60,21 @@ class LocalLLM:
             model = options.get("llm_model", "llama3")
         if not api_type:
             api_type = options.get("llm_api_type", "ollama")
+        if not api_key:
+            api_key = (
+                options.get("llm_api_key")
+                or os.getenv("OPENAI_API_KEY")
+                or os.getenv("GENAI_GARDEN_KEY")
+                or os.getenv("GEMINI_API_KEY")
+            )
 
-        return cls(base_url=base_url, model=model, api_type=api_type)
+        if api_type == "gemini":
+            if not base_url or base_url == "http://localhost:11434":
+                base_url = "https://generativelanguage.googleapis.com"
+            if not model or model == "llama3":
+                model = "gemini-1.5-flash"
+
+        return cls(base_url=base_url, model=model, api_type=api_type, api_key=api_key)
 
     def chat(
         self, 
@@ -68,6 +89,8 @@ class LocalLLM:
             return self._chat_ollama(messages, temperature, max_tokens)
         elif self.api_type == "openai_compatible":
             return self._chat_openai_compat(messages, temperature, max_tokens)
+        elif self.api_type == "gemini":
+            return self._chat_gemini(messages, temperature, max_tokens)
         else:
             raise LocalLLMError(f"Unknown api_type: {self.api_type}")
 
@@ -99,8 +122,11 @@ class LocalLLM:
             "temperature": temperature,
             "max_tokens": max_tokens,
         }
+        headers = {"Content-Type": "application/json"}
+        if self.api_key:
+            headers["Authorization"] = f"Bearer {self.api_key}"
         try:
-            resp = requests.post(url, json=payload, timeout=60)
+            resp = requests.post(url, json=payload, headers=headers, timeout=60)
             resp.raise_for_status()
             data = resp.json()
             choices = data.get("choices", [])
@@ -109,3 +135,33 @@ class LocalLLM:
             return choices[0].get("message", {}).get("content", "")
         except Exception as e:
             raise LocalLLMError(f"OpenAI-compatible request failed: {e}")
+
+    def _chat_gemini(self, messages: List[Dict[str, str]], temperature: float, max_tokens: int) -> str:
+        if not self.api_key:
+            raise LocalLLMError("Gemini API key is missing. Set GENAI_GARDEN_KEY or llm_api_key.")
+
+        url = f"{self.base_url}/v1beta/models/{self.model}:generateContent"
+        prompt = "\n".join(f"{m.get('role', 'user')}: {m.get('content', '')}" for m in messages if m.get("content"))
+        payload = {
+            "contents": [{"parts": [{"text": prompt}]}],
+            "generationConfig": {
+                "temperature": temperature,
+                "maxOutputTokens": max_tokens,
+            },
+        }
+        headers = {
+            "Content-Type": "application/json",
+            "x-goog-api-key": self.api_key,
+        }
+        try:
+            resp = requests.post(url, json=payload, headers=headers, timeout=60)
+            resp.raise_for_status()
+            data = resp.json()
+            candidates = data.get("candidates", [])
+            if not candidates:
+                return ""
+            parts = (candidates[0].get("content") or {}).get("parts", [])
+            text = "".join(str(p.get("text", "")) for p in parts)
+            return text
+        except Exception as e:
+            raise LocalLLMError(f"Gemini request failed: {e}")

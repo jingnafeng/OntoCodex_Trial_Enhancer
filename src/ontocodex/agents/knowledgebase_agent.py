@@ -1,7 +1,10 @@
 from __future__ import annotations
 
+import json
+
 from ontocodex.engine.state import OntoCodexState
 from ontocodex.kb.utils import get_kb
+from ontocodex.providers.local_llm import LocalLLM, LocalLLMError
 
 
 def _uniq_terms(terms):
@@ -14,6 +17,40 @@ def _uniq_terms(terms):
         seen.add(norm)
         out.append(norm)
     return out
+
+
+def _llm_expand_related_terms(state: OntoCodexState, term: str):
+    llm = LocalLLM.from_options(state.options, prefix="knowledge")
+    system = (
+        "Given a clinical term or short request, return JSON with key related_terms "
+        "(array of concise clinical terms, abbreviations, and parent terms). "
+        "Return only JSON."
+    )
+    try:
+        raw = llm.chat(
+            messages=[
+                {"role": "system", "content": system},
+                {"role": "user", "content": term},
+            ],
+            temperature=0.0,
+            max_tokens=250,
+        )
+    except LocalLLMError as exc:
+        state.warnings.append(f"KnowledgeBaseAgent LLM expansion failed: {exc}")
+        return []
+    try:
+        data = json.loads(raw)
+    except Exception:
+        start = raw.find("{")
+        end = raw.rfind("}")
+        if start == -1 or end == -1 or end <= start:
+            return []
+        try:
+            data = json.loads(raw[start : end + 1])
+        except Exception:
+            return []
+    vals = data.get("related_terms", []) if isinstance(data, dict) else []
+    return _uniq_terms(vals if isinstance(vals, list) else [])
 
 
 def knowledgebase_node(state: OntoCodexState) -> OntoCodexState:
@@ -53,6 +90,8 @@ def knowledgebase_node(state: OntoCodexState) -> OntoCodexState:
                     parent = kb.onto_store.get_entity(parent_iri)
                     if parent and parent.get("label"):
                         related_terms.append(parent["label"])
+        if not related_terms and bool(state.options.get("llm_kb_expansion", True)):
+            related_terms = _llm_expand_related_terms(state, term)
         related_terms = _uniq_terms(related_terms)
         cand["fallback_terms"] = related_terms
 

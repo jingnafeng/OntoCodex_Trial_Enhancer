@@ -2,6 +2,7 @@ import argparse
 import sys
 import yaml
 from pathlib import Path
+from dotenv import load_dotenv
 
 # Ensure src is in python path if running directly
 sys.path.append(str(Path(__file__).resolve().parents[2]))
@@ -20,6 +21,8 @@ def load_config(path: str) -> dict:
 
 
 def main():
+    repo_root = Path(__file__).resolve().parents[3]
+    load_dotenv(dotenv_path=repo_root / ".env")
     parser = argparse.ArgumentParser(description="Run OntoCodex Local Workflow")
     parser.add_argument("--ontology", required=True, help="Path to the input OWL ontology file")
     parser.add_argument("--config", default="configs/ontocodex.yaml", help="Path to configuration YAML")

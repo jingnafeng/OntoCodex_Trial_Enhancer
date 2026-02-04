@@ -1,3 +1,6 @@
+import json
+import os
+
 from ontocodex.io.owl_writer import load_graph, save_graph, add_omop_annotations, OmopAnnotationPayload
 from ontocodex.engine.evidence_log import build_evidence_rows, write_jsonl
 
@@ -32,5 +35,12 @@ def script_node(state):
     rows = build_evidence_rows(run_id=state.run_id, mappings=state.mappings)
     write_jsonl(evidence_path, rows)
     state.artifacts["evidence_jsonl"] = evidence_path
+
+    if state.artifacts.get("trial_parser"):
+        trial_path = state.options.get("trial_output_path", f"artifacts/{state.run_id}/trial_parser.json")
+        os.makedirs(os.path.dirname(trial_path) or ".", exist_ok=True)
+        with open(trial_path, "w", encoding="utf-8") as f:
+            json.dump(state.artifacts["trial_parser"], f, indent=2, ensure_ascii=False)
+        state.artifacts["trial_parser_json"] = trial_path
 
     return state

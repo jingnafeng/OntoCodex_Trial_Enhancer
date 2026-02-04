@@ -3,6 +3,7 @@ pandas
 rdflib
 requests
 pyyaml
+openpyxl
 langgraph
 langchain
 python-dotenv

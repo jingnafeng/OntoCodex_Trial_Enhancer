@@ -1,0 +1,41 @@
+{
+  "input_text": "other key inclusion criteria is as follows, help find and add them to the previous trial protocol: Evidence of first-line platinum-based chemotherapy combined with a PD-1 or PD-L1 inhibitor, identified via medication administration records. Discontinuation of first-line therapy prior to initiation of second-line docetaxel-based treatment. Second-line treatment initiated within routine oncology care (outpatient infusion setting).",
+  "decision_plan": {
+    "mode": "trial_parser",
+    "composite_term_strategy": {
+      "enabled": true,
+      "require_multi_term_for_composites": true,
+      "default_min_components": 2
+    },
+    "composite_definitions": [
+      {
+        "name": "Outpatient oncology care",
+        "min_components": 2,
+        "components": [
+          {
+            "role": "diagnosis",
+            "required_systems": [
+              "ICD10CM",
+              "ICD10"
+            ],
+            "description": "Oncology diagnosis term(s), e.g., NSCLC or malignancy."
+          },
+          {
+            "role": "visit_type",
+            "required_systems": [
+              "CPT4",
+              "CPT"
+            ],
+            "description": "Outpatient office/oncology encounter term."
+          }
+        ]
+      }
+    ]
+  },
+  "inclusion_concepts": [],
+  "exclusion_concepts": [],
+  "temporal_constraints": [],
+  "outcomes": [],
+  "concept_mappings": [],
+  "composite_concepts": []
+}

@@ -1,0 +1,305 @@
+{
+  "input_text": "help me make this clinical trial a virtual trial that can use data in EHR to replicate. Find the medical terms in each inclusion and exclusion criteria, find their temporal constraint, and find the outcome the study wants to generate. find medical concepts and their ICD codes or RxNorm mapping.  Here is the clinical trial: Patients with advanced or metastatic non–small cell lung cancer identified through repeated diagnosis codes in inpatient or outpatient oncology care settings prior to the Index Date. Diagnosis Codes: ICD-10: C34.0x–C34.9x (lung and bronchus malignancies)",
+  "decision_plan": {
+    "mode": "trial_parser",
+    "composite_term_strategy": {
+      "enabled": true,
+      "require_multi_term_for_composites": true,
+      "default_min_components": 2
+    },
+    "composite_definitions": [
+      {
+        "name": "Inpatient oncology care",
+        "min_components": 2,
+        "components": [
+          {
+            "role": "diagnosis",
+            "required_systems": [
+              "ICD10CM",
+              "ICD10"
+            ],
+            "description": "Oncology diagnosis term(s), e.g., NSCLC or malignancy."
+          },
+          {
+            "role": "visit_type",
+            "required_systems": [
+              "CPT4",
+              "CPT"
+            ],
+            "description": "Inpatient visit / hospital encounter term."
+          }
+        ]
+      },
+      {
+        "name": "Outpatient oncology care",
+        "min_components": 2,
+        "components": [
+          {
+            "role": "diagnosis",
+            "required_systems": [
+              "ICD10CM",
+              "ICD10"
+            ],
+            "description": "Oncology diagnosis term(s), e.g., NSCLC or malignancy."
+          },
+          {
+            "role": "visit_type",
+            "required_systems": [
+              "CPT4",
+              "CPT"
+            ],
+            "description": "Outpatient office/oncology encounter term."
+          }
+        ]
+      }
+    ]
+  },
+  "inclusion_concepts": [
+    {
+      "term": "advanced non–small cell lung cancer",
+      "temporal_constraint": "identified through repeated diagnosis codes prior to the Index Date"
+    },
+    {
+      "term": "lung malignancy",
+      "temporal_constraint": "identified through repeated diagnosis codes prior to the Index Date"
+    },
+    {
+      "term": "bronchus malignancy",
+      "temporal_constraint": "identified through repeated diagnosis codes prior to the Index Date"
+    },
+    {
+      "term": "Outpatient oncology care",
+      "temporal_constraint": "prior to Index Date"
+    },
+    {
+      "term": "Inpatient oncology care",
+      "temporal_constraint": "prior to Index Date"
+    }
+  ],
+  "exclusion_concepts": [],
+  "temporal_constraints": [
+    "prior to the Index Date",
+    "repeated diagnosis codes"
+  ],
+  "outcomes": [
+    "progression of non–small cell lung cancer"
+  ],
+  "concept_mappings": [
+    {
+      "criterion_type": "inclusion",
+      "term": "advanced non–small cell lung cancer",
+      "temporal_constraint": "identified through repeated diagnosis codes prior to the Index Date",
+      "mapped_codes": {
+        "ICD10CM": {
+          "code": "C34.0x-C34.9x",
+          "term": "Advanced non-small cell lung cancer",
+          "score": 1.0,
+          "evidence": {
+            "source_type": "trial_dictionary",
+            "source_file": "trial_codes.csv",
+            "id": "1",
+            "field": "term/code",
+            "snippet": "term=Advanced non-small cell lung cancer | code=ICD10CM:C34.0x-C34.9x",
+            "extra": {
+              "system": "ICD10CM",
+              "code": "C34.0x-C34.9x"
+            }
+          }
+        },
+        "ICD10": null,
+        "RXNORM": null,
+        "CPT4": null,
+        "CPT": null
+      }
+    },
+    {
+      "criterion_type": "inclusion",
+      "term": "lung malignancy",
+      "temporal_constraint": "identified through repeated diagnosis codes prior to the Index Date",
+      "mapped_codes": {
+        "ICD10CM": {
+          "code": "C34.9",
+          "term": "lung malignancy",
+          "score": 1.0,
+          "evidence": {
+            "source_type": "trial_dictionary",
+            "source_file": "trial_codes.csv",
+            "id": "7",
+            "field": "term/code",
+            "snippet": "term=lung malignancy | code=ICD10CM:C34.9",
+            "extra": {
+              "system": "ICD10CM",
+              "code": "C34.9"
+            }
+          }
+        },
+        "ICD10": null,
+        "RXNORM": null,
+        "CPT4": null,
+        "CPT": null
+      }
+    },
+    {
+      "criterion_type": "inclusion",
+      "term": "bronchus malignancy",
+      "temporal_constraint": "identified through repeated diagnosis codes prior to the Index Date",
+      "mapped_codes": {
+        "ICD10CM": null,
+        "ICD10": null,
+        "RXNORM": null,
+        "CPT4": null,
+        "CPT": null
+      }
+    },
+    {
+      "criterion_type": "inclusion",
+      "term": "Outpatient oncology care",
+      "temporal_constraint": "prior to Index Date",
+      "mapped_codes": {
+        "ICD10CM": null,
+        "ICD10": null,
+        "RXNORM": null,
+        "CPT4": {
+          "code": "99215",
+          "term": "Outpatient oncology care",
+          "score": 1.0,
+          "evidence": {
+            "source_type": "trial_dictionary",
+            "source_file": "trial_codes.csv",
+            "id": "3",
+            "field": "term/code",
+            "snippet": "term=Outpatient oncology care | code=CPT4:99215",
+            "extra": {
+              "system": "CPT4",
+              "code": "99215"
+            }
+          }
+        },
+        "CPT": null
+      }
+    },
+    {
+      "criterion_type": "inclusion",
+      "term": "Inpatient oncology care",
+      "temporal_constraint": "prior to Index Date",
+      "mapped_codes": {
+        "ICD10CM": null,
+        "ICD10": null,
+        "RXNORM": null,
+        "CPT4": {
+          "code": "99223",
+          "term": "Inpatient oncology care",
+          "score": 1.0,
+          "evidence": {
+            "source_type": "trial_dictionary",
+            "source_file": "trial_codes.csv",
+            "id": "4",
+            "field": "term/code",
+            "snippet": "term=Inpatient oncology care | code=CPT4:99223",
+            "extra": {
+              "system": "CPT4",
+              "code": "99223"
+            }
+          }
+        },
+        "CPT": null
+      }
+    }
+  ],
+  "composite_concepts": [
+    {
+      "name": "Inpatient oncology care",
+      "min_components": 2,
+      "component_terms": [
+        {
+          "role": "diagnosis",
+          "term": "advanced non–small cell lung cancer",
+          "mapping": {
+            "code": "C34.0x-C34.9x",
+            "term": "Advanced non-small cell lung cancer",
+            "score": 1.0,
+            "evidence": {
+              "source_type": "trial_dictionary",
+              "source_file": "trial_codes.csv",
+              "id": "1",
+              "field": "term/code",
+              "snippet": "term=Advanced non-small cell lung cancer | code=ICD10CM:C34.0x-C34.9x",
+              "extra": {
+                "system": "ICD10CM",
+                "code": "C34.0x-C34.9x"
+              }
+            }
+          }
+        },
+        {
+          "role": "visit_type",
+          "term": "Inpatient oncology care",
+          "mapping": {
+            "code": "99223",
+            "term": "Inpatient oncology care",
+            "score": 1.0,
+            "evidence": {
+              "source_type": "trial_dictionary",
+              "source_file": "trial_codes.csv",
+              "id": "4",
+              "field": "term/code",
+              "snippet": "term=Inpatient oncology care | code=CPT4:99223",
+              "extra": {
+                "system": "CPT4",
+                "code": "99223"
+              }
+            }
+          }
+        }
+      ],
+      "meets_definition": true
+    },
+    {
+      "name": "Outpatient oncology care",
+      "min_components": 2,
+      "component_terms": [
+        {
+          "role": "diagnosis",
+          "term": "advanced non–small cell lung cancer",
+          "mapping": {
+            "code": "C34.0x-C34.9x",
+            "term": "Advanced non-small cell lung cancer",
+            "score": 1.0,
+            "evidence": {
+              "source_type": "trial_dictionary",
+              "source_file": "trial_codes.csv",
+              "id": "1",
+              "field": "term/code",
+              "snippet": "term=Advanced non-small cell lung cancer | code=ICD10CM:C34.0x-C34.9x",
+              "extra": {
+                "system": "ICD10CM",
+                "code": "C34.0x-C34.9x"
+              }
+            }
+          }
+        },
+        {
+          "role": "visit_type",
+          "term": "Outpatient oncology care",
+          "mapping": {
+            "code": "99215",
+            "term": "Outpatient oncology care",
+            "score": 1.0,
+            "evidence": {
+              "source_type": "trial_dictionary",
+              "source_file": "trial_codes.csv",
+              "id": "3",
+              "field": "term/code",
+              "snippet": "term=Outpatient oncology care | code=CPT4:99215",
+              "extra": {
+                "system": "CPT4",
+                "code": "99215"
+              }
+            }
+          }
+        }
+      ],
+      "meets_definition": true
+    }
+  ]
+}

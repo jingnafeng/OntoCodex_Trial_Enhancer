@@ -1,0 +1,292 @@
+{
+  "input_text": "other key inclusion criteria is as follows, help find and add them to the previous trial protocol:\nEvidence of first-line platinum-based chemotherapy combined with a PD-1 or PD-L1 inhibitor, identified via medication administration records\n\nDiscontinuation of first-line therapy prior to initiation of second-line docetaxel-based treatment\n\nSecond-line treatment initiated within routine oncology care (outpatient infusion setting)\n",
+  "decision_plan": {
+    "mode": "trial_parser",
+    "composite_term_strategy": {
+      "enabled": true,
+      "require_multi_term_for_composites": true,
+      "default_min_components": 2
+    },
+    "section_strategy": {
+      "enabled": true,
+      "split_by_paragraph_or_sentence": true,
+      "agent_router": "decision_agent"
+    },
+    "criteria_sections": [
+      {
+        "id": "sec_1",
+        "criterion_type": "inclusion",
+        "text": "other key inclusion criteria is as follows, help find and add them to the previous trial protocol:",
+        "route_agents": [
+          "llm",
+          "terminology"
+        ]
+      },
+      {
+        "id": "sec_2",
+        "criterion_type": "inclusion",
+        "text": "Evidence of first-line platinum-based chemotherapy combined with a PD-1 or PD-L1 inhibitor, identified via medication administration records",
+        "route_agents": [
+          "llm",
+          "terminology",
+          "knowledge"
+        ]
+      },
+      {
+        "id": "sec_3",
+        "criterion_type": "other",
+        "text": "Discontinuation of first-line therapy prior to initiation of second-line docetaxel-based treatment",
+        "route_agents": [
+          "llm",
+          "terminology"
+        ]
+      },
+      {
+        "id": "sec_4",
+        "criterion_type": "other",
+        "text": "Second-line treatment initiated within routine oncology care (outpatient infusion setting)",
+        "route_agents": [
+          "llm",
+          "terminology"
+        ]
+      }
+    ],
+    "composite_definitions": [
+      {
+        "name": "Outpatient oncology care",
+        "min_components": 2,
+        "components": [
+          {
+            "role": "diagnosis",
+            "required_systems": [
+              "ICD10CM",
+              "ICD10"
+            ],
+            "description": "Oncology diagnosis term(s), e.g., NSCLC or malignancy."
+          },
+          {
+            "role": "visit_type",
+            "required_systems": [
+              "CPT4",
+              "CPT"
+            ],
+            "description": "Outpatient office/oncology encounter term."
+          }
+        ]
+      }
+    ]
+  },
+  "section_results": [
+    {
+      "section_id": "sec_1",
+      "criterion_type": "inclusion",
+      "text": "other key inclusion criteria is as follows, help find and add them to the previous trial protocol:",
+      "route_agents": [
+        "llm",
+        "terminology"
+      ],
+      "llm_parsed": {
+        "inclusion_concepts": [],
+        "exclusion_concepts": [],
+        "temporal_constraints": [],
+        "outcomes": []
+      },
+      "kb_hits": [],
+      "terminology_mappings": []
+    },
+    {
+      "section_id": "sec_2",
+      "criterion_type": "inclusion",
+      "text": "Evidence of first-line platinum-based chemotherapy combined with a PD-1 or PD-L1 inhibitor, identified via medication administration records",
+      "route_agents": [
+        "llm",
+        "terminology",
+        "knowledge"
+      ],
+      "llm_parsed": {
+        "inclusion_concepts": [],
+        "exclusion_concepts": [],
+        "temporal_constraints": [],
+        "outcomes": []
+      },
+      "kb_hits": [
+        {
+          "kind": "ontology",
+          "term": "id",
+          "iri": "http://www.geneontology.org/formats/oboInOwl#id",
+          "score": 0.7,
+          "evidence": {
+            "source_type": "ontology",
+            "source_file": "hp.owl",
+            "id": "http://www.geneontology.org/formats/oboInOwl#id",
+            "field": "rdfs:label",
+            "snippet": "id",
+            "extra": {}
+          }
+        },
+        {
+          "kind": "ontology",
+          "term": "base",
+          "iri": "http://purl.obolibrary.org/obo/CHEBI_22695",
+          "score": 0.7,
+          "evidence": {
+            "source_type": "ontology",
+            "source_file": "hp.owl",
+            "id": "http://purl.obolibrary.org/obo/CHEBI_22695",
+            "field": "rdfs:label",
+            "snippet": "base",
+            "extra": {}
+          }
+        }
+      ],
+      "terminology_mappings": []
+    },
+    {
+      "section_id": "sec_3",
+      "criterion_type": "other",
+      "text": "Discontinuation of first-line therapy prior to initiation of second-line docetaxel-based treatment",
+      "route_agents": [
+        "llm",
+        "terminology"
+      ],
+      "llm_parsed": {
+        "inclusion_concepts": [],
+        "exclusion_concepts": [],
+        "temporal_constraints": [],
+        "outcomes": []
+      },
+      "kb_hits": [],
+      "terminology_mappings": []
+    },
+    {
+      "section_id": "sec_4",
+      "criterion_type": "other",
+      "text": "Second-line treatment initiated within routine oncology care (outpatient infusion setting)",
+      "route_agents": [
+        "llm",
+        "terminology"
+      ],
+      "llm_parsed": {
+        "inclusion_concepts": [
+          "second-line treatment",
+          "routine oncology care",
+          "outpatient infusion setting"
+        ],
+        "exclusion_concepts": [],
+        "temporal_constraints": [
+          "within routine oncology care"
+        ],
+        "outcomes": []
+      },
+      "kb_hits": [],
+      "terminology_mappings": [
+        {
+          "term": "second-line treatment",
+          "mapped_codes": {
+            "ICD10CM": null,
+            "ICD10": null,
+            "RXNORM": null,
+            "CPT4": null,
+            "CPT": null
+          }
+        },
+        {
+          "term": "routine oncology care",
+          "mapped_codes": {
+            "ICD10CM": null,
+            "ICD10": null,
+            "RXNORM": null,
+            "CPT4": {
+              "code": "99215",
+              "term": "Outpatient oncology care",
+              "score": 0.5,
+              "evidence": {
+                "source_type": "trial_dictionary",
+                "source_file": "trial_codes.csv",
+                "id": "3",
+                "field": "term/code",
+                "snippet": "term=Outpatient oncology care | code=CPT4:99215",
+                "extra": {
+                  "system": "CPT4",
+                  "code": "99215"
+                }
+              }
+            },
+            "CPT": null
+          }
+        },
+        {
+          "term": "outpatient infusion setting",
+          "mapped_codes": {
+            "ICD10CM": null,
+            "ICD10": null,
+            "RXNORM": null,
+            "CPT4": null,
+            "CPT": null
+          }
+        }
+      ]
+    }
+  ],
+  "inclusion_concepts": [
+    "second-line treatment",
+    "routine oncology care",
+    "outpatient infusion setting"
+  ],
+  "exclusion_concepts": [],
+  "temporal_constraints": [
+    "within routine oncology care"
+  ],
+  "outcomes": [],
+  "concept_mappings": [
+    {
+      "criterion_type": "other",
+      "term": "second-line treatment",
+      "mapped_codes": {
+        "ICD10CM": null,
+        "ICD10": null,
+        "RXNORM": null,
+        "CPT4": null,
+        "CPT": null
+      }
+    },
+    {
+      "criterion_type": "other",
+      "term": "routine oncology care",
+      "mapped_codes": {
+        "ICD10CM": null,
+        "ICD10": null,
+        "RXNORM": null,
+        "CPT4": {
+          "code": "99215",
+          "term": "Outpatient oncology care",
+          "score": 0.5,
+          "evidence": {
+            "source_type": "trial_dictionary",
+            "source_file": "trial_codes.csv",
+            "id": "3",
+            "field": "term/code",
+            "snippet": "term=Outpatient oncology care | code=CPT4:99215",
+            "extra": {
+              "system": "CPT4",
+              "code": "99215"
+            }
+          }
+        },
+        "CPT": null
+      }
+    },
+    {
+      "criterion_type": "other",
+      "term": "outpatient infusion setting",
+      "mapped_codes": {
+        "ICD10CM": null,
+        "ICD10": null,
+        "RXNORM": null,
+        "CPT4": null,
+        "CPT": null
+      }
+    }
+  ],
+  "composite_concepts": []
+}

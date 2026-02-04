@@ -82,6 +82,8 @@ class TerminologyStore:
         # LOINC enrichment
         self._loinc_meta: Dict[str, Dict[str, Any]] = {}
         self._loinc_syn_index: Dict[str, List[str]] = {}  # norm_syn -> [loinc_code]
+        # Mayo CPT quick index: normalized test name -> CPT TermRecord list
+        self._mayo_cpt_index: Dict[str, List[TermRecord]] = {}
 
     # -------------------------
     # Construction
@@ -115,7 +117,14 @@ class TerminologyStore:
         else:
             store._loaded_sources.append("SKIP (missing/empty): LOINC_CUI.csv")
 
-        # 3) Optional XLSX (best-effort; safe to keep but not required)
+        # 3) Mayo CPT reference (first-line for lab/procedure lookups)
+        mayo_cpt_csv = os.path.join(data_dir, "cpt-codes-mayo.csv")
+        if os.path.exists(mayo_cpt_csv) and os.path.getsize(mayo_cpt_csv) > 0:
+            store._load_mayo_cpt_csv(mayo_cpt_csv)
+        else:
+            store._loaded_sources.append("SKIP (missing/empty): cpt-codes-mayo.csv")
+
+        # 4) Optional XLSX (best-effort; safe to keep but not required)
         for fn in ["medDRA.xlsx", "MedDRA_CTCAE_mapping_v5.xlsx"]:
             path = os.path.join(data_dir, fn)
             if os.path.exists(path) and os.path.getsize(path) > 0:
@@ -123,7 +132,7 @@ class TerminologyStore:
             else:
                 store._loaded_sources.append(f"SKIP (missing/empty): {fn}")
 
-        # 4) Post-process: attach LOINC CUI metadata to any LOINC records loaded from loinc_omop.csv
+        # 5) Post-process: attach LOINC CUI metadata to any LOINC records loaded from loinc_omop.csv
         store._attach_loinc_meta_to_existing_records()
 
         return store
@@ -155,6 +164,11 @@ class TerminologyStore:
             return []
 
         sys_norm = self._normalize_system(system) if system else None
+
+        # First-line Mayo CPT reference for lab tests / diagnostic procedures.
+        mayo_hits = self._lookup_mayo_cpt(term=term, system=sys_norm, k=k)
+        if mayo_hits:
+            return mayo_hits
 
         # 1) Exact normalized hits
         candidates: List[TermRecord] = []
@@ -216,6 +230,42 @@ class TerminologyStore:
                 return hits
 
         return []
+
+    def _lookup_mayo_cpt(self, term: str, system: Optional[str], k: int) -> List[Dict[str, Any]]:
+        q_norm = normalize_term(term)
+        if not q_norm or not self._mayo_cpt_index:
+            return []
+
+        # Use Mayo CPT first for explicit CPT queries or lab/procedure-like phrases.
+        q_tokens = set(q_norm.split())
+        is_cpt_query = system in {"CPT", "CPT4", None}
+        procedure_markers = {
+            "lab", "test", "assay", "panel", "diagnostic", "diagnosis",
+            "procedure", "infusion", "biopsy", "screen", "screening",
+        }
+        likely_procedure = bool(q_tokens & procedure_markers)
+        if not (is_cpt_query and likely_procedure) and system not in {"CPT", "CPT4"}:
+            return []
+
+        candidates: List[TermRecord] = []
+        candidates.extend(self._mayo_cpt_index.get(q_norm, []))
+        if not candidates:
+            for key, recs in self._mayo_cpt_index.items():
+                if q_tokens & set(key.split()):
+                    candidates.extend(recs)
+
+        if not candidates:
+            return []
+
+        scored: List[Tuple[float, TermRecord]] = []
+        for r in candidates:
+            score = self._score_record(query_norm=q_norm, query_tokens=q_tokens, rec=r)
+            # Mayo dictionary is designated first-line for this use-case.
+            score = min(1.0, score + 0.1)
+            scored.append((score, r))
+        scored.sort(key=lambda x: x[0], reverse=True)
+        top = scored[: max(1, k)]
+        return [self._to_hit_dict(score=s, rec=r, query=term) for s, r in top if s > 0]
 
     def lookup_code(self, code: str, system: Optional[str] = None) -> Optional[Dict[str, Any]]:
         """
@@ -433,6 +483,121 @@ class TerminologyStore:
             loaded += 1
 
         self._loaded_sources.append(f"LOADED: {os.path.basename(path)} (loinc_meta_rows={loaded})")
+
+    def _load_mayo_cpt_csv(self, path: str) -> None:
+        df = pd.read_csv(path, dtype=str, keep_default_na=False)
+        df.columns = [str(c).strip() for c in df.columns]
+
+        term_col = self._pick_col(df.columns, ["Test Name", "test_name", "test name", "name", "term", "label"])
+        code_col = self._pick_col(df.columns, ["CPT Code", "cpt_code", "cpt code", "code"])
+        mayo_id_col = self._pick_col(df.columns, ["Mayo Test ID", "mayo_test_id", "mayo test id", "test_id"])
+
+        if not term_col or not code_col:
+            self._loaded_sources.append(
+                f"SKIP (Mayo CPT schema mismatch): {os.path.basename(path)} "
+                f"(term_col={term_col}, code_col={code_col}, cols={list(df.columns)})"
+            )
+            return
+
+        loaded = 0
+        for idx, row in df.iterrows():
+            term = str(row.get(term_col, "")).strip()
+            code_raw = str(row.get(code_col, "")).strip()
+            if not term or not code_raw:
+                continue
+            term_norm = normalize_term(term)
+            if not term_norm:
+                continue
+
+            code_entries = self._parse_mayo_cpt_entries(code_raw)
+            if not code_entries:
+                continue
+
+            extra = {}
+            if mayo_id_col:
+                mtid = str(row.get(mayo_id_col, "")).strip()
+                if mtid:
+                    extra["mayo_test_id"] = mtid
+            if len(code_entries) > 1:
+                extra["mayo_panel"] = True
+
+            for i, entry in enumerate(code_entries):
+                rec_extra = dict(extra)
+                if entry.get("detail"):
+                    rec_extra["cpt_detail"] = entry["detail"]
+                if entry.get("multiplier"):
+                    rec_extra["multiplier"] = entry["multiplier"]
+                rec_extra["panel_index"] = i + 1
+
+                rec = TermRecord(
+                    system="CPT4",
+                    code=entry["code"],
+                    term=term,
+                    term_norm=term_norm,
+                    source_file=os.path.basename(path),
+                    row_id=f"{idx}:{i}",
+                    extra=rec_extra,
+                )
+                self._mayo_cpt_index.setdefault(term_norm, []).append(rec)
+                self._add_record(rec)
+                loaded += 1
+        self._loaded_sources.append(f"LOADED: {os.path.basename(path)} (rows_indexed={loaded})")
+
+    @staticmethod
+    def _parse_mayo_cpt_entries(code_raw: str) -> List[Dict[str, Any]]:
+        """
+        Parse Mayo CPT field that may contain:
+          - single code: "83916"
+          - single code with quantity: "86765 x 2"
+          - multiline code-detail panel:
+              "88184-Flow cytometry ...\\n88185-..."
+        Returns unique entries preserving first-seen order.
+        """
+        if not code_raw:
+            return []
+
+        text = str(code_raw).replace("\r\n", "\n").replace("\r", "\n")
+        lines = [ln.strip() for ln in text.split("\n") if ln.strip()]
+        if not lines:
+            lines = [text.strip()]
+
+        out: List[Dict[str, Any]] = []
+        seen: set[Tuple[str, str]] = set()
+
+        for ln in lines:
+            codes = re.findall(r"\b(\d{5})\b", ln)
+            if not codes:
+                continue
+
+            # Prefer first code in a line if multiple are present.
+            code = codes[0]
+            detail = ""
+            if "-" in ln:
+                detail = ln.split("-", 1)[1].strip()
+            mult = None
+            m = re.search(r"\bx\s*(\d+)\b", ln, flags=re.IGNORECASE)
+            if m:
+                try:
+                    mult = int(m.group(1))
+                except Exception:
+                    mult = None
+
+            key = (code, detail)
+            if key in seen:
+                continue
+            seen.add(key)
+            out.append({"code": code, "detail": detail, "multiplier": mult})
+
+        # If parser failed on line-wise pass, fallback to any unique 5-digit code in full text.
+        if not out:
+            for code in re.findall(r"\b(\d{5})\b", text):
+                key = (code, "")
+                if key in seen:
+                    continue
+                seen.add(key)
+                out.append({"code": code, "detail": "", "multiplier": None})
+
+        return out
 
     def _attach_loinc_meta_to_existing_records(self) -> None:
         """

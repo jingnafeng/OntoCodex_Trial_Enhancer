@@ -8,6 +8,7 @@ Requires-Dist: pandas
 Requires-Dist: rdflib
 Requires-Dist: requests
 Requires-Dist: pyyaml
+Requires-Dist: openpyxl
 Requires-Dist: langgraph
 Requires-Dist: langchain
 Requires-Dist: python-dotenv
