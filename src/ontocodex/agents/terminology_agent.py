@@ -7,6 +7,21 @@ def _hit_score(hit: dict) -> float:
     except Exception:
         return 0.0
 
+
+def _kb_systems(options):
+    vals = options.get("kb_systems")
+    if isinstance(vals, list) and vals:
+        out = []
+        for v in vals:
+            s = str(v).strip()
+            if s:
+                out.append(s)
+        return out or [None]
+    one = options.get("kb_system")
+    if one:
+        return [str(one).strip()]
+    return [None]
+
 def terminology_node(state: OntoCodexState) -> OntoCodexState:
     """
     Terminology Agent:
@@ -28,13 +43,15 @@ def terminology_node(state: OntoCodexState) -> OntoCodexState:
 
     data_dir = state.options.get("data_dir", "data")
     kb = get_kb(data_dir=data_dir)
+    systems = _kb_systems(state.options)
 
     for cand in state.candidates:
         hits = cand.get("kb_hits", []) or []
         if not hits:
             fallback_terms = cand.get("fallback_terms", []) or []
             for term in fallback_terms:
-                hits.extend(kb.term_store.lookup(term, system=state.options.get("kb_system"), k=5))
+                for system in systems:
+                    hits.extend(kb.term_store.lookup(term, system=system, k=5))
         if not hits:
             continue
 

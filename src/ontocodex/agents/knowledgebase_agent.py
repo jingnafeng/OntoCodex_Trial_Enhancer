@@ -19,6 +19,21 @@ def _uniq_terms(terms):
     return out
 
 
+def _kb_systems(options):
+    vals = options.get("kb_systems")
+    if isinstance(vals, list) and vals:
+        out = []
+        for v in vals:
+            s = str(v).strip()
+            if s:
+                out.append(s)
+        return out or [None]
+    one = options.get("kb_system")
+    if one:
+        return [str(one).strip()]
+    return [None]
+
+
 def _llm_expand_related_terms(state: OntoCodexState, term: str):
     llm = LocalLLM.from_options(state.options, prefix="knowledge")
     system = (
@@ -64,7 +79,7 @@ def knowledgebase_node(state: OntoCodexState) -> OntoCodexState:
         return state
 
     data_dir = state.options.get("data_dir", "data")
-    system = state.options.get("kb_system")  # optional system constraint
+    systems = _kb_systems(state.options)
     top_k = int(state.options.get("kb_top_k", 5))
 
     kb = get_kb(data_dir=data_dir)
@@ -73,7 +88,11 @@ def knowledgebase_node(state: OntoCodexState) -> OntoCodexState:
         term = cand.get("term") or cand.get("label") or cand.get("concept_name")
         if not term:
             continue
-        hits = kb.term_store.lookup(term=term, system=system, k=top_k)
+        hits = []
+        for system in systems:
+            hits = kb.term_store.lookup(term=term, system=system, k=top_k)
+            if hits:
+                break
         if hits:
             cand["kb_hits"] = hits
             continue

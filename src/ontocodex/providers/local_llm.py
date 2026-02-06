@@ -19,6 +19,7 @@ class LocalLLMConfig:
     model: str
     api_type: str = "ollama"
     api_key: Optional[str] = None
+    timeout: int = 120
 
 
 class LocalLLM:
@@ -26,11 +27,12 @@ class LocalLLM:
     A simple client for a local LLM server (e.g., Ollama, LM Studio, LocalAI).
     Defaults to Ollama's API format.
     """
-    def __init__(self, base_url: str, model: str, api_type: str = "ollama", api_key: Optional[str] = None):
+    def __init__(self, base_url: str, model: str, api_type: str = "ollama", api_key: Optional[str] = None, timeout: int = 120):
         self.base_url = base_url.rstrip("/")
         self.model = model
         self.api_type = api_type
         self.api_key = api_key
+        self.timeout = int(timeout) if timeout else 120
 
     @classmethod
     def from_options(cls, options: Dict[str, Any], prefix: str = "llm") -> LocalLLM:
@@ -52,6 +54,7 @@ class LocalLLM:
         model = options.get(f"{prefix}_model")
         api_type = options.get(f"{prefix}_api_type")
         api_key = options.get(f"{prefix}_api_key")
+        timeout = options.get(f"{prefix}_timeout")
 
         # 2. Fallback to generic 'llm_'
         if not base_url:
@@ -67,6 +70,8 @@ class LocalLLM:
                 or os.getenv("GENAI_GARDEN_KEY")
                 or os.getenv("GEMINI_API_KEY")
             )
+        if not timeout:
+            timeout = options.get("llm_timeout") or os.getenv("ONTOCODEX_LLM_TIMEOUT") or 120
 
         if api_type == "gemini":
             if not base_url or base_url == "http://localhost:11434":
@@ -74,7 +79,7 @@ class LocalLLM:
             if not model or model == "llama3":
                 model = "gemini-1.5-flash"
 
-        return cls(base_url=base_url, model=model, api_type=api_type, api_key=api_key)
+        return cls(base_url=base_url, model=model, api_type=api_type, api_key=api_key, timeout=int(timeout))
 
     def chat(
         self, 
@@ -106,7 +111,7 @@ class LocalLLM:
             }
         }
         try:
-            resp = requests.post(url, json=payload, timeout=60)
+            resp = requests.post(url, json=payload, timeout=self.timeout)
             resp.raise_for_status()
             data = resp.json()
             return data.get("message", {}).get("content", "")
@@ -126,7 +131,7 @@ class LocalLLM:
         if self.api_key:
             headers["Authorization"] = f"Bearer {self.api_key}"
         try:
-            resp = requests.post(url, json=payload, headers=headers, timeout=60)
+            resp = requests.post(url, json=payload, headers=headers, timeout=self.timeout)
             resp.raise_for_status()
             data = resp.json()
             choices = data.get("choices", [])
@@ -154,7 +159,7 @@ class LocalLLM:
             "x-goog-api-key": self.api_key,
         }
         try:
-            resp = requests.post(url, json=payload, headers=headers, timeout=60)
+            resp = requests.post(url, json=payload, headers=headers, timeout=self.timeout)
             resp.raise_for_status()
             data = resp.json()
             candidates = data.get("candidates", [])

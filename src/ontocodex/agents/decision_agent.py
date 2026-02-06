@@ -7,6 +7,21 @@ from ontocodex.providers.local_llm import LocalLLM, LocalLLMError
 from ontocodex.kb.utils import get_kb
 
 
+def _kb_systems(options: Dict[str, Any]) -> list[Optional[str]]:
+    vals = options.get("kb_systems")
+    if isinstance(vals, list) and vals:
+        out = []
+        for v in vals:
+            s = str(v).strip()
+            if s:
+                out.append(s)
+        return out or [None]
+    one = options.get("kb_system")
+    if one:
+        return [str(one).strip()]
+    return [None]
+
+
 def _split_trial_sections(trial_text: str) -> list[Dict[str, Any]]:
     parts = [p.strip() for p in trial_text.replace("\r", "\n").split("\n") if p.strip()]
     if len(parts) <= 1:
@@ -234,11 +249,15 @@ def decision_node(state: OntoCodexState) -> OntoCodexState:
         kb = get_kb(data_dir=data_dir)
         hits = []
         matched_term = term
+        systems = _kb_systems(state.options)
         for q in lookup_terms:
-            q_hits = kb.term_store.lookup(q, system=state.options.get("kb_system"))
-            if q_hits:
-                matched_term = q
-                hits = q_hits
+            for sys in systems:
+                q_hits = kb.term_store.lookup(q, system=sys)
+                if q_hits:
+                    matched_term = q
+                    hits = q_hits
+                    break
+            if hits:
                 break
 
         state.candidates = [{

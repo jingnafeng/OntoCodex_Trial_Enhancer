@@ -21,6 +21,21 @@ from .trial_orchestrator_agent import (
 from .validator_agent import validator_node
 
 
+# Start routing function
+def route_from_start(state: OntoCodexState) -> str:
+    """
+    Choose pipeline at startup:
+      - trial extraction path: go directly to decision agent
+      - ontology normalization/enrichment path: read ontology first
+    """
+    opts = state.get("options", {}) or {}
+    has_trial_text = bool(str(opts.get("trial_text", "")).strip()) or bool(str(opts.get("trial_text_file", "")).strip())
+    task_type = str(state.get("task_type", "")).lower()
+    if has_trial_text or task_type == "extract":
+        return "to_decision"
+    return "to_ontology_reader"
+
+
 # Conditional routing function
 def route_after_decision(state: OntoCodexState) -> str:
     """Routes to terminology, knowledge, or validation based on the decision."""
@@ -50,6 +65,7 @@ def create_graph():
     workflow = StateGraph(OntoCodexState)
 
     # Define the nodes
+    workflow.add_node("start_router", lambda s: s)
     workflow.add_node("read_ontology", ontology_reader_node)
     workflow.add_node("make_decision", decision_node)
     workflow.add_node("lookup_kb", knowledgebase_node)
@@ -66,9 +82,17 @@ def create_graph():
     workflow.add_node("write_output", script_node)
 
     # Set the entrypoint
-    workflow.set_entry_point("read_ontology")
+    workflow.set_entry_point("start_router")
 
     # Define the graph structure
+    workflow.add_conditional_edges(
+        "start_router",
+        route_from_start,
+        {
+            "to_ontology_reader": "read_ontology",
+            "to_decision": "make_decision",
+        },
+    )
     workflow.add_edge("read_ontology", "make_decision")
 
     # Branching from the decision node

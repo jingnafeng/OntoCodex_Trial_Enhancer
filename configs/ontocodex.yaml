@@ -6,8 +6,10 @@ llm_term_extraction: true
 llm_kb_expansion: true
 
 kb_system: "SNOMEDCT"
+kb_systems: ["ICD9", "ICD10", "CPT4", "RXNORM", "ATC", "LOINC", "SNOMEDCT"]
 kb_top_k: 5
 input_term: "Help me phenotype Type 2 diabetes"
 
 out_owl_path: "artifacts/enriched_ollama.owl"
 evidence_path: "artifacts/evidence_ollama.jsonl"
+skip_owl_write: true

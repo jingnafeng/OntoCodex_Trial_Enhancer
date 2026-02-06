@@ -1,0 +1,26 @@
+llm_base_url: "http://localhost:11434"
+#llm_model: #"gemma3" 
+llm_model: "llama3:8b"
+llm_api_type: "ollama"
+
+llm_routing: true
+llm_term_extraction: true
+llm_kb_expansion: true
+trial_strict_router: true
+llm_timeout: 240
+decision_timeout: 240
+knowledge_timeout: 240
+
+
+kb_systems: ["ICD9", "ICD10", "CPT", "RXNORM", "ATC", "LOINC"]
+# Backward-compatible fallback:
+kb_system: "SNOMEDCT"
+kb_top_k: 10
+
+trial_text_file: "test_bash/trial_protocol_fullpage.txt"
+
+skip_owl_write: true
+
+out_owl_path: "artifacts/enriched_trial_fullpage.owl"
+evidence_path: "artifacts/evidence_trial_fullpage.jsonl"
+trial_output_path: "artifacts/trial_parser_fullpage.json"

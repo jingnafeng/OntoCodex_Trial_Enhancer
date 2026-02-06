@@ -1,0 +1,23 @@
+Title: Comparative Effectiveness of SLND alone vs. ALND in Women and Men with T1-T2 N0 Breast Cancer and Positive Sentinel Nodes.
+I. Study Population & Eligibility
+Demographics: Adults (Age $\ge$ 18), Male and Female.
+Active Disease Confirmation: A malignant breast cancer diagnosis code (ICD-9: 174.x, 175.x; ICD-10: C50.x) must be present within the 90-day baseline lookback prior to the Index Surgery.
+Clinical Stage: T1-T2 ($< 5$ cm), clinically node-negative (N0).
+Pathological Inclusion: 1-2 positive sentinel lymph nodes (SLNs) identified via Hematoxylin and Eosin (H&E) staining.
+II. Standardized Temporal Windows
+Index Date ($T_0$): Date of Index Breast Conserving Surgery (Lumpectomy).
+Baseline Lookback (90 Days): All baseline assessments occur within $[T_0 - 90\text{ days}, T_0]$.
+Comorbidities, Vitals, and Labs: Captured in the 90 days prior to surgery.
+Neoadjuvant Exclusion: Receipt of any systemic antineoplastic therapy (ATC L01) or endocrine therapy (ATC L02) in the 90 days prior to $T_0$ triggers exclusion.
+Prior Malignancy (Unlimited): History of any other malignancy (excluding non-melanoma skin cancer) at any point prior to $T_0$ triggers exclusion to ensure a newly diagnosed primary cohort.
+Treatment Window (90 Days): Symmetrical window $[T_0, T_0 + 90\text{ days}]$ used for arm assignment.
+III. Treatment Arm Assignment (Symmetrical 90-Day Rule)
+Comparator (ALND): Presence of Axillary Lymph Node Dissection procedure codes (CPT: 38740, 38745) within 90 days of the Index Date.
+Intervention (SLND): Absence of ALND procedure codes within 90 days of the Index Date.
+IV. Defined Endpoints
+Primary Endpoint:
+Overall Survival (OS): Time from $T_0$ to death from any cause.
+Secondary Endpoints:
+Breast Cancer Specific Survival (BCSS): Time from $T_0$ to death specifically attributed to breast cancer (ICD-9: 174.x; ICD-10: C50.x).
+Axillary Recurrence (AR): New malignancy code in the ipsilateral axillary region (ICD-9: 196.3) or an ALND procedure occurring after the 90-day treatment window ($> T_0 + 90\text{ days}$).
+Locoregional Recurrence (LRR): Composite endpoint of Axillary Recurrence (AR) or local recurrence in the ipsilateral breast.

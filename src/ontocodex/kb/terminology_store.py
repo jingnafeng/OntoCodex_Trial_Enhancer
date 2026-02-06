@@ -3,12 +3,16 @@ from __future__ import annotations
 
 import os
 import re
+import json
 from dataclasses import dataclass
 from typing import Any, Dict, Iterable, List, Optional, Tuple
 
 import pandas as pd
+from rdflib import Graph, Literal
+from rdflib.namespace import RDFS
 
 from ontocodex.kb.evidence import Evidence
+from ontocodex.providers.local_llm import LocalLLM, LocalLLMError
 
 
 # -------------------------
@@ -17,9 +21,92 @@ from ontocodex.kb.evidence import Evidence
 
 _CAMEL_SPLIT_RE = re.compile(r"(?<=[a-z])(?=[A-Z])")
 _NON_ALNUM_RE = re.compile(r"[^a-z0-9]+")
+_ICD10_RE = re.compile(r"\b([A-TV-Z][0-9]{2}(?:\.[0-9A-ZxX]+)?)\b")
+_ICD9_RE = re.compile(r"\b([0-9]{3}(?:\.[0-9]+)?)\b")
+_LLM_NORM_CACHE: Dict[Tuple[str, str], str] = {}
 
 
-def normalize_term(text: str) -> str:
+class _OntologyNormalizer:
+    def __init__(self) -> None:
+        self.label_by_norm: Dict[str, str] = {}
+        self.icd_by_norm: Dict[str, List[Tuple[str, str]]] = {}
+        self.loaded_files: List[str] = []
+
+    def load(self, data_dir: str) -> None:
+        if self.loaded_files:
+            return
+        for fn in ("doid.owl", "DOID.owl", "hp.owl", "HP.owl"):
+            path = os.path.join(data_dir, fn)
+            if not os.path.exists(path):
+                continue
+            g = Graph()
+            try:
+                g.parse(path)
+            except Exception:
+                continue
+            self.loaded_files.append(os.path.basename(path))
+            for subj, label in g.subject_objects(RDFS.label):
+                if not isinstance(label, Literal):
+                    continue
+                label_str = str(label).strip()
+                label_norm = normalize_term(label_str, use_llm=False)
+                if not label_norm:
+                    continue
+                self.label_by_norm.setdefault(label_norm, label_str)
+
+                # xref-based ICD extraction for this ontology term
+                icd_pairs: List[Tuple[str, str]] = []
+                for p, o in g.predicate_objects(subj):
+                    pname = str(p).lower()
+                    if "xref" not in pname and "cross" not in pname and "alternativeid" not in pname:
+                        continue
+                    text = str(o).strip()
+                    for c in _ICD10_RE.findall(text):
+                        icd_pairs.append(("ICD10", c.upper()))
+                    for c in _ICD9_RE.findall(text):
+                        if c.startswith("0"):
+                            continue
+                        icd_pairs.append(("ICD9", c))
+                if icd_pairs:
+                    seen = set()
+                    uniq = []
+                    for pair in icd_pairs:
+                        if pair in seen:
+                            continue
+                        seen.add(pair)
+                        uniq.append(pair)
+                    self.icd_by_norm.setdefault(label_norm, []).extend(uniq)
+
+
+_ONTO_NORM: Optional[_OntologyNormalizer] = None
+
+
+def _get_ontology_normalizer(data_dir: str) -> _OntologyNormalizer:
+    global _ONTO_NORM
+    if _ONTO_NORM is None:
+        _ONTO_NORM = _OntologyNormalizer()
+    _ONTO_NORM.load(data_dir=data_dir)
+    return _ONTO_NORM
+
+
+def _parse_llm_json(text: str) -> Dict[str, Any]:
+    try:
+        data = json.loads(text)
+        return data if isinstance(data, dict) else {}
+    except Exception:
+        pass
+    s = text.find("{")
+    e = text.rfind("}")
+    if s == -1 or e == -1 or e <= s:
+        return {}
+    try:
+        data = json.loads(text[s : e + 1])
+        return data if isinstance(data, dict) else {}
+    except Exception:
+        return {}
+
+
+def normalize_term(text: str, use_llm: bool = False, data_dir: str = "data") -> str:
     """
     Normalize a term for lookup:
     - split camelCase
@@ -32,11 +119,58 @@ def normalize_term(text: str) -> str:
     s = str(text).strip()
     if not s:
         return ""
+    original = s
     s = _CAMEL_SPLIT_RE.sub(" ", s)
     s = s.lower()
     s = _NON_ALNUM_RE.sub(" ", s)
     s = " ".join(s.split())
-    return s
+    if not use_llm:
+        return s
+
+    # LLM-assisted canonical term rewrite (best-effort, safe fallback).
+    if use_llm:
+        cache_key = (s, data_dir)
+        cached = _LLM_NORM_CACHE.get(cache_key)
+        if cached is not None:
+            return cached
+
+    llm_term = original
+    try:
+        llm = LocalLLM.from_options({"llm_api_type": os.getenv("ONTOCODEX_NORMALIZE_API_TYPE", "ollama")})
+        raw = llm.chat(
+            messages=[
+                {
+                    "role": "system",
+                    "content": (
+                        "Normalize this medical phrase into a concise canonical clinical concept. "
+                        "Return JSON: {\"canonical_term\": \"...\"}."
+                    ),
+                },
+                {"role": "user", "content": original},
+            ],
+            temperature=0.0,
+            max_tokens=80,
+        )
+        data = _parse_llm_json(raw)
+        cand = str(data.get("canonical_term", "")).strip()
+        if cand:
+            llm_term = cand
+    except LocalLLMError:
+        pass
+    except Exception:
+        pass
+
+    llm_norm = normalize_term(llm_term, use_llm=False)
+    onto = _get_ontology_normalizer(data_dir=data_dir)
+    if llm_norm in onto.label_by_norm:
+        out = normalize_term(onto.label_by_norm[llm_norm], use_llm=False)
+        _LLM_NORM_CACHE[cache_key] = out
+        return out
+
+    # fallback to the deterministic normalized value if no ontology alignment
+    out = llm_norm or s
+    _LLM_NORM_CACHE[cache_key] = out
+    return out
 
 
 def jaccard(a: set[str], b: set[str]) -> float:
@@ -84,6 +218,7 @@ class TerminologyStore:
         self._loinc_syn_index: Dict[str, List[str]] = {}  # norm_syn -> [loinc_code]
         # Mayo CPT quick index: normalized test name -> CPT TermRecord list
         self._mayo_cpt_index: Dict[str, List[TermRecord]] = {}
+        self._data_dir: str = "data"
 
     # -------------------------
     # Construction
@@ -92,6 +227,7 @@ class TerminologyStore:
     @classmethod
     def from_dir(cls, data_dir: str = "data") -> "TerminologyStore":
         store = cls()
+        store._data_dir = data_dir
 
         # 1) Load OMOP mapping CSVs (authoritative deterministic layer)
         csv_files = [
@@ -159,7 +295,8 @@ class TerminologyStore:
         if not term or not str(term).strip():
             return []
 
-        q_norm = normalize_term(term)
+        use_llm = bool(self._use_llm_normalization(term))
+        q_norm = normalize_term(term, use_llm=use_llm, data_dir=self._data_dir)
         if not q_norm:
             return []
 
@@ -201,6 +338,12 @@ class TerminologyStore:
             top = scored[: max(1, k)]
             return [self._to_hit_dict(score=s, rec=r, query=term) for s, r in top if s > 0]
 
+        # 2b) Ontology-based ICD mapping fallback from DOID/HP xrefs.
+        if sys_norm in {"ICD9", "ICD10"}:
+            onto_hits = self._lookup_ontology_icd(term=term, q_norm=q_norm, sys_norm=sys_norm, k=k)
+            if onto_hits:
+                return onto_hits
+
         # 3) LOINC synonym fallback (optional): only if system is LOINC or not specified
         if (sys_norm is None or sys_norm == "LOINC") and self._loinc_syn_index:
             codes = self._loinc_syn_index.get(q_norm, [])
@@ -230,6 +373,62 @@ class TerminologyStore:
                 return hits
 
         return []
+
+    def _use_llm_normalization(self, term: str) -> bool:
+        """
+        Use LLM normalization only for longer free-text prompts.
+        """
+        if not term:
+            return False
+        min_chars = int(os.getenv("ONTOCODEX_LLM_NORM_MIN_CHARS", "48"))
+        max_tokens = int(os.getenv("ONTOCODEX_LLM_NORM_MAX_TOKENS", "10"))
+        t = str(term).strip()
+        if len(t) < min_chars:
+            return False
+        token_count = len(t.split())
+        return token_count >= max_tokens
+
+    def _lookup_ontology_icd(self, term: str, q_norm: str, sys_norm: str, k: int) -> List[Dict[str, Any]]:
+        onto = _get_ontology_normalizer(self._data_dir)
+        candidates = onto.icd_by_norm.get(q_norm, [])
+        if not candidates:
+            # token-overlap fallback
+            q_tokens = set(q_norm.split())
+            for key, icds in onto.icd_by_norm.items():
+                if q_tokens & set(key.split()):
+                    candidates.extend(icds)
+        hits: List[Dict[str, Any]] = []
+        seen = set()
+        for system, code in candidates:
+            if system != sys_norm:
+                continue
+            key = (system, code)
+            if key in seen:
+                continue
+            seen.add(key)
+            ev = Evidence(
+                source_type="ontology",
+                source_file="doid.owl/hp.owl",
+                id=code,
+                field="xref",
+                snippet=f"ontology ICD mapping {system}:{code}",
+                extra={"system": system, "code": code},
+            ).to_dict()
+            hits.append(
+                {
+                    "kind": "ontology",
+                    "query": term,
+                    "term": term,
+                    "system": system,
+                    "code": code,
+                    "score": 0.85,
+                    "evidence": ev,
+                    "extra": {},
+                }
+            )
+            if len(hits) >= max(1, k):
+                break
+        return hits
 
     def _lookup_mayo_cpt(self, term: str, system: Optional[str], k: int) -> List[Dict[str, Any]]:
         q_norm = normalize_term(term)

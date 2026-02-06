@@ -1,0 +1,6031 @@
+{
+  "input_text": "Title: Comparative Effectiveness of SLND alone vs. ALND in Women and Men with T1-T2 N0 Breast Cancer and Positive Sentinel Nodes.\nI. Study Population & Eligibility\nDemographics: Adults (Age $\\ge$ 18), Male and Female.\nActive Disease Confirmation: A malignant breast cancer diagnosis code (ICD-9: 174.x, 175.x; ICD-10: C50.x) must be present within the 90-day baseline lookback prior to the Index Surgery.\nClinical Stage: T1-T2 ($< 5$ cm), clinically node-negative (N0).\nPathological Inclusion: 1-2 positive sentinel lymph nodes (SLNs) identified via Hematoxylin and Eosin (H&E) staining.\nII. Standardized Temporal Windows\nIndex Date ($T_0$): Date of Index Breast Conserving Surgery (Lumpectomy).\nBaseline Lookback (90 Days): All baseline assessments occur within $[T_0 - 90\\text{ days}, T_0]$.\nComorbidities, Vitals, and Labs: Captured in the 90 days prior to surgery.\nNeoadjuvant Exclusion: Receipt of any systemic antineoplastic therapy (ATC L01) or endocrine therapy (ATC L02) in the 90 days prior to $T_0$ triggers exclusion.\nPrior Malignancy (Unlimited): History of any other malignancy (excluding non-melanoma skin cancer) at any point prior to $T_0$ triggers exclusion to ensure a newly diagnosed primary cohort.\nTreatment Window (90 Days): Symmetrical window $[T_0, T_0 + 90\\text{ days}]$ used for arm assignment.\nIII. Treatment Arm Assignment (Symmetrical 90-Day Rule)\nComparator (ALND): Presence of Axillary Lymph Node Dissection procedure codes (CPT: 38740, 38745) within 90 days of the Index Date.\nIntervention (SLND): Absence of ALND procedure codes within 90 days of the Index Date.\nIV. Defined Endpoints\nPrimary Endpoint:\nOverall Survival (OS): Time from $T_0$ to death from any cause.\nSecondary Endpoints:\nBreast Cancer Specific Survival (BCSS): Time from $T_0$ to death specifically attributed to breast cancer (ICD-9: 174.x; ICD-10: C50.x).\nAxillary Recurrence (AR): New malignancy code in the ipsilateral axillary region (ICD-9: 196.3) or an ALND procedure occurring after the 90-day treatment window ($> T_0 + 90\\text{ days}$).\nLocoregional Recurrence (LRR): Composite endpoint of Axillary Recurrence (AR) or local recurrence in the ipsilateral breast.\n",
+  "decision_plan": {
+    "mode": "trial_parser",
+    "composite_term_strategy": {
+      "enabled": true,
+      "require_multi_term_for_composites": true,
+      "default_min_components": 2
+    },
+    "section_strategy": {
+      "enabled": true,
+      "split_by_paragraph_or_sentence": true,
+      "agent_router": "decision_agent"
+    },
+    "criteria_sections": [
+      {
+        "id": "sec_1",
+        "criterion_type": "other",
+        "text": "Title: Comparative Effectiveness of SLND alone vs. ALND in Women and Men with T1-T2 N0 Breast Cancer and Positive Sentinel Nodes.",
+        "route_agents": [
+          "llm",
+          "terminology"
+        ]
+      },
+      {
+        "id": "sec_2",
+        "criterion_type": "other",
+        "text": "I. Study Population & Eligibility",
+        "route_agents": [
+          "llm",
+          "terminology"
+        ]
+      },
+      {
+        "id": "sec_3",
+        "criterion_type": "other",
+        "text": "Demographics: Adults (Age $\\ge$ 18), Male and Female.",
+        "route_agents": [
+          "llm",
+          "terminology"
+        ]
+      },
+      {
+        "id": "sec_4",
+        "criterion_type": "inclusion",
+        "text": "Active Disease Confirmation: A malignant breast cancer diagnosis code (ICD-9: 174.x, 175.x; ICD-10: C50.x) must be present within the 90-day baseline lookback prior to the Index Surgery.",
+        "route_agents": [
+          "llm",
+          "terminology"
+        ]
+      },
+      {
+        "id": "sec_5",
+        "criterion_type": "other",
+        "text": "Clinical Stage: T1-T2 ($< 5$ cm), clinically node-negative (N0).",
+        "route_agents": [
+          "llm",
+          "terminology"
+        ]
+      },
+      {
+        "id": "sec_6",
+        "criterion_type": "inclusion",
+        "text": "Pathological Inclusion: 1-2 positive sentinel lymph nodes (SLNs) identified via Hematoxylin and Eosin (H&E) staining.",
+        "route_agents": [
+          "llm",
+          "terminology"
+        ]
+      },
+      {
+        "id": "sec_7",
+        "criterion_type": "other",
+        "text": "II. Standardized Temporal Windows",
+        "route_agents": [
+          "llm",
+          "terminology"
+        ]
+      },
+      {
+        "id": "sec_8",
+        "criterion_type": "other",
+        "text": "Index Date ($T_0$): Date of Index Breast Conserving Surgery (Lumpectomy).",
+        "route_agents": [
+          "llm",
+          "terminology"
+        ]
+      },
+      {
+        "id": "sec_9",
+        "criterion_type": "other",
+        "text": "Baseline Lookback (90 Days): All baseline assessments occur within $[T_0 - 90\\text{ days}, T_0]$.",
+        "route_agents": [
+          "llm",
+          "terminology"
+        ]
+      },
+      {
+        "id": "sec_10",
+        "criterion_type": "other",
+        "text": "Comorbidities, Vitals, and Labs: Captured in the 90 days prior to surgery.",
+        "route_agents": [
+          "llm",
+          "terminology"
+        ]
+      },
+      {
+        "id": "sec_11",
+        "criterion_type": "exclusion",
+        "text": "Neoadjuvant Exclusion: Receipt of any systemic antineoplastic therapy (ATC L01) or endocrine therapy (ATC L02) in the 90 days prior to $T_0$ triggers exclusion.",
+        "route_agents": [
+          "llm",
+          "terminology"
+        ]
+      },
+      {
+        "id": "sec_12",
+        "criterion_type": "exclusion",
+        "text": "Prior Malignancy (Unlimited): History of any other malignancy (excluding non-melanoma skin cancer) at any point prior to $T_0$ triggers exclusion to ensure a newly diagnosed primary cohort.",
+        "route_agents": [
+          "llm",
+          "terminology"
+        ]
+      },
+      {
+        "id": "sec_13",
+        "criterion_type": "other",
+        "text": "Treatment Window (90 Days): Symmetrical window $[T_0, T_0 + 90\\text{ days}]$ used for arm assignment.",
+        "route_agents": [
+          "llm",
+          "terminology"
+        ]
+      },
+      {
+        "id": "sec_14",
+        "criterion_type": "other",
+        "text": "III. Treatment Arm Assignment (Symmetrical 90-Day Rule)",
+        "route_agents": [
+          "llm",
+          "terminology"
+        ]
+      },
+      {
+        "id": "sec_15",
+        "criterion_type": "other",
+        "text": "Comparator (ALND): Presence of Axillary Lymph Node Dissection procedure codes (CPT: 38740, 38745) within 90 days of the Index Date.",
+        "route_agents": [
+          "llm",
+          "terminology"
+        ]
+      },
+      {
+        "id": "sec_16",
+        "criterion_type": "other",
+        "text": "Intervention (SLND): Absence of ALND procedure codes within 90 days of the Index Date.",
+        "route_agents": [
+          "llm",
+          "terminology"
+        ]
+      },
+      {
+        "id": "sec_17",
+        "criterion_type": "outcome",
+        "text": "IV. Defined Endpoints",
+        "route_agents": [
+          "llm",
+          "terminology"
+        ]
+      },
+      {
+        "id": "sec_18",
+        "criterion_type": "outcome",
+        "text": "Primary Endpoint:",
+        "route_agents": [
+          "llm",
+          "terminology"
+        ]
+      },
+      {
+        "id": "sec_19",
+        "criterion_type": "other",
+        "text": "Overall Survival (OS): Time from $T_0$ to death from any cause.",
+        "route_agents": [
+          "llm",
+          "terminology"
+        ]
+      },
+      {
+        "id": "sec_20",
+        "criterion_type": "outcome",
+        "text": "Secondary Endpoints:",
+        "route_agents": [
+          "llm",
+          "terminology"
+        ]
+      },
+      {
+        "id": "sec_21",
+        "criterion_type": "other",
+        "text": "Breast Cancer Specific Survival (BCSS): Time from $T_0$ to death specifically attributed to breast cancer (ICD-9: 174.x; ICD-10: C50.x).",
+        "route_agents": [
+          "llm",
+          "terminology"
+        ]
+      },
+      {
+        "id": "sec_22",
+        "criterion_type": "other",
+        "text": "Axillary Recurrence (AR): New malignancy code in the ipsilateral axillary region (ICD-9: 196.3) or an ALND procedure occurring after the 90-day treatment window ($> T_0 + 90\\text{ days}$).",
+        "route_agents": [
+          "llm",
+          "terminology"
+        ]
+      },
+      {
+        "id": "sec_23",
+        "criterion_type": "outcome",
+        "text": "Locoregional Recurrence (LRR): Composite endpoint of Axillary Recurrence (AR) or local recurrence in the ipsilateral breast.",
+        "route_agents": [
+          "llm",
+          "terminology"
+        ]
+      }
+    ],
+    "composite_definitions": []
+  },
+  "section_results": [
+    {
+      "section_id": "sec_1",
+      "criterion_type": "other",
+      "text": "Title: Comparative Effectiveness of SLND alone vs. ALND in Women and Men with T1-T2 N0 Breast Cancer and Positive Sentinel Nodes.",
+      "route_agents": [
+        "llm",
+        "terminology"
+      ],
+      "llm_parsed": {
+        "inclusion_concepts": [
+          "T1-T2 N0 Breast Cancer",
+          "Positive Sentinel Nodes",
+          "Women",
+          "Men"
+        ],
+        "exclusion_concepts": [],
+        "temporal_constraints": [
+          "SLND",
+          "ALND"
+        ],
+        "outcomes": [
+          "Comparative Effectiveness"
+        ]
+      },
+      "kb_hits": [],
+      "terminology_mappings": [
+        {
+          "term": "T1-T2 N0 Breast Cancer",
+          "mapped_codes": {
+            "ICD10CM": null,
+            "ICD10": {
+              "code": "C24.1",
+              "term": "T1-T2 N0 Breast Cancer",
+              "score": 0.85,
+              "evidence": {
+                "source_type": "ontology",
+                "source_file": "doid.owl/hp.owl",
+                "id": "C24.1",
+                "field": "xref",
+                "snippet": "ontology ICD mapping ICD10:C24.1",
+                "extra": {
+                  "system": "ICD10",
+                  "code": "C24.1"
+                }
+              }
+            },
+            "RXNORM": null,
+            "CPT4": {
+              "code": "81432",
+              "term": "Hereditary Breast/Gynecologic Cancer Panel, Varies",
+              "score": 0.3222222222222222,
+              "evidence": {
+                "source_type": "csv/xlsx",
+                "source_file": "cpt-codes-mayo.csv",
+                "id": "3112:0",
+                "field": "term/code",
+                "snippet": "term=Hereditary Breast/Gynecologic Cancer Panel, Varies | code=CPT4:81432",
+                "extra": {
+                  "system": "CPT4",
+                  "code": "81432",
+                  "mayo_test_id": "BRGYP",
+                  "panel_index": 1
+                }
+              }
+            },
+            "CPT": {
+              "code": "81432",
+              "term": "Hereditary Breast/Gynecologic Cancer Panel, Varies",
+              "score": 0.3222222222222222,
+              "evidence": {
+                "source_type": "csv/xlsx",
+                "source_file": "cpt-codes-mayo.csv",
+                "id": "3112:0",
+                "field": "term/code",
+                "snippet": "term=Hereditary Breast/Gynecologic Cancer Panel, Varies | code=CPT4:81432",
+                "extra": {
+                  "system": "CPT4",
+                  "code": "81432",
+                  "mayo_test_id": "BRGYP",
+                  "panel_index": 1
+                }
+              }
+            }
+          }
+        },
+        {
+          "term": "Positive Sentinel Nodes",
+          "mapped_codes": {
+            "ICD10CM": null,
+            "ICD10": {
+              "code": "D81.1",
+              "term": "Positive Sentinel Nodes",
+              "score": 0.85,
+              "evidence": {
+                "source_type": "ontology",
+                "source_file": "doid.owl/hp.owl",
+                "id": "D81.1",
+                "field": "xref",
+                "snippet": "ontology ICD mapping ICD10:D81.1",
+                "extra": {
+                  "system": "ICD10",
+                  "code": "D81.1"
+                }
+              }
+            },
+            "RXNORM": null,
+            "CPT4": null,
+            "CPT": null
+          }
+        },
+        {
+          "term": "Women",
+          "mapped_codes": {
+            "ICD10CM": null,
+            "ICD10": null,
+            "RXNORM": null,
+            "CPT4": null,
+            "CPT": null
+          }
+        },
+        {
+          "term": "Men",
+          "mapped_codes": {
+            "ICD10CM": null,
+            "ICD10": null,
+            "RXNORM": null,
+            "CPT4": null,
+            "CPT": null
+          }
+        },
+        {
+          "term": "Comparative Effectiveness",
+          "mapped_codes": {
+            "ICD10CM": null,
+            "ICD10": null,
+            "RXNORM": null,
+            "CPT4": null,
+            "CPT": null
+          }
+        }
+      ]
+    },
+    {
+      "section_id": "sec_2",
+      "criterion_type": "other",
+      "text": "I. Study Population & Eligibility",
+      "route_agents": [
+        "llm",
+        "terminology"
+      ],
+      "llm_parsed": {
+        "inclusion_concepts": [],
+        "exclusion_concepts": [],
+        "temporal_constraints": [],
+        "outcomes": []
+      },
+      "kb_hits": [],
+      "terminology_mappings": []
+    },
+    {
+      "section_id": "sec_3",
+      "criterion_type": "other",
+      "text": "Demographics: Adults (Age $\\ge$ 18), Male and Female.",
+      "route_agents": [
+        "llm",
+        "terminology"
+      ],
+      "llm_parsed": {
+        "inclusion_concepts": [
+          "Adults",
+          "Age >= 18",
+          "Male",
+          "Female"
+        ],
+        "exclusion_concepts": [],
+        "temporal_constraints": [],
+        "outcomes": []
+      },
+      "kb_hits": [],
+      "terminology_mappings": [
+        {
+          "term": "Adults",
+          "mapped_codes": {
+            "ICD10CM": null,
+            "ICD10": null,
+            "RXNORM": null,
+            "CPT4": null,
+            "CPT": null
+          }
+        },
+        {
+          "term": "Age >= 18",
+          "mapped_codes": {
+            "ICD10CM": null,
+            "ICD10": {
+              "code": "E23.0",
+              "term": "Age >= 18",
+              "score": 0.85,
+              "evidence": {
+                "source_type": "ontology",
+                "source_file": "doid.owl/hp.owl",
+                "id": "E23.0",
+                "field": "xref",
+                "snippet": "ontology ICD mapping ICD10:E23.0",
+                "extra": {
+                  "system": "ICD10",
+                  "code": "E23.0"
+                }
+              }
+            },
+            "RXNORM": null,
+            "CPT4": {
+              "code": "82542",
+              "term": "18-Hydroxycorticosterone, Serum",
+              "score": 0.35,
+              "evidence": {
+                "source_type": "csv/xlsx",
+                "source_file": "cpt-codes-mayo.csv",
+                "id": "1502:0",
+                "field": "term/code",
+                "snippet": "term=18-Hydroxycorticosterone, Serum | code=CPT4:82542",
+                "extra": {
+                  "system": "CPT4",
+                  "code": "82542",
+                  "mayo_test_id": "FHC18",
+                  "panel_index": 1
+                }
+              }
+            },
+            "CPT": {
+              "code": "82542",
+              "term": "18-Hydroxycorticosterone, Serum",
+              "score": 0.35,
+              "evidence": {
+                "source_type": "csv/xlsx",
+                "source_file": "cpt-codes-mayo.csv",
+                "id": "1502:0",
+                "field": "term/code",
+                "snippet": "term=18-Hydroxycorticosterone, Serum | code=CPT4:82542",
+                "extra": {
+                  "system": "CPT4",
+                  "code": "82542",
+                  "mayo_test_id": "FHC18",
+                  "panel_index": 1
+                }
+              }
+            }
+          }
+        },
+        {
+          "term": "Male",
+          "mapped_codes": {
+            "ICD10CM": null,
+            "ICD10": {
+              "code": "N50.1",
+              "term": "Male",
+              "score": 0.85,
+              "evidence": {
+                "source_type": "ontology",
+                "source_file": "doid.owl/hp.owl",
+                "id": "N50.1",
+                "field": "xref",
+                "snippet": "ontology ICD mapping ICD10:N50.1",
+                "extra": {
+                  "system": "ICD10",
+                  "code": "N50.1"
+                }
+              }
+            },
+            "RXNORM": null,
+            "CPT4": null,
+            "CPT": null
+          }
+        },
+        {
+          "term": "Female",
+          "mapped_codes": {
+            "ICD10CM": null,
+            "ICD10": {
+              "code": "C57",
+              "term": "Female",
+              "score": 0.85,
+              "evidence": {
+                "source_type": "ontology",
+                "source_file": "doid.owl/hp.owl",
+                "id": "C57",
+                "field": "xref",
+                "snippet": "ontology ICD mapping ICD10:C57",
+                "extra": {
+                  "system": "ICD10",
+                  "code": "C57"
+                }
+              }
+            },
+            "RXNORM": null,
+            "CPT4": null,
+            "CPT": null
+          }
+        }
+      ]
+    },
+    {
+      "section_id": "sec_4",
+      "criterion_type": "inclusion",
+      "text": "Active Disease Confirmation: A malignant breast cancer diagnosis code (ICD-9: 174.x, 175.x; ICD-10: C50.x) must be present within the 90-day baseline lookback prior to the Index Surgery.",
+      "route_agents": [
+        "llm",
+        "terminology"
+      ],
+      "llm_parsed": {
+        "inclusion_concepts": [
+          "malignant breast cancer",
+          "ICD-9: 174.x",
+          "ICD-9: 175.x",
+          "ICD-10: C50.x"
+        ],
+        "exclusion_concepts": [],
+        "temporal_constraints": [
+          "90-day baseline lookback prior to the Index Surgery"
+        ],
+        "outcomes": []
+      },
+      "kb_hits": [],
+      "terminology_mappings": [
+        {
+          "term": "malignant breast cancer",
+          "mapped_codes": {
+            "ICD10CM": null,
+            "ICD10": {
+              "code": "C24.1",
+              "term": "malignant breast cancer",
+              "score": 0.85,
+              "evidence": {
+                "source_type": "ontology",
+                "source_file": "doid.owl/hp.owl",
+                "id": "C24.1",
+                "field": "xref",
+                "snippet": "ontology ICD mapping ICD10:C24.1",
+                "extra": {
+                  "system": "ICD10",
+                  "code": "C24.1"
+                }
+              }
+            },
+            "RXNORM": null,
+            "CPT4": {
+              "code": "81432",
+              "term": "Hereditary Breast/Gynecologic Cancer Panel, Varies",
+              "score": 0.3857142857142857,
+              "evidence": {
+                "source_type": "csv/xlsx",
+                "source_file": "cpt-codes-mayo.csv",
+                "id": "3112:0",
+                "field": "term/code",
+                "snippet": "term=Hereditary Breast/Gynecologic Cancer Panel, Varies | code=CPT4:81432",
+                "extra": {
+                  "system": "CPT4",
+                  "code": "81432",
+                  "mayo_test_id": "BRGYP",
+                  "panel_index": 1
+                }
+              }
+            },
+            "CPT": {
+              "code": "81432",
+              "term": "Hereditary Breast/Gynecologic Cancer Panel, Varies",
+              "score": 0.3857142857142857,
+              "evidence": {
+                "source_type": "csv/xlsx",
+                "source_file": "cpt-codes-mayo.csv",
+                "id": "3112:0",
+                "field": "term/code",
+                "snippet": "term=Hereditary Breast/Gynecologic Cancer Panel, Varies | code=CPT4:81432",
+                "extra": {
+                  "system": "CPT4",
+                  "code": "81432",
+                  "mayo_test_id": "BRGYP",
+                  "panel_index": 1
+                }
+              }
+            }
+          }
+        },
+        {
+          "term": "ICD-9: 174.x",
+          "mapped_codes": {
+            "ICD10CM": null,
+            "ICD10": {
+              "code": "H90.3",
+              "term": "ICD-9: 174.x",
+              "score": 0.85,
+              "evidence": {
+                "source_type": "ontology",
+                "source_file": "doid.owl/hp.owl",
+                "id": "H90.3",
+                "field": "xref",
+                "snippet": "ontology ICD mapping ICD10:H90.3",
+                "extra": {
+                  "system": "ICD10",
+                  "code": "H90.3"
+                }
+              }
+            },
+            "RXNORM": null,
+            "CPT4": {
+              "code": "85335",
+              "term": "Factor X Inhibitor Screen, Plasma",
+              "score": 0.225,
+              "evidence": {
+                "source_type": "csv/xlsx",
+                "source_file": "cpt-codes-mayo.csv",
+                "id": "27:0",
+                "field": "term/code",
+                "snippet": "term=Factor X Inhibitor Screen, Plasma | code=CPT4:85335",
+                "extra": {
+                  "system": "CPT4",
+                  "code": "85335",
+                  "mayo_test_id": "10_IS",
+                  "panel_index": 1
+                }
+              }
+            },
+            "CPT": {
+              "code": "85335",
+              "term": "Factor X Inhibitor Screen, Plasma",
+              "score": 0.225,
+              "evidence": {
+                "source_type": "csv/xlsx",
+                "source_file": "cpt-codes-mayo.csv",
+                "id": "27:0",
+                "field": "term/code",
+                "snippet": "term=Factor X Inhibitor Screen, Plasma | code=CPT4:85335",
+                "extra": {
+                  "system": "CPT4",
+                  "code": "85335",
+                  "mayo_test_id": "10_IS",
+                  "panel_index": 1
+                }
+              }
+            }
+          }
+        },
+        {
+          "term": "ICD-9: 175.x",
+          "mapped_codes": {
+            "ICD10CM": null,
+            "ICD10": {
+              "code": "H90.3",
+              "term": "ICD-9: 175.x",
+              "score": 0.85,
+              "evidence": {
+                "source_type": "ontology",
+                "source_file": "doid.owl/hp.owl",
+                "id": "H90.3",
+                "field": "xref",
+                "snippet": "ontology ICD mapping ICD10:H90.3",
+                "extra": {
+                  "system": "ICD10",
+                  "code": "H90.3"
+                }
+              }
+            },
+            "RXNORM": null,
+            "CPT4": {
+              "code": "85335",
+              "term": "Factor X Inhibitor Screen, Plasma",
+              "score": 0.225,
+              "evidence": {
+                "source_type": "csv/xlsx",
+                "source_file": "cpt-codes-mayo.csv",
+                "id": "27:0",
+                "field": "term/code",
+                "snippet": "term=Factor X Inhibitor Screen, Plasma | code=CPT4:85335",
+                "extra": {
+                  "system": "CPT4",
+                  "code": "85335",
+                  "mayo_test_id": "10_IS",
+                  "panel_index": 1
+                }
+              }
+            },
+            "CPT": {
+              "code": "85335",
+              "term": "Factor X Inhibitor Screen, Plasma",
+              "score": 0.225,
+              "evidence": {
+                "source_type": "csv/xlsx",
+                "source_file": "cpt-codes-mayo.csv",
+                "id": "27:0",
+                "field": "term/code",
+                "snippet": "term=Factor X Inhibitor Screen, Plasma | code=CPT4:85335",
+                "extra": {
+                  "system": "CPT4",
+                  "code": "85335",
+                  "mayo_test_id": "10_IS",
+                  "panel_index": 1
+                }
+              }
+            }
+          }
+        },
+        {
+          "term": "ICD-10: C50.x",
+          "mapped_codes": {
+            "ICD10CM": null,
+            "ICD10": {
+              "code": "H90.3",
+              "term": "ICD-10: C50.x",
+              "score": 0.85,
+              "evidence": {
+                "source_type": "ontology",
+                "source_file": "doid.owl/hp.owl",
+                "id": "H90.3",
+                "field": "xref",
+                "snippet": "ontology ICD mapping ICD10:H90.3",
+                "extra": {
+                  "system": "ICD10",
+                  "code": "H90.3"
+                }
+              }
+            },
+            "RXNORM": {
+              "code": "2562816",
+              "term": "finerenone 10 MG Oral Tablet",
+              "score": 0.125,
+              "evidence": {
+                "source_type": "csv/xlsx",
+                "source_file": "rxnorm_omop.csv",
+                "id": "78400",
+                "field": "term/code",
+                "snippet": "term=finerenone 10 MG Oral Tablet | code=RXNORM:2562816",
+                "extra": {
+                  "system": "RXNORM",
+                  "code": "2562816",
+                  "concept_id": "1537456",
+                  "domain_id": "Drug",
+                  "concept_class_id": "Clinical Drug"
+                }
+              }
+            },
+            "CPT4": {
+              "code": "85335",
+              "term": "Factor X Inhibitor Screen, Plasma",
+              "score": 0.225,
+              "evidence": {
+                "source_type": "csv/xlsx",
+                "source_file": "cpt-codes-mayo.csv",
+                "id": "27:0",
+                "field": "term/code",
+                "snippet": "term=Factor X Inhibitor Screen, Plasma | code=CPT4:85335",
+                "extra": {
+                  "system": "CPT4",
+                  "code": "85335",
+                  "mayo_test_id": "10_IS",
+                  "panel_index": 1
+                }
+              }
+            },
+            "CPT": {
+              "code": "85335",
+              "term": "Factor X Inhibitor Screen, Plasma",
+              "score": 0.225,
+              "evidence": {
+                "source_type": "csv/xlsx",
+                "source_file": "cpt-codes-mayo.csv",
+                "id": "27:0",
+                "field": "term/code",
+                "snippet": "term=Factor X Inhibitor Screen, Plasma | code=CPT4:85335",
+                "extra": {
+                  "system": "CPT4",
+                  "code": "85335",
+                  "mayo_test_id": "10_IS",
+                  "panel_index": 1
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "section_id": "sec_5",
+      "criterion_type": "other",
+      "text": "Clinical Stage: T1-T2 ($< 5$ cm), clinically node-negative (N0).",
+      "route_agents": [
+        "llm",
+        "terminology"
+      ],
+      "llm_parsed": {
+        "inclusion_concepts": [
+          "T1-T2",
+          "less than 5 cm"
+        ],
+        "exclusion_concepts": [],
+        "temporal_constraints": [],
+        "outcomes": []
+      },
+      "kb_hits": [],
+      "terminology_mappings": [
+        {
+          "term": "T1-T2",
+          "mapped_codes": {
+            "ICD10CM": null,
+            "ICD10": null,
+            "RXNORM": null,
+            "CPT4": null,
+            "CPT": null
+          }
+        },
+        {
+          "term": "less than 5 cm",
+          "mapped_codes": {
+            "ICD10CM": null,
+            "ICD10": {
+              "code": "Q87.1",
+              "term": "less than 5 cm",
+              "score": 0.85,
+              "evidence": {
+                "source_type": "ontology",
+                "source_file": "doid.owl/hp.owl",
+                "id": "Q87.1",
+                "field": "xref",
+                "snippet": "ontology ICD mapping ICD10:Q87.1",
+                "extra": {
+                  "system": "ICD10",
+                  "code": "Q87.1"
+                }
+              }
+            },
+            "RXNORM": {
+              "code": "2532331",
+              "term": "ponesimod 5 MG Oral Tablet",
+              "score": 0.125,
+              "evidence": {
+                "source_type": "csv/xlsx",
+                "source_file": "rxnorm_omop.csv",
+                "id": "77330",
+                "field": "term/code",
+                "snippet": "term=ponesimod 5 MG Oral Tablet | code=RXNORM:2532331",
+                "extra": {
+                  "system": "RXNORM",
+                  "code": "2532331",
+                  "concept_id": "740150",
+                  "domain_id": "Drug",
+                  "concept_class_id": "Clinical Drug"
+                }
+              }
+            },
+            "CPT4": {
+              "code": "82542",
+              "term": "5-Methyltetrahydrofolate",
+              "score": 0.30000000000000004,
+              "evidence": {
+                "source_type": "csv/xlsx",
+                "source_file": "cpt-codes-mayo.csv",
+                "id": "516:0",
+                "field": "term/code",
+                "snippet": "term=5-Methyltetrahydrofolate | code=CPT4:82542",
+                "extra": {
+                  "system": "CPT4",
+                  "code": "82542",
+                  "mayo_test_id": "F5M",
+                  "panel_index": 1
+                }
+              }
+            },
+            "CPT": {
+              "code": "82542",
+              "term": "5-Methyltetrahydrofolate",
+              "score": 0.30000000000000004,
+              "evidence": {
+                "source_type": "csv/xlsx",
+                "source_file": "cpt-codes-mayo.csv",
+                "id": "516:0",
+                "field": "term/code",
+                "snippet": "term=5-Methyltetrahydrofolate | code=CPT4:82542",
+                "extra": {
+                  "system": "CPT4",
+                  "code": "82542",
+                  "mayo_test_id": "F5M",
+                  "panel_index": 1
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "section_id": "sec_6",
+      "criterion_type": "inclusion",
+      "text": "Pathological Inclusion: 1-2 positive sentinel lymph nodes (SLNs) identified via Hematoxylin and Eosin (H&E) staining.",
+      "route_agents": [
+        "llm",
+        "terminology"
+      ],
+      "llm_parsed": {
+        "inclusion_concepts": [
+          "positive sentinel lymph nodes",
+          "Hematoxylin and Eosin (H&E) staining",
+          "1-2 positive sentinel lymph nodes"
+        ],
+        "exclusion_concepts": [],
+        "temporal_constraints": [],
+        "outcomes": []
+      },
+      "kb_hits": [],
+      "terminology_mappings": [
+        {
+          "term": "positive sentinel lymph nodes",
+          "mapped_codes": {
+            "ICD10CM": null,
+            "ICD10": {
+              "code": "D81.1",
+              "term": "positive sentinel lymph nodes",
+              "score": 0.85,
+              "evidence": {
+                "source_type": "ontology",
+                "source_file": "doid.owl/hp.owl",
+                "id": "D81.1",
+                "field": "xref",
+                "snippet": "ontology ICD mapping ICD10:D81.1",
+                "extra": {
+                  "system": "ICD10",
+                  "code": "D81.1"
+                }
+              }
+            },
+            "RXNORM": null,
+            "CPT4": {
+              "code": "82308",
+              "term": "Calcitonin, Fine-Needle Aspiration Biopsy Needle Wash, Lymph Node",
+              "score": 0.19090909090909092,
+              "evidence": {
+                "source_type": "csv/xlsx",
+                "source_file": "cpt-codes-mayo.csv",
+                "id": "811:0",
+                "field": "term/code",
+                "snippet": "term=Calcitonin, Fine-Needle Aspiration Biopsy Needle Wash, Lymph Node | code=CPT4:82308",
+                "extra": {
+                  "system": "CPT4",
+                  "code": "82308",
+                  "mayo_test_id": "CATLN",
+                  "panel_index": 1
+                }
+              }
+            },
+            "CPT": {
+              "code": "82308",
+              "term": "Calcitonin, Fine-Needle Aspiration Biopsy Needle Wash, Lymph Node",
+              "score": 0.19090909090909092,
+              "evidence": {
+                "source_type": "csv/xlsx",
+                "source_file": "cpt-codes-mayo.csv",
+                "id": "811:0",
+                "field": "term/code",
+                "snippet": "term=Calcitonin, Fine-Needle Aspiration Biopsy Needle Wash, Lymph Node | code=CPT4:82308",
+                "extra": {
+                  "system": "CPT4",
+                  "code": "82308",
+                  "mayo_test_id": "CATLN",
+                  "panel_index": 1
+                }
+              }
+            }
+          }
+        },
+        {
+          "term": "Hematoxylin and Eosin (H&E) staining",
+          "mapped_codes": {
+            "ICD10CM": null,
+            "ICD10": {
+              "code": "D82.8",
+              "term": "Hematoxylin and Eosin (H&E) staining",
+              "score": 0.85,
+              "evidence": {
+                "source_type": "ontology",
+                "source_file": "doid.owl/hp.owl",
+                "id": "D82.8",
+                "field": "xref",
+                "snippet": "ontology ICD mapping ICD10:D82.8",
+                "extra": {
+                  "system": "ICD10",
+                  "code": "D82.8"
+                }
+              }
+            },
+            "RXNORM": null,
+            "CPT4": {
+              "code": "84446",
+              "term": "Vitamin A and Vitamin E, Serum",
+              "score": 0.3222222222222222,
+              "evidence": {
+                "source_type": "csv/xlsx",
+                "source_file": "cpt-codes-mayo.csv",
+                "id": "2662:0",
+                "field": "term/code",
+                "snippet": "term=Vitamin A and Vitamin E, Serum | code=CPT4:84446",
+                "extra": {
+                  "system": "CPT4",
+                  "code": "84446",
+                  "mayo_test_id": "VITAE",
+                  "mayo_panel": true,
+                  "panel_index": 1
+                }
+              }
+            },
+            "CPT": {
+              "code": "84446",
+              "term": "Vitamin A and Vitamin E, Serum",
+              "score": 0.3222222222222222,
+              "evidence": {
+                "source_type": "csv/xlsx",
+                "source_file": "cpt-codes-mayo.csv",
+                "id": "2662:0",
+                "field": "term/code",
+                "snippet": "term=Vitamin A and Vitamin E, Serum | code=CPT4:84446",
+                "extra": {
+                  "system": "CPT4",
+                  "code": "84446",
+                  "mayo_test_id": "VITAE",
+                  "mayo_panel": true,
+                  "panel_index": 1
+                }
+              }
+            }
+          }
+        },
+        {
+          "term": "1-2 positive sentinel lymph nodes",
+          "mapped_codes": {
+            "ICD10CM": null,
+            "ICD10": {
+              "code": "G71.1",
+              "term": "1-2 positive sentinel lymph nodes",
+              "score": 0.85,
+              "evidence": {
+                "source_type": "ontology",
+                "source_file": "doid.owl/hp.owl",
+                "id": "G71.1",
+                "field": "xref",
+                "snippet": "ontology ICD mapping ICD10:G71.1",
+                "extra": {
+                  "system": "ICD10",
+                  "code": "G71.1"
+                }
+              }
+            },
+            "RXNORM": {
+              "code": "2056895",
+              "term": "everolimus 1 MG Oral Tablet",
+              "score": 0.1,
+              "evidence": {
+                "source_type": "csv/xlsx",
+                "source_file": "rxnorm_omop.csv",
+                "id": "59478",
+                "field": "term/code",
+                "snippet": "term=everolimus 1 MG Oral Tablet | code=RXNORM:2056895",
+                "extra": {
+                  "system": "RXNORM",
+                  "code": "2056895",
+                  "concept_id": "35200596",
+                  "domain_id": "Drug",
+                  "concept_class_id": "Clinical Drug"
+                }
+              }
+            },
+            "CPT4": {
+              "code": "83520",
+              "term": "Prothrombin Fragment 1+2 MoAb",
+              "score": 0.30000000000000004,
+              "evidence": {
+                "source_type": "csv/xlsx",
+                "source_file": "cpt-codes-mayo.csv",
+                "id": "1492:0",
+                "field": "term/code",
+                "snippet": "term=Prothrombin Fragment 1+2 MoAb | code=CPT4:83520",
+                "extra": {
+                  "system": "CPT4",
+                  "code": "83520",
+                  "mayo_test_id": "FPF12",
+                  "panel_index": 1
+                }
+              }
+            },
+            "CPT": {
+              "code": "83520",
+              "term": "Prothrombin Fragment 1+2 MoAb",
+              "score": 0.30000000000000004,
+              "evidence": {
+                "source_type": "csv/xlsx",
+                "source_file": "cpt-codes-mayo.csv",
+                "id": "1492:0",
+                "field": "term/code",
+                "snippet": "term=Prothrombin Fragment 1+2 MoAb | code=CPT4:83520",
+                "extra": {
+                  "system": "CPT4",
+                  "code": "83520",
+                  "mayo_test_id": "FPF12",
+                  "panel_index": 1
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "section_id": "sec_7",
+      "criterion_type": "other",
+      "text": "II. Standardized Temporal Windows",
+      "route_agents": [
+        "llm",
+        "terminology"
+      ],
+      "llm_parsed": {
+        "inclusion_concepts": [],
+        "exclusion_concepts": [],
+        "temporal_constraints": [],
+        "outcomes": []
+      },
+      "kb_hits": [],
+      "terminology_mappings": []
+    },
+    {
+      "section_id": "sec_8",
+      "criterion_type": "other",
+      "text": "Index Date ($T_0$): Date of Index Breast Conserving Surgery (Lumpectomy).",
+      "route_agents": [
+        "llm",
+        "terminology"
+      ],
+      "llm_parsed": {
+        "inclusion_concepts": [
+          "Breast Conserving Surgery",
+          "Lumpectomy",
+          "Index Date"
+        ],
+        "exclusion_concepts": [],
+        "temporal_constraints": [
+          "$T_0$"
+        ],
+        "outcomes": []
+      },
+      "kb_hits": [],
+      "terminology_mappings": [
+        {
+          "term": "Breast Conserving Surgery",
+          "mapped_codes": {
+            "ICD10CM": null,
+            "ICD10": {
+              "code": "N60.0",
+              "term": "Breast Conserving Surgery",
+              "score": 0.85,
+              "evidence": {
+                "source_type": "ontology",
+                "source_file": "doid.owl/hp.owl",
+                "id": "N60.0",
+                "field": "xref",
+                "snippet": "ontology ICD mapping ICD10:N60.0",
+                "extra": {
+                  "system": "ICD10",
+                  "code": "N60.0"
+                }
+              }
+            },
+            "RXNORM": null,
+            "CPT4": {
+              "code": "86300",
+              "term": "Breast Carcinoma-Associated Antigen, Serum",
+              "score": 0.24285714285714285,
+              "evidence": {
+                "source_type": "csv/xlsx",
+                "source_file": "cpt-codes-mayo.csv",
+                "id": "2719:0",
+                "field": "term/code",
+                "snippet": "term=Breast Carcinoma-Associated Antigen, Serum | code=CPT4:86300",
+                "extra": {
+                  "system": "CPT4",
+                  "code": "86300",
+                  "mayo_test_id": "C2729",
+                  "panel_index": 1
+                }
+              }
+            },
+            "CPT": {
+              "code": "86300",
+              "term": "Breast Carcinoma-Associated Antigen, Serum",
+              "score": 0.24285714285714285,
+              "evidence": {
+                "source_type": "csv/xlsx",
+                "source_file": "cpt-codes-mayo.csv",
+                "id": "2719:0",
+                "field": "term/code",
+                "snippet": "term=Breast Carcinoma-Associated Antigen, Serum | code=CPT4:86300",
+                "extra": {
+                  "system": "CPT4",
+                  "code": "86300",
+                  "mayo_test_id": "C2729",
+                  "panel_index": 1
+                }
+              }
+            }
+          }
+        },
+        {
+          "term": "Lumpectomy",
+          "mapped_codes": {
+            "ICD10CM": null,
+            "ICD10": null,
+            "RXNORM": null,
+            "CPT4": null,
+            "CPT": null
+          }
+        },
+        {
+          "term": "Index Date",
+          "mapped_codes": {
+            "ICD10CM": null,
+            "ICD10": null,
+            "RXNORM": null,
+            "CPT4": {
+              "code": "86343",
+              "term": "CU Index",
+              "score": 0.43333333333333335,
+              "evidence": {
+                "source_type": "csv/xlsx",
+                "source_file": "cpt-codes-mayo.csv",
+                "id": "564:0",
+                "field": "term/code",
+                "snippet": "term=CU Index | code=CPT4:86343",
+                "extra": {
+                  "system": "CPT4",
+                  "code": "86343",
+                  "mayo_test_id": "FCUIX",
+                  "panel_index": 1
+                }
+              }
+            },
+            "CPT": {
+              "code": "86343",
+              "term": "CU Index",
+              "score": 0.43333333333333335,
+              "evidence": {
+                "source_type": "csv/xlsx",
+                "source_file": "cpt-codes-mayo.csv",
+                "id": "564:0",
+                "field": "term/code",
+                "snippet": "term=CU Index | code=CPT4:86343",
+                "extra": {
+                  "system": "CPT4",
+                  "code": "86343",
+                  "mayo_test_id": "FCUIX",
+                  "panel_index": 1
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "section_id": "sec_9",
+      "criterion_type": "other",
+      "text": "Baseline Lookback (90 Days): All baseline assessments occur within $[T_0 - 90\\text{ days}, T_0]$.",
+      "route_agents": [
+        "llm",
+        "terminology"
+      ],
+      "llm_parsed": {
+        "inclusion_concepts": [
+          "baseline assessments",
+          "90 Days"
+        ],
+        "exclusion_concepts": [],
+        "temporal_constraints": [
+          "T_0 - 90 days",
+          "T_0"
+        ],
+        "outcomes": []
+      },
+      "kb_hits": [],
+      "terminology_mappings": [
+        {
+          "term": "baseline assessments",
+          "mapped_codes": {
+            "ICD10CM": null,
+            "ICD10": null,
+            "RXNORM": null,
+            "CPT4": null,
+            "CPT": null
+          }
+        },
+        {
+          "term": "90 Days",
+          "mapped_codes": {
+            "ICD10CM": null,
+            "ICD10": null,
+            "RXNORM": null,
+            "CPT4": null,
+            "CPT": null
+          }
+        }
+      ]
+    },
+    {
+      "section_id": "sec_10",
+      "criterion_type": "other",
+      "text": "Comorbidities, Vitals, and Labs: Captured in the 90 days prior to surgery.",
+      "route_agents": [
+        "llm",
+        "terminology"
+      ],
+      "llm_parsed": {
+        "inclusion_concepts": [
+          "Comorbidities",
+          "Vitals",
+          "Labs"
+        ],
+        "exclusion_concepts": [],
+        "temporal_constraints": [
+          "90 days prior to surgery"
+        ],
+        "outcomes": []
+      },
+      "kb_hits": [],
+      "terminology_mappings": [
+        {
+          "term": "Comorbidities",
+          "mapped_codes": {
+            "ICD10CM": null,
+            "ICD10": null,
+            "RXNORM": null,
+            "CPT4": null,
+            "CPT": null
+          }
+        },
+        {
+          "term": "Vitals",
+          "mapped_codes": {
+            "ICD10CM": null,
+            "ICD10": null,
+            "RXNORM": null,
+            "CPT4": null,
+            "CPT": null
+          }
+        },
+        {
+          "term": "Labs",
+          "mapped_codes": {
+            "ICD10CM": null,
+            "ICD10": null,
+            "RXNORM": null,
+            "CPT4": null,
+            "CPT": null
+          }
+        }
+      ]
+    },
+    {
+      "section_id": "sec_11",
+      "criterion_type": "exclusion",
+      "text": "Neoadjuvant Exclusion: Receipt of any systemic antineoplastic therapy (ATC L01) or endocrine therapy (ATC L02) in the 90 days prior to $T_0$ triggers exclusion.",
+      "route_agents": [
+        "llm",
+        "terminology"
+      ],
+      "llm_parsed": {
+        "inclusion_concepts": [],
+        "exclusion_concepts": [
+          "systemic antineoplastic therapy (ATC L01)",
+          "endocrine therapy (ATC L02)"
+        ],
+        "temporal_constraints": [
+          "90 days prior to $T_0$"
+        ],
+        "outcomes": []
+      },
+      "kb_hits": [],
+      "terminology_mappings": [
+        {
+          "term": "systemic antineoplastic therapy (ATC L01)",
+          "mapped_codes": {
+            "ICD10CM": null,
+            "ICD10": {
+              "code": "E71.41",
+              "term": "systemic antineoplastic therapy (ATC L01)",
+              "score": 0.85,
+              "evidence": {
+                "source_type": "ontology",
+                "source_file": "doid.owl/hp.owl",
+                "id": "E71.41",
+                "field": "xref",
+                "snippet": "ontology ICD mapping ICD10:E71.41",
+                "extra": {
+                  "system": "ICD10",
+                  "code": "E71.41"
+                }
+              }
+            },
+            "RXNORM": null,
+            "CPT4": {
+              "code": "86039",
+              "term": "Systemic Sclerosis Criteria Panel, Serum",
+              "score": 0.2111111111111111,
+              "evidence": {
+                "source_type": "csv/xlsx",
+                "source_file": "cpt-codes-mayo.csv",
+                "id": "3742:0",
+                "field": "term/code",
+                "snippet": "term=Systemic Sclerosis Criteria Panel, Serum | code=CPT4:86039",
+                "extra": {
+                  "system": "CPT4",
+                  "code": "86039",
+                  "mayo_test_id": "SSCP",
+                  "mayo_panel": true,
+                  "panel_index": 1
+                }
+              }
+            },
+            "CPT": {
+              "code": "86039",
+              "term": "Systemic Sclerosis Criteria Panel, Serum",
+              "score": 0.2111111111111111,
+              "evidence": {
+                "source_type": "csv/xlsx",
+                "source_file": "cpt-codes-mayo.csv",
+                "id": "3742:0",
+                "field": "term/code",
+                "snippet": "term=Systemic Sclerosis Criteria Panel, Serum | code=CPT4:86039",
+                "extra": {
+                  "system": "CPT4",
+                  "code": "86039",
+                  "mayo_test_id": "SSCP",
+                  "mayo_panel": true,
+                  "panel_index": 1
+                }
+              }
+            }
+          }
+        },
+        {
+          "term": "endocrine therapy (ATC L02)",
+          "mapped_codes": {
+            "ICD10CM": null,
+            "ICD10": {
+              "code": "E31.22",
+              "term": "endocrine therapy (ATC L02)",
+              "score": 0.85,
+              "evidence": {
+                "source_type": "ontology",
+                "source_file": "doid.owl/hp.owl",
+                "id": "E31.22",
+                "field": "xref",
+                "snippet": "ontology ICD mapping ICD10:E31.22",
+                "extra": {
+                  "system": "ICD10",
+                  "code": "E31.22"
+                }
+              }
+            },
+            "RXNORM": null,
+            "CPT4": {
+              "code": "82384",
+              "term": "Catecholamine, Endocrine Study, Plasma",
+              "score": 0.24285714285714285,
+              "evidence": {
+                "source_type": "csv/xlsx",
+                "source_file": "cpt-codes-mayo.csv",
+                "id": "292:0",
+                "field": "term/code",
+                "snippet": "term=Catecholamine, Endocrine Study, Plasma | code=CPT4:82384",
+                "extra": {
+                  "system": "CPT4",
+                  "code": "82384",
+                  "mayo_test_id": "CATPA",
+                  "multiplier": 2,
+                  "panel_index": 1
+                }
+              }
+            },
+            "CPT": {
+              "code": "82384",
+              "term": "Catecholamine, Endocrine Study, Plasma",
+              "score": 0.24285714285714285,
+              "evidence": {
+                "source_type": "csv/xlsx",
+                "source_file": "cpt-codes-mayo.csv",
+                "id": "292:0",
+                "field": "term/code",
+                "snippet": "term=Catecholamine, Endocrine Study, Plasma | code=CPT4:82384",
+                "extra": {
+                  "system": "CPT4",
+                  "code": "82384",
+                  "mayo_test_id": "CATPA",
+                  "multiplier": 2,
+                  "panel_index": 1
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "section_id": "sec_12",
+      "criterion_type": "exclusion",
+      "text": "Prior Malignancy (Unlimited): History of any other malignancy (excluding non-melanoma skin cancer) at any point prior to $T_0$ triggers exclusion to ensure a newly diagnosed primary cohort.",
+      "route_agents": [
+        "llm",
+        "terminology"
+      ],
+      "llm_parsed": {
+        "inclusion_concepts": [],
+        "exclusion_concepts": [
+          "Prior Malignancy"
+        ],
+        "temporal_constraints": [
+          "$T_0$"
+        ],
+        "outcomes": []
+      },
+      "kb_hits": [],
+      "terminology_mappings": [
+        {
+          "term": "Prior Malignancy",
+          "mapped_codes": {
+            "ICD10CM": null,
+            "ICD10": null,
+            "RXNORM": null,
+            "CPT4": {
+              "code": "88377",
+              "term": "Biliary Tract Malignancy, FISH, Varies",
+              "score": 0.26666666666666666,
+              "evidence": {
+                "source_type": "csv/xlsx",
+                "source_file": "cpt-codes-mayo.csv",
+                "id": "1380:0",
+                "field": "term/code",
+                "snippet": "term=Biliary Tract Malignancy, FISH, Varies | code=CPT4:88377",
+                "extra": {
+                  "system": "CPT4",
+                  "code": "88377",
+                  "mayo_test_id": "BILAO",
+                  "panel_index": 1
+                }
+              }
+            },
+            "CPT": {
+              "code": "88377",
+              "term": "Biliary Tract Malignancy, FISH, Varies",
+              "score": 0.26666666666666666,
+              "evidence": {
+                "source_type": "csv/xlsx",
+                "source_file": "cpt-codes-mayo.csv",
+                "id": "1380:0",
+                "field": "term/code",
+                "snippet": "term=Biliary Tract Malignancy, FISH, Varies | code=CPT4:88377",
+                "extra": {
+                  "system": "CPT4",
+                  "code": "88377",
+                  "mayo_test_id": "BILAO",
+                  "panel_index": 1
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "section_id": "sec_13",
+      "criterion_type": "other",
+      "text": "Treatment Window (90 Days): Symmetrical window $[T_0, T_0 + 90\\text{ days}]$ used for arm assignment.",
+      "route_agents": [
+        "llm",
+        "terminology"
+      ],
+      "llm_parsed": {
+        "inclusion_concepts": [
+          "Treatment Window",
+          "90 Days",
+          "Symmetrical window",
+          "[T_0, T_0 + 90 days]"
+        ],
+        "exclusion_concepts": [],
+        "temporal_constraints": [
+          "Treatment Window (90 Days)",
+          "Symmetrical window $[T_0, T_0 + 90\text{ days}]$"
+        ],
+        "outcomes": []
+      },
+      "kb_hits": [],
+      "terminology_mappings": [
+        {
+          "term": "Treatment Window",
+          "mapped_codes": {
+            "ICD10CM": null,
+            "ICD10": null,
+            "RXNORM": null,
+            "CPT4": {
+              "code": "81432",
+              "term": "Rapid Hereditary Breast Cancer Treatment Decision Panel, Varies",
+              "score": 0.2111111111111111,
+              "evidence": {
+                "source_type": "csv/xlsx",
+                "source_file": "cpt-codes-mayo.csv",
+                "id": "3538:0",
+                "field": "term/code",
+                "snippet": "term=Rapid Hereditary Breast Cancer Treatment Decision Panel, Varies | code=CPT4:81432",
+                "extra": {
+                  "system": "CPT4",
+                  "code": "81432",
+                  "mayo_test_id": "BRTP",
+                  "panel_index": 1
+                }
+              }
+            },
+            "CPT": {
+              "code": "81432",
+              "term": "Rapid Hereditary Breast Cancer Treatment Decision Panel, Varies",
+              "score": 0.2111111111111111,
+              "evidence": {
+                "source_type": "csv/xlsx",
+                "source_file": "cpt-codes-mayo.csv",
+                "id": "3538:0",
+                "field": "term/code",
+                "snippet": "term=Rapid Hereditary Breast Cancer Treatment Decision Panel, Varies | code=CPT4:81432",
+                "extra": {
+                  "system": "CPT4",
+                  "code": "81432",
+                  "mayo_test_id": "BRTP",
+                  "panel_index": 1
+                }
+              }
+            }
+          }
+        },
+        {
+          "term": "90 Days",
+          "mapped_codes": {
+            "ICD10CM": null,
+            "ICD10": null,
+            "RXNORM": null,
+            "CPT4": null,
+            "CPT": null
+          }
+        },
+        {
+          "term": "Symmetrical window",
+          "mapped_codes": {
+            "ICD10CM": null,
+            "ICD10": null,
+            "RXNORM": null,
+            "CPT4": null,
+            "CPT": null
+          }
+        },
+        {
+          "term": "[T_0, T_0 + 90 days]",
+          "mapped_codes": {
+            "ICD10CM": null,
+            "ICD10": {
+              "code": "C91.5",
+              "term": "[T_0, T_0 + 90 days]",
+              "score": 0.85,
+              "evidence": {
+                "source_type": "ontology",
+                "source_file": "doid.owl/hp.owl",
+                "id": "C91.5",
+                "field": "xref",
+                "snippet": "ontology ICD mapping ICD10:C91.5",
+                "extra": {
+                  "system": "ICD10",
+                  "code": "C91.5"
+                }
+              }
+            },
+            "RXNORM": {
+              "code": "1607796",
+              "term": "deferasirox 90 MG Oral Tablet",
+              "score": 0.125,
+              "evidence": {
+                "source_type": "csv/xlsx",
+                "source_file": "rxnorm_omop.csv",
+                "id": "41409",
+                "field": "term/code",
+                "snippet": "term=deferasirox 90 MG Oral Tablet | code=RXNORM:1607796",
+                "extra": {
+                  "system": "RXNORM",
+                  "code": "1607796",
+                  "concept_id": "46221241",
+                  "domain_id": "Drug",
+                  "concept_class_id": "Clinical Drug"
+                }
+              }
+            },
+            "CPT4": {
+              "code": "84484",
+              "term": "Troponin T, 5th Generation, Plasma",
+              "score": 0.225,
+              "evidence": {
+                "source_type": "csv/xlsx",
+                "source_file": "cpt-codes-mayo.csv",
+                "id": "1091:0",
+                "field": "term/code",
+                "snippet": "term=Troponin T, 5th Generation, Plasma | code=CPT4:84484",
+                "extra": {
+                  "system": "CPT4",
+                  "code": "84484",
+                  "mayo_test_id": "TRPS",
+                  "panel_index": 1
+                }
+              }
+            },
+            "CPT": {
+              "code": "84484",
+              "term": "Troponin T, 5th Generation, Plasma",
+              "score": 0.225,
+              "evidence": {
+                "source_type": "csv/xlsx",
+                "source_file": "cpt-codes-mayo.csv",
+                "id": "1091:0",
+                "field": "term/code",
+                "snippet": "term=Troponin T, 5th Generation, Plasma | code=CPT4:84484",
+                "extra": {
+                  "system": "CPT4",
+                  "code": "84484",
+                  "mayo_test_id": "TRPS",
+                  "panel_index": 1
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "section_id": "sec_14",
+      "criterion_type": "other",
+      "text": "III. Treatment Arm Assignment (Symmetrical 90-Day Rule)",
+      "route_agents": [
+        "llm",
+        "terminology"
+      ],
+      "llm_parsed": {
+        "inclusion_concepts": [
+          "Symmetrical 90-day rule",
+          "Treatment arm assignment",
+          "Randomized controlled trial",
+          "Clinical trial",
+          "Treatment group"
+        ],
+        "exclusion_concepts": [
+          "Asymmetrical assignment",
+          "Non-randomized assignment",
+          "Uncontrolled assignment"
+        ],
+        "temporal_constraints": [
+          "90 days",
+          "Treatment duration"
+        ],
+        "outcomes": [
+          "Treatment arm assignment adherence"
+        ]
+      },
+      "kb_hits": [],
+      "terminology_mappings": [
+        {
+          "term": "Symmetrical 90-day rule",
+          "mapped_codes": {
+            "ICD10CM": null,
+            "ICD10": {
+              "code": "G90.1",
+              "term": "Symmetrical 90-day rule",
+              "score": 0.85,
+              "evidence": {
+                "source_type": "ontology",
+                "source_file": "doid.owl/hp.owl",
+                "id": "G90.1",
+                "field": "xref",
+                "snippet": "ontology ICD mapping ICD10:G90.1",
+                "extra": {
+                  "system": "ICD10",
+                  "code": "G90.1"
+                }
+              }
+            },
+            "RXNORM": {
+              "code": "1607796",
+              "term": "deferasirox 90 MG Oral Tablet",
+              "score": 0.125,
+              "evidence": {
+                "source_type": "csv/xlsx",
+                "source_file": "rxnorm_omop.csv",
+                "id": "41409",
+                "field": "term/code",
+                "snippet": "term=deferasirox 90 MG Oral Tablet | code=RXNORM:1607796",
+                "extra": {
+                  "system": "RXNORM",
+                  "code": "1607796",
+                  "concept_id": "46221241",
+                  "domain_id": "Drug",
+                  "concept_class_id": "Clinical Drug"
+                }
+              }
+            },
+            "CPT4": null,
+            "CPT": null
+          }
+        },
+        {
+          "term": "Treatment arm assignment",
+          "mapped_codes": {
+            "ICD10CM": null,
+            "ICD10": null,
+            "RXNORM": null,
+            "CPT4": {
+              "code": "81432",
+              "term": "Rapid Hereditary Breast Cancer Treatment Decision Panel, Varies",
+              "score": 0.2,
+              "evidence": {
+                "source_type": "csv/xlsx",
+                "source_file": "cpt-codes-mayo.csv",
+                "id": "3538:0",
+                "field": "term/code",
+                "snippet": "term=Rapid Hereditary Breast Cancer Treatment Decision Panel, Varies | code=CPT4:81432",
+                "extra": {
+                  "system": "CPT4",
+                  "code": "81432",
+                  "mayo_test_id": "BRTP",
+                  "panel_index": 1
+                }
+              }
+            },
+            "CPT": {
+              "code": "81432",
+              "term": "Rapid Hereditary Breast Cancer Treatment Decision Panel, Varies",
+              "score": 0.2,
+              "evidence": {
+                "source_type": "csv/xlsx",
+                "source_file": "cpt-codes-mayo.csv",
+                "id": "3538:0",
+                "field": "term/code",
+                "snippet": "term=Rapid Hereditary Breast Cancer Treatment Decision Panel, Varies | code=CPT4:81432",
+                "extra": {
+                  "system": "CPT4",
+                  "code": "81432",
+                  "mayo_test_id": "BRTP",
+                  "panel_index": 1
+                }
+              }
+            }
+          }
+        },
+        {
+          "term": "Randomized controlled trial",
+          "mapped_codes": {
+            "ICD10CM": null,
+            "ICD10": null,
+            "RXNORM": null,
+            "CPT4": {
+              "code": "80307",
+              "term": "Controlled Substance Monitoring Panel, Random, Urine",
+              "score": 0.225,
+              "evidence": {
+                "source_type": "csv/xlsx",
+                "source_file": "cpt-codes-mayo.csv",
+                "id": "3035:0",
+                "field": "term/code",
+                "snippet": "term=Controlled Substance Monitoring Panel, Random, Urine | code=CPT4:80307",
+                "extra": {
+                  "system": "CPT4",
+                  "code": "80307",
+                  "mayo_test_id": "CSMPU",
+                  "mayo_panel": true,
+                  "panel_index": 1
+                }
+              }
+            },
+            "CPT": {
+              "code": "80307",
+              "term": "Controlled Substance Monitoring Panel, Random, Urine",
+              "score": 0.225,
+              "evidence": {
+                "source_type": "csv/xlsx",
+                "source_file": "cpt-codes-mayo.csv",
+                "id": "3035:0",
+                "field": "term/code",
+                "snippet": "term=Controlled Substance Monitoring Panel, Random, Urine | code=CPT4:80307",
+                "extra": {
+                  "system": "CPT4",
+                  "code": "80307",
+                  "mayo_test_id": "CSMPU",
+                  "mayo_panel": true,
+                  "panel_index": 1
+                }
+              }
+            }
+          }
+        },
+        {
+          "term": "Clinical trial",
+          "mapped_codes": {
+            "ICD10CM": null,
+            "ICD10": null,
+            "RXNORM": null,
+            "CPT4": null,
+            "CPT": null
+          }
+        },
+        {
+          "term": "Treatment group",
+          "mapped_codes": {
+            "ICD10CM": null,
+            "ICD10": {
+              "code": "Q82.1",
+              "term": "Treatment group",
+              "score": 0.85,
+              "evidence": {
+                "source_type": "ontology",
+                "source_file": "doid.owl/hp.owl",
+                "id": "Q82.1",
+                "field": "xref",
+                "snippet": "ontology ICD mapping ICD10:Q82.1",
+                "extra": {
+                  "system": "ICD10",
+                  "code": "Q82.1"
+                }
+              }
+            },
+            "RXNORM": null,
+            "CPT4": {
+              "code": "80184",
+              "term": "Phenytoin, Total and Phenobarbital Group, Serum",
+              "score": 0.24285714285714285,
+              "evidence": {
+                "source_type": "csv/xlsx",
+                "source_file": "cpt-codes-mayo.csv",
+                "id": "408:0",
+                "field": "term/code",
+                "snippet": "term=Phenytoin, Total and Phenobarbital Group, Serum | code=CPT4:80184",
+                "extra": {
+                  "system": "CPT4",
+                  "code": "80184",
+                  "mayo_test_id": "PNYG",
+                  "mayo_panel": true,
+                  "cpt_detail": "Phenobarbital",
+                  "panel_index": 1
+                }
+              }
+            },
+            "CPT": {
+              "code": "80184",
+              "term": "Phenytoin, Total and Phenobarbital Group, Serum",
+              "score": 0.24285714285714285,
+              "evidence": {
+                "source_type": "csv/xlsx",
+                "source_file": "cpt-codes-mayo.csv",
+                "id": "408:0",
+                "field": "term/code",
+                "snippet": "term=Phenytoin, Total and Phenobarbital Group, Serum | code=CPT4:80184",
+                "extra": {
+                  "system": "CPT4",
+                  "code": "80184",
+                  "mayo_test_id": "PNYG",
+                  "mayo_panel": true,
+                  "cpt_detail": "Phenobarbital",
+                  "panel_index": 1
+                }
+              }
+            }
+          }
+        },
+        {
+          "term": "Asymmetrical assignment",
+          "mapped_codes": {
+            "ICD10CM": null,
+            "ICD10": null,
+            "RXNORM": null,
+            "CPT4": null,
+            "CPT": null
+          }
+        },
+        {
+          "term": "Non-randomized assignment",
+          "mapped_codes": {
+            "ICD10CM": null,
+            "ICD10": {
+              "code": "C85.9",
+              "term": "Non-randomized assignment",
+              "score": 0.85,
+              "evidence": {
+                "source_type": "ontology",
+                "source_file": "doid.owl/hp.owl",
+                "id": "C85.9",
+                "field": "xref",
+                "snippet": "ontology ICD mapping ICD10:C85.9",
+                "extra": {
+                  "system": "ICD10",
+                  "code": "C85.9"
+                }
+              }
+            },
+            "RXNORM": null,
+            "CPT4": {
+              "code": "88104",
+              "term": "Cytology Non-Gynecologic, Varies",
+              "score": 0.26666666666666666,
+              "evidence": {
+                "source_type": "csv/xlsx",
+                "source_file": "cpt-codes-mayo.csv",
+                "id": "1113:0",
+                "field": "term/code",
+                "snippet": "term=Cytology Non-Gynecologic, Varies | code=CPT4:88104",
+                "extra": {
+                  "system": "CPT4",
+                  "code": "88104",
+                  "mayo_test_id": "CYTNG",
+                  "mayo_panel": true,
+                  "cpt_detail": "NDSPC (if appropriate)",
+                  "panel_index": 1
+                }
+              }
+            },
+            "CPT": {
+              "code": "88104",
+              "term": "Cytology Non-Gynecologic, Varies",
+              "score": 0.26666666666666666,
+              "evidence": {
+                "source_type": "csv/xlsx",
+                "source_file": "cpt-codes-mayo.csv",
+                "id": "1113:0",
+                "field": "term/code",
+                "snippet": "term=Cytology Non-Gynecologic, Varies | code=CPT4:88104",
+                "extra": {
+                  "system": "CPT4",
+                  "code": "88104",
+                  "mayo_test_id": "CYTNG",
+                  "mayo_panel": true,
+                  "cpt_detail": "NDSPC (if appropriate)",
+                  "panel_index": 1
+                }
+              }
+            }
+          }
+        },
+        {
+          "term": "Uncontrolled assignment",
+          "mapped_codes": {
+            "ICD10CM": null,
+            "ICD10": null,
+            "RXNORM": null,
+            "CPT4": null,
+            "CPT": null
+          }
+        },
+        {
+          "term": "Treatment arm assignment adherence",
+          "mapped_codes": {
+            "ICD10CM": null,
+            "ICD10": null,
+            "RXNORM": null,
+            "CPT4": {
+              "code": "81432",
+              "term": "Rapid Hereditary Breast Cancer Treatment Decision Panel, Varies",
+              "score": 0.19090909090909092,
+              "evidence": {
+                "source_type": "csv/xlsx",
+                "source_file": "cpt-codes-mayo.csv",
+                "id": "3538:0",
+                "field": "term/code",
+                "snippet": "term=Rapid Hereditary Breast Cancer Treatment Decision Panel, Varies | code=CPT4:81432",
+                "extra": {
+                  "system": "CPT4",
+                  "code": "81432",
+                  "mayo_test_id": "BRTP",
+                  "panel_index": 1
+                }
+              }
+            },
+            "CPT": {
+              "code": "81432",
+              "term": "Rapid Hereditary Breast Cancer Treatment Decision Panel, Varies",
+              "score": 0.19090909090909092,
+              "evidence": {
+                "source_type": "csv/xlsx",
+                "source_file": "cpt-codes-mayo.csv",
+                "id": "3538:0",
+                "field": "term/code",
+                "snippet": "term=Rapid Hereditary Breast Cancer Treatment Decision Panel, Varies | code=CPT4:81432",
+                "extra": {
+                  "system": "CPT4",
+                  "code": "81432",
+                  "mayo_test_id": "BRTP",
+                  "panel_index": 1
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "section_id": "sec_15",
+      "criterion_type": "other",
+      "text": "Comparator (ALND): Presence of Axillary Lymph Node Dissection procedure codes (CPT: 38740, 38745) within 90 days of the Index Date.",
+      "route_agents": [
+        "llm",
+        "terminology"
+      ],
+      "llm_parsed": {
+        "inclusion_concepts": [
+          "Axillary Lymph Node Dissection",
+          "CPT 38740",
+          "CPT 38745"
+        ],
+        "exclusion_concepts": [],
+        "temporal_constraints": [
+          "within 90 days of the Index Date"
+        ],
+        "outcomes": []
+      },
+      "kb_hits": [],
+      "terminology_mappings": [
+        {
+          "term": "Axillary Lymph Node Dissection",
+          "mapped_codes": {
+            "ICD10CM": null,
+            "ICD10": {
+              "code": "C50.61",
+              "term": "Axillary Lymph Node Dissection",
+              "score": 0.85,
+              "evidence": {
+                "source_type": "ontology",
+                "source_file": "doid.owl/hp.owl",
+                "id": "C50.61",
+                "field": "xref",
+                "snippet": "ontology ICD mapping ICD10:C50.61",
+                "extra": {
+                  "system": "ICD10",
+                  "code": "C50.61"
+                }
+              }
+            },
+            "RXNORM": null,
+            "CPT4": {
+              "code": "82308",
+              "term": "Calcitonin, Fine-Needle Aspiration Biopsy Needle Wash, Lymph Node",
+              "score": 0.30000000000000004,
+              "evidence": {
+                "source_type": "csv/xlsx",
+                "source_file": "cpt-codes-mayo.csv",
+                "id": "811:0",
+                "field": "term/code",
+                "snippet": "term=Calcitonin, Fine-Needle Aspiration Biopsy Needle Wash, Lymph Node | code=CPT4:82308",
+                "extra": {
+                  "system": "CPT4",
+                  "code": "82308",
+                  "mayo_test_id": "CATLN",
+                  "panel_index": 1
+                }
+              }
+            },
+            "CPT": {
+              "code": "82308",
+              "term": "Calcitonin, Fine-Needle Aspiration Biopsy Needle Wash, Lymph Node",
+              "score": 0.30000000000000004,
+              "evidence": {
+                "source_type": "csv/xlsx",
+                "source_file": "cpt-codes-mayo.csv",
+                "id": "811:0",
+                "field": "term/code",
+                "snippet": "term=Calcitonin, Fine-Needle Aspiration Biopsy Needle Wash, Lymph Node | code=CPT4:82308",
+                "extra": {
+                  "system": "CPT4",
+                  "code": "82308",
+                  "mayo_test_id": "CATLN",
+                  "panel_index": 1
+                }
+              }
+            }
+          }
+        },
+        {
+          "term": "CPT 38740",
+          "mapped_codes": {
+            "ICD10CM": null,
+            "ICD10": null,
+            "RXNORM": null,
+            "CPT4": null,
+            "CPT": null
+          }
+        },
+        {
+          "term": "CPT 38745",
+          "mapped_codes": {
+            "ICD10CM": null,
+            "ICD10": null,
+            "RXNORM": null,
+            "CPT4": null,
+            "CPT": null
+          }
+        }
+      ]
+    },
+    {
+      "section_id": "sec_16",
+      "criterion_type": "other",
+      "text": "Intervention (SLND): Absence of ALND procedure codes within 90 days of the Index Date.",
+      "route_agents": [
+        "llm",
+        "terminology"
+      ],
+      "llm_parsed": {
+        "inclusion_concepts": [
+          "Absence of ALND procedure codes"
+        ],
+        "exclusion_concepts": [],
+        "temporal_constraints": [
+          "within 90 days of the Index Date"
+        ],
+        "outcomes": []
+      },
+      "kb_hits": [],
+      "terminology_mappings": [
+        {
+          "term": "Absence of ALND procedure codes",
+          "mapped_codes": {
+            "ICD10CM": null,
+            "ICD10": {
+              "code": "E88.9",
+              "term": "Absence of ALND procedure codes",
+              "score": 0.85,
+              "evidence": {
+                "source_type": "ontology",
+                "source_file": "doid.owl/hp.owl",
+                "id": "E88.9",
+                "field": "xref",
+                "snippet": "ontology ICD mapping ICD10:E88.9",
+                "extra": {
+                  "system": "ICD10",
+                  "code": "E88.9"
+                }
+              }
+            },
+            "RXNORM": null,
+            "CPT4": {
+              "code": "85597",
+              "term": "Platelet Neutralization Procedure, Plasma",
+              "score": 0.225,
+              "evidence": {
+                "source_type": "csv/xlsx",
+                "source_file": "cpt-codes-mayo.csv",
+                "id": "164:0",
+                "field": "term/code",
+                "snippet": "term=Platelet Neutralization Procedure, Plasma | code=CPT4:85597",
+                "extra": {
+                  "system": "CPT4",
+                  "code": "85597",
+                  "mayo_test_id": "PNP",
+                  "panel_index": 1
+                }
+              }
+            },
+            "CPT": {
+              "code": "85597",
+              "term": "Platelet Neutralization Procedure, Plasma",
+              "score": 0.225,
+              "evidence": {
+                "source_type": "csv/xlsx",
+                "source_file": "cpt-codes-mayo.csv",
+                "id": "164:0",
+                "field": "term/code",
+                "snippet": "term=Platelet Neutralization Procedure, Plasma | code=CPT4:85597",
+                "extra": {
+                  "system": "CPT4",
+                  "code": "85597",
+                  "mayo_test_id": "PNP",
+                  "panel_index": 1
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "section_id": "sec_17",
+      "criterion_type": "outcome",
+      "text": "IV. Defined Endpoints",
+      "route_agents": [
+        "llm",
+        "terminology"
+      ],
+      "llm_parsed": {
+        "inclusion_concepts": [],
+        "exclusion_concepts": [],
+        "temporal_constraints": [],
+        "outcomes": []
+      },
+      "kb_hits": [],
+      "terminology_mappings": []
+    },
+    {
+      "section_id": "sec_18",
+      "criterion_type": "outcome",
+      "text": "Primary Endpoint:",
+      "route_agents": [
+        "llm",
+        "terminology"
+      ],
+      "llm_parsed": {
+        "inclusion_concepts": [],
+        "exclusion_concepts": [],
+        "temporal_constraints": [],
+        "outcomes": []
+      },
+      "kb_hits": [],
+      "terminology_mappings": []
+    },
+    {
+      "section_id": "sec_19",
+      "criterion_type": "other",
+      "text": "Overall Survival (OS): Time from $T_0$ to death from any cause.",
+      "route_agents": [
+        "llm",
+        "terminology"
+      ],
+      "llm_parsed": {
+        "inclusion_concepts": [
+          "Overall Survival",
+          "Time from T0 to death from any cause"
+        ],
+        "exclusion_concepts": [],
+        "temporal_constraints": [
+          "T0"
+        ],
+        "outcomes": [
+          "Death from any cause"
+        ]
+      },
+      "kb_hits": [],
+      "terminology_mappings": [
+        {
+          "term": "Overall Survival",
+          "mapped_codes": {
+            "ICD10CM": null,
+            "ICD10": null,
+            "RXNORM": null,
+            "CPT4": null,
+            "CPT": null
+          }
+        },
+        {
+          "term": "Time from T0 to death from any cause",
+          "mapped_codes": {
+            "ICD10CM": null,
+            "ICD10": {
+              "code": "E71.1",
+              "term": "Time from T0 to death from any cause",
+              "score": 0.85,
+              "evidence": {
+                "source_type": "ontology",
+                "source_file": "doid.owl/hp.owl",
+                "id": "E71.1",
+                "field": "xref",
+                "snippet": "ontology ICD mapping ICD10:E71.1",
+                "extra": {
+                  "system": "ICD10",
+                  "code": "E71.1"
+                }
+              }
+            },
+            "RXNORM": null,
+            "CPT4": {
+              "code": "85610",
+              "term": "Prothrombin Time, Plasma",
+              "score": 0.2111111111111111,
+              "evidence": {
+                "source_type": "csv/xlsx",
+                "source_file": "cpt-codes-mayo.csv",
+                "id": "435:0",
+                "field": "term/code",
+                "snippet": "term=Prothrombin Time, Plasma | code=CPT4:85610",
+                "extra": {
+                  "system": "CPT4",
+                  "code": "85610",
+                  "mayo_test_id": "PTTP",
+                  "panel_index": 1
+                }
+              }
+            },
+            "CPT": {
+              "code": "85610",
+              "term": "Prothrombin Time, Plasma",
+              "score": 0.2111111111111111,
+              "evidence": {
+                "source_type": "csv/xlsx",
+                "source_file": "cpt-codes-mayo.csv",
+                "id": "435:0",
+                "field": "term/code",
+                "snippet": "term=Prothrombin Time, Plasma | code=CPT4:85610",
+                "extra": {
+                  "system": "CPT4",
+                  "code": "85610",
+                  "mayo_test_id": "PTTP",
+                  "panel_index": 1
+                }
+              }
+            }
+          }
+        },
+        {
+          "term": "Death from any cause",
+          "mapped_codes": {
+            "ICD10CM": null,
+            "ICD10": null,
+            "RXNORM": null,
+            "CPT4": {
+              "code": "88037",
+              "term": "Sudden Cardiac Death Pathology Consultation",
+              "score": 0.225,
+              "evidence": {
+                "source_type": "csv/xlsx",
+                "source_file": "cpt-codes-mayo.csv",
+                "id": "2765:0",
+                "field": "term/code",
+                "snippet": "term=Sudden Cardiac Death Pathology Consultation | code=CPT4:88037",
+                "extra": {
+                  "system": "CPT4",
+                  "code": "88037",
+                  "mayo_test_id": "SUDC",
+                  "panel_index": 1
+                }
+              }
+            },
+            "CPT": {
+              "code": "88037",
+              "term": "Sudden Cardiac Death Pathology Consultation",
+              "score": 0.225,
+              "evidence": {
+                "source_type": "csv/xlsx",
+                "source_file": "cpt-codes-mayo.csv",
+                "id": "2765:0",
+                "field": "term/code",
+                "snippet": "term=Sudden Cardiac Death Pathology Consultation | code=CPT4:88037",
+                "extra": {
+                  "system": "CPT4",
+                  "code": "88037",
+                  "mayo_test_id": "SUDC",
+                  "panel_index": 1
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "section_id": "sec_20",
+      "criterion_type": "outcome",
+      "text": "Secondary Endpoints:",
+      "route_agents": [
+        "llm",
+        "terminology"
+      ],
+      "llm_parsed": {
+        "inclusion_concepts": [],
+        "exclusion_concepts": [],
+        "temporal_constraints": [],
+        "outcomes": []
+      },
+      "kb_hits": [],
+      "terminology_mappings": []
+    },
+    {
+      "section_id": "sec_21",
+      "criterion_type": "other",
+      "text": "Breast Cancer Specific Survival (BCSS): Time from $T_0$ to death specifically attributed to breast cancer (ICD-9: 174.x; ICD-10: C50.x).",
+      "route_agents": [
+        "llm",
+        "terminology"
+      ],
+      "llm_parsed": {
+        "inclusion_concepts": [
+          "Breast Cancer",
+          "Specific Survival",
+          "Time from T0 to death",
+          "ICD-9: 174.x",
+          "ICD-10: C50.x"
+        ],
+        "exclusion_concepts": [],
+        "temporal_constraints": [
+          "Time from T0"
+        ],
+        "outcomes": [
+          "Death specifically attributed to breast cancer"
+        ]
+      },
+      "kb_hits": [],
+      "terminology_mappings": [
+        {
+          "term": "Breast Cancer",
+          "mapped_codes": {
+            "ICD10CM": null,
+            "ICD10": {
+              "code": "C50",
+              "term": "Breast Cancer",
+              "score": 0.85,
+              "evidence": {
+                "source_type": "ontology",
+                "source_file": "doid.owl/hp.owl",
+                "id": "C50",
+                "field": "xref",
+                "snippet": "ontology ICD mapping ICD10:C50",
+                "extra": {
+                  "system": "ICD10",
+                  "code": "C50"
+                }
+              }
+            },
+            "RXNORM": null,
+            "CPT4": {
+              "code": "81432",
+              "term": "Hereditary Breast/Gynecologic Cancer Panel, Varies",
+              "score": 0.43333333333333335,
+              "evidence": {
+                "source_type": "csv/xlsx",
+                "source_file": "cpt-codes-mayo.csv",
+                "id": "3112:0",
+                "field": "term/code",
+                "snippet": "term=Hereditary Breast/Gynecologic Cancer Panel, Varies | code=CPT4:81432",
+                "extra": {
+                  "system": "CPT4",
+                  "code": "81432",
+                  "mayo_test_id": "BRGYP",
+                  "panel_index": 1
+                }
+              }
+            },
+            "CPT": {
+              "code": "81432",
+              "term": "Hereditary Breast/Gynecologic Cancer Panel, Varies",
+              "score": 0.43333333333333335,
+              "evidence": {
+                "source_type": "csv/xlsx",
+                "source_file": "cpt-codes-mayo.csv",
+                "id": "3112:0",
+                "field": "term/code",
+                "snippet": "term=Hereditary Breast/Gynecologic Cancer Panel, Varies | code=CPT4:81432",
+                "extra": {
+                  "system": "CPT4",
+                  "code": "81432",
+                  "mayo_test_id": "BRGYP",
+                  "panel_index": 1
+                }
+              }
+            }
+          }
+        },
+        {
+          "term": "Specific Survival",
+          "mapped_codes": {
+            "ICD10CM": null,
+            "ICD10": {
+              "code": "F40.2",
+              "term": "Specific Survival",
+              "score": 0.85,
+              "evidence": {
+                "source_type": "ontology",
+                "source_file": "doid.owl/hp.owl",
+                "id": "F40.2",
+                "field": "xref",
+                "snippet": "ontology ICD mapping ICD10:F40.2",
+                "extra": {
+                  "system": "ICD10",
+                  "code": "F40.2"
+                }
+              }
+            },
+            "RXNORM": null,
+            "CPT4": {
+              "code": "83520",
+              "term": "Neuron-Specific Enolase, Serum",
+              "score": 0.30000000000000004,
+              "evidence": {
+                "source_type": "csv/xlsx",
+                "source_file": "cpt-codes-mayo.csv",
+                "id": "1639:0",
+                "field": "term/code",
+                "snippet": "term=Neuron-Specific Enolase, Serum | code=CPT4:83520",
+                "extra": {
+                  "system": "CPT4",
+                  "code": "83520",
+                  "mayo_test_id": "NSE",
+                  "panel_index": 1
+                }
+              }
+            },
+            "CPT": {
+              "code": "83520",
+              "term": "Neuron-Specific Enolase, Serum",
+              "score": 0.30000000000000004,
+              "evidence": {
+                "source_type": "csv/xlsx",
+                "source_file": "cpt-codes-mayo.csv",
+                "id": "1639:0",
+                "field": "term/code",
+                "snippet": "term=Neuron-Specific Enolase, Serum | code=CPT4:83520",
+                "extra": {
+                  "system": "CPT4",
+                  "code": "83520",
+                  "mayo_test_id": "NSE",
+                  "panel_index": 1
+                }
+              }
+            }
+          }
+        },
+        {
+          "term": "Time from T0 to death",
+          "mapped_codes": {
+            "ICD10CM": null,
+            "ICD10": {
+              "code": "E71.1",
+              "term": "Time from T0 to death",
+              "score": 0.85,
+              "evidence": {
+                "source_type": "ontology",
+                "source_file": "doid.owl/hp.owl",
+                "id": "E71.1",
+                "field": "xref",
+                "snippet": "ontology ICD mapping ICD10:E71.1",
+                "extra": {
+                  "system": "ICD10",
+                  "code": "E71.1"
+                }
+              }
+            },
+            "RXNORM": null,
+            "CPT4": {
+              "code": "85610",
+              "term": "Prothrombin Time, Plasma",
+              "score": 0.24285714285714285,
+              "evidence": {
+                "source_type": "csv/xlsx",
+                "source_file": "cpt-codes-mayo.csv",
+                "id": "435:0",
+                "field": "term/code",
+                "snippet": "term=Prothrombin Time, Plasma | code=CPT4:85610",
+                "extra": {
+                  "system": "CPT4",
+                  "code": "85610",
+                  "mayo_test_id": "PTTP",
+                  "panel_index": 1
+                }
+              }
+            },
+            "CPT": {
+              "code": "85610",
+              "term": "Prothrombin Time, Plasma",
+              "score": 0.24285714285714285,
+              "evidence": {
+                "source_type": "csv/xlsx",
+                "source_file": "cpt-codes-mayo.csv",
+                "id": "435:0",
+                "field": "term/code",
+                "snippet": "term=Prothrombin Time, Plasma | code=CPT4:85610",
+                "extra": {
+                  "system": "CPT4",
+                  "code": "85610",
+                  "mayo_test_id": "PTTP",
+                  "panel_index": 1
+                }
+              }
+            }
+          }
+        },
+        {
+          "term": "ICD-9: 174.x",
+          "mapped_codes": {
+            "ICD10CM": null,
+            "ICD10": {
+              "code": "H90.3",
+              "term": "ICD-9: 174.x",
+              "score": 0.85,
+              "evidence": {
+                "source_type": "ontology",
+                "source_file": "doid.owl/hp.owl",
+                "id": "H90.3",
+                "field": "xref",
+                "snippet": "ontology ICD mapping ICD10:H90.3",
+                "extra": {
+                  "system": "ICD10",
+                  "code": "H90.3"
+                }
+              }
+            },
+            "RXNORM": null,
+            "CPT4": {
+              "code": "85335",
+              "term": "Factor X Inhibitor Screen, Plasma",
+              "score": 0.225,
+              "evidence": {
+                "source_type": "csv/xlsx",
+                "source_file": "cpt-codes-mayo.csv",
+                "id": "27:0",
+                "field": "term/code",
+                "snippet": "term=Factor X Inhibitor Screen, Plasma | code=CPT4:85335",
+                "extra": {
+                  "system": "CPT4",
+                  "code": "85335",
+                  "mayo_test_id": "10_IS",
+                  "panel_index": 1
+                }
+              }
+            },
+            "CPT": {
+              "code": "85335",
+              "term": "Factor X Inhibitor Screen, Plasma",
+              "score": 0.225,
+              "evidence": {
+                "source_type": "csv/xlsx",
+                "source_file": "cpt-codes-mayo.csv",
+                "id": "27:0",
+                "field": "term/code",
+                "snippet": "term=Factor X Inhibitor Screen, Plasma | code=CPT4:85335",
+                "extra": {
+                  "system": "CPT4",
+                  "code": "85335",
+                  "mayo_test_id": "10_IS",
+                  "panel_index": 1
+                }
+              }
+            }
+          }
+        },
+        {
+          "term": "ICD-10: C50.x",
+          "mapped_codes": {
+            "ICD10CM": null,
+            "ICD10": {
+              "code": "H90.3",
+              "term": "ICD-10: C50.x",
+              "score": 0.85,
+              "evidence": {
+                "source_type": "ontology",
+                "source_file": "doid.owl/hp.owl",
+                "id": "H90.3",
+                "field": "xref",
+                "snippet": "ontology ICD mapping ICD10:H90.3",
+                "extra": {
+                  "system": "ICD10",
+                  "code": "H90.3"
+                }
+              }
+            },
+            "RXNORM": {
+              "code": "2562816",
+              "term": "finerenone 10 MG Oral Tablet",
+              "score": 0.125,
+              "evidence": {
+                "source_type": "csv/xlsx",
+                "source_file": "rxnorm_omop.csv",
+                "id": "78400",
+                "field": "term/code",
+                "snippet": "term=finerenone 10 MG Oral Tablet | code=RXNORM:2562816",
+                "extra": {
+                  "system": "RXNORM",
+                  "code": "2562816",
+                  "concept_id": "1537456",
+                  "domain_id": "Drug",
+                  "concept_class_id": "Clinical Drug"
+                }
+              }
+            },
+            "CPT4": {
+              "code": "85335",
+              "term": "Factor X Inhibitor Screen, Plasma",
+              "score": 0.225,
+              "evidence": {
+                "source_type": "csv/xlsx",
+                "source_file": "cpt-codes-mayo.csv",
+                "id": "27:0",
+                "field": "term/code",
+                "snippet": "term=Factor X Inhibitor Screen, Plasma | code=CPT4:85335",
+                "extra": {
+                  "system": "CPT4",
+                  "code": "85335",
+                  "mayo_test_id": "10_IS",
+                  "panel_index": 1
+                }
+              }
+            },
+            "CPT": {
+              "code": "85335",
+              "term": "Factor X Inhibitor Screen, Plasma",
+              "score": 0.225,
+              "evidence": {
+                "source_type": "csv/xlsx",
+                "source_file": "cpt-codes-mayo.csv",
+                "id": "27:0",
+                "field": "term/code",
+                "snippet": "term=Factor X Inhibitor Screen, Plasma | code=CPT4:85335",
+                "extra": {
+                  "system": "CPT4",
+                  "code": "85335",
+                  "mayo_test_id": "10_IS",
+                  "panel_index": 1
+                }
+              }
+            }
+          }
+        },
+        {
+          "term": "Death specifically attributed to breast cancer",
+          "mapped_codes": {
+            "ICD10CM": null,
+            "ICD10": {
+              "code": "E71.1",
+              "term": "Death specifically attributed to breast cancer",
+              "score": 0.85,
+              "evidence": {
+                "source_type": "ontology",
+                "source_file": "doid.owl/hp.owl",
+                "id": "E71.1",
+                "field": "xref",
+                "snippet": "ontology ICD mapping ICD10:E71.1",
+                "extra": {
+                  "system": "ICD10",
+                  "code": "E71.1"
+                }
+              }
+            },
+            "RXNORM": null,
+            "CPT4": {
+              "code": "81432",
+              "term": "Hereditary Breast/Gynecologic Cancer Panel, Varies",
+              "score": 0.30000000000000004,
+              "evidence": {
+                "source_type": "csv/xlsx",
+                "source_file": "cpt-codes-mayo.csv",
+                "id": "3112:0",
+                "field": "term/code",
+                "snippet": "term=Hereditary Breast/Gynecologic Cancer Panel, Varies | code=CPT4:81432",
+                "extra": {
+                  "system": "CPT4",
+                  "code": "81432",
+                  "mayo_test_id": "BRGYP",
+                  "panel_index": 1
+                }
+              }
+            },
+            "CPT": {
+              "code": "81432",
+              "term": "Hereditary Breast/Gynecologic Cancer Panel, Varies",
+              "score": 0.30000000000000004,
+              "evidence": {
+                "source_type": "csv/xlsx",
+                "source_file": "cpt-codes-mayo.csv",
+                "id": "3112:0",
+                "field": "term/code",
+                "snippet": "term=Hereditary Breast/Gynecologic Cancer Panel, Varies | code=CPT4:81432",
+                "extra": {
+                  "system": "CPT4",
+                  "code": "81432",
+                  "mayo_test_id": "BRGYP",
+                  "panel_index": 1
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "section_id": "sec_22",
+      "criterion_type": "other",
+      "text": "Axillary Recurrence (AR): New malignancy code in the ipsilateral axillary region (ICD-9: 196.3) or an ALND procedure occurring after the 90-day treatment window ($> T_0 + 90\\text{ days}$).",
+      "route_agents": [
+        "llm",
+        "terminology"
+      ],
+      "llm_parsed": {
+        "inclusion_concepts": [
+          "Axillary Recurrence",
+          "New malignancy code",
+          "ipsilateral axillary region",
+          "ALND procedure"
+        ],
+        "exclusion_concepts": [],
+        "temporal_constraints": [
+          "90-day treatment window",
+          "$> T_0 + 90\text{ days}$"
+        ],
+        "outcomes": [
+          "ICD-9: 196.3"
+        ]
+      },
+      "kb_hits": [],
+      "terminology_mappings": [
+        {
+          "term": "Axillary Recurrence",
+          "mapped_codes": {
+            "ICD10CM": null,
+            "ICD10": {
+              "code": "C50.61",
+              "term": "Axillary Recurrence",
+              "score": 0.85,
+              "evidence": {
+                "source_type": "ontology",
+                "source_file": "doid.owl/hp.owl",
+                "id": "C50.61",
+                "field": "xref",
+                "snippet": "ontology ICD mapping ICD10:C50.61",
+                "extra": {
+                  "system": "ICD10",
+                  "code": "C50.61"
+                }
+              }
+            },
+            "RXNORM": null,
+            "CPT4": null,
+            "CPT": null
+          }
+        },
+        {
+          "term": "New malignancy code",
+          "mapped_codes": {
+            "ICD10CM": null,
+            "ICD10": null,
+            "RXNORM": null,
+            "CPT4": {
+              "code": "88184",
+              "term": "Fetomaternal Bleed, New York, Blood",
+              "score": 0.24285714285714285,
+              "evidence": {
+                "source_type": "csv/xlsx",
+                "source_file": "cpt-codes-mayo.csv",
+                "id": "269:0",
+                "field": "term/code",
+                "snippet": "term=Fetomaternal Bleed, New York, Blood | code=CPT4:88184",
+                "extra": {
+                  "system": "CPT4",
+                  "code": "88184",
+                  "mayo_test_id": "FMBNY",
+                  "cpt_detail": "Flow cytometry; cell surface cytoplasmic",
+                  "panel_index": 1
+                }
+              }
+            },
+            "CPT": {
+              "code": "88184",
+              "term": "Fetomaternal Bleed, New York, Blood",
+              "score": 0.24285714285714285,
+              "evidence": {
+                "source_type": "csv/xlsx",
+                "source_file": "cpt-codes-mayo.csv",
+                "id": "269:0",
+                "field": "term/code",
+                "snippet": "term=Fetomaternal Bleed, New York, Blood | code=CPT4:88184",
+                "extra": {
+                  "system": "CPT4",
+                  "code": "88184",
+                  "mayo_test_id": "FMBNY",
+                  "cpt_detail": "Flow cytometry; cell surface cytoplasmic",
+                  "panel_index": 1
+                }
+              }
+            }
+          }
+        },
+        {
+          "term": "ipsilateral axillary region",
+          "mapped_codes": {
+            "ICD10CM": null,
+            "ICD10": {
+              "code": "C50.61",
+              "term": "ipsilateral axillary region",
+              "score": 0.85,
+              "evidence": {
+                "source_type": "ontology",
+                "source_file": "doid.owl/hp.owl",
+                "id": "C50.61",
+                "field": "xref",
+                "snippet": "ontology ICD mapping ICD10:C50.61",
+                "extra": {
+                  "system": "ICD10",
+                  "code": "C50.61"
+                }
+              }
+            },
+            "RXNORM": null,
+            "CPT4": {
+              "code": "82785",
+              "term": "Respiratory Profile, Region 18, Alaska, Serum",
+              "score": 0.225,
+              "evidence": {
+                "source_type": "csv/xlsx",
+                "source_file": "cpt-codes-mayo.csv",
+                "id": "853:0",
+                "field": "term/code",
+                "snippet": "term=Respiratory Profile, Region 18, Alaska, Serum | code=CPT4:82785",
+                "extra": {
+                  "system": "CPT4",
+                  "code": "82785",
+                  "mayo_test_id": "RPR18",
+                  "mayo_panel": true,
+                  "cpt_detail": "IgE",
+                  "panel_index": 1
+                }
+              }
+            },
+            "CPT": {
+              "code": "82785",
+              "term": "Respiratory Profile, Region 18, Alaska, Serum",
+              "score": 0.225,
+              "evidence": {
+                "source_type": "csv/xlsx",
+                "source_file": "cpt-codes-mayo.csv",
+                "id": "853:0",
+                "field": "term/code",
+                "snippet": "term=Respiratory Profile, Region 18, Alaska, Serum | code=CPT4:82785",
+                "extra": {
+                  "system": "CPT4",
+                  "code": "82785",
+                  "mayo_test_id": "RPR18",
+                  "mayo_panel": true,
+                  "cpt_detail": "IgE",
+                  "panel_index": 1
+                }
+              }
+            }
+          }
+        },
+        {
+          "term": "ALND procedure",
+          "mapped_codes": {
+            "ICD10CM": null,
+            "ICD10": null,
+            "RXNORM": null,
+            "CPT4": {
+              "code": "85597",
+              "term": "Platelet Neutralization Procedure, Plasma",
+              "score": 0.30000000000000004,
+              "evidence": {
+                "source_type": "csv/xlsx",
+                "source_file": "cpt-codes-mayo.csv",
+                "id": "164:0",
+                "field": "term/code",
+                "snippet": "term=Platelet Neutralization Procedure, Plasma | code=CPT4:85597",
+                "extra": {
+                  "system": "CPT4",
+                  "code": "85597",
+                  "mayo_test_id": "PNP",
+                  "panel_index": 1
+                }
+              }
+            },
+            "CPT": {
+              "code": "85597",
+              "term": "Platelet Neutralization Procedure, Plasma",
+              "score": 0.30000000000000004,
+              "evidence": {
+                "source_type": "csv/xlsx",
+                "source_file": "cpt-codes-mayo.csv",
+                "id": "164:0",
+                "field": "term/code",
+                "snippet": "term=Platelet Neutralization Procedure, Plasma | code=CPT4:85597",
+                "extra": {
+                  "system": "CPT4",
+                  "code": "85597",
+                  "mayo_test_id": "PNP",
+                  "panel_index": 1
+                }
+              }
+            }
+          }
+        },
+        {
+          "term": "ICD-9: 196.3",
+          "mapped_codes": {
+            "ICD10CM": null,
+            "ICD10": {
+              "code": "Q04.3",
+              "term": "ICD-9: 196.3",
+              "score": 0.85,
+              "evidence": {
+                "source_type": "ontology",
+                "source_file": "doid.owl/hp.owl",
+                "id": "Q04.3",
+                "field": "xref",
+                "snippet": "ontology ICD mapping ICD10:Q04.3",
+                "extra": {
+                  "system": "ICD10",
+                  "code": "Q04.3"
+                }
+              }
+            },
+            "RXNORM": {
+              "code": "1661327",
+              "term": "3-dimethylaminopropylamine",
+              "score": 0.2,
+              "evidence": {
+                "source_type": "csv/xlsx",
+                "source_file": "rxnorm_omop.csv",
+                "id": "43489",
+                "field": "term/code",
+                "snippet": "term=3-dimethylaminopropylamine | code=RXNORM:1661327",
+                "extra": {
+                  "system": "RXNORM",
+                  "code": "1661327",
+                  "concept_id": "46276135",
+                  "domain_id": "Drug",
+                  "concept_class_id": "Ingredient"
+                }
+              }
+            },
+            "CPT4": {
+              "code": "82777",
+              "term": "Galectin-3, Serum",
+              "score": 0.26666666666666666,
+              "evidence": {
+                "source_type": "csv/xlsx",
+                "source_file": "cpt-codes-mayo.csv",
+                "id": "2182:0",
+                "field": "term/code",
+                "snippet": "term=Galectin-3, Serum | code=CPT4:82777",
+                "extra": {
+                  "system": "CPT4",
+                  "code": "82777",
+                  "mayo_test_id": "GAL3",
+                  "panel_index": 1
+                }
+              }
+            },
+            "CPT": {
+              "code": "82777",
+              "term": "Galectin-3, Serum",
+              "score": 0.26666666666666666,
+              "evidence": {
+                "source_type": "csv/xlsx",
+                "source_file": "cpt-codes-mayo.csv",
+                "id": "2182:0",
+                "field": "term/code",
+                "snippet": "term=Galectin-3, Serum | code=CPT4:82777",
+                "extra": {
+                  "system": "CPT4",
+                  "code": "82777",
+                  "mayo_test_id": "GAL3",
+                  "panel_index": 1
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "section_id": "sec_23",
+      "criterion_type": "outcome",
+      "text": "Locoregional Recurrence (LRR): Composite endpoint of Axillary Recurrence (AR) or local recurrence in the ipsilateral breast.",
+      "route_agents": [
+        "llm",
+        "terminology"
+      ],
+      "llm_parsed": {
+        "inclusion_concepts": [
+          "locoregional recurrence",
+          "axillary recurrence",
+          "local recurrence",
+          "ipsilateral breast"
+        ],
+        "exclusion_concepts": [],
+        "temporal_constraints": [],
+        "outcomes": [
+          "locoregional recurrence"
+        ]
+      },
+      "kb_hits": [],
+      "terminology_mappings": [
+        {
+          "term": "locoregional recurrence",
+          "mapped_codes": {
+            "ICD10CM": null,
+            "ICD10": null,
+            "RXNORM": null,
+            "CPT4": null,
+            "CPT": null
+          }
+        },
+        {
+          "term": "axillary recurrence",
+          "mapped_codes": {
+            "ICD10CM": null,
+            "ICD10": {
+              "code": "C50.61",
+              "term": "axillary recurrence",
+              "score": 0.85,
+              "evidence": {
+                "source_type": "ontology",
+                "source_file": "doid.owl/hp.owl",
+                "id": "C50.61",
+                "field": "xref",
+                "snippet": "ontology ICD mapping ICD10:C50.61",
+                "extra": {
+                  "system": "ICD10",
+                  "code": "C50.61"
+                }
+              }
+            },
+            "RXNORM": null,
+            "CPT4": null,
+            "CPT": null
+          }
+        },
+        {
+          "term": "local recurrence",
+          "mapped_codes": {
+            "ICD10CM": null,
+            "ICD10": null,
+            "RXNORM": null,
+            "CPT4": null,
+            "CPT": null
+          }
+        },
+        {
+          "term": "ipsilateral breast",
+          "mapped_codes": {
+            "ICD10CM": null,
+            "ICD10": {
+              "code": "N60.0",
+              "term": "ipsilateral breast",
+              "score": 0.85,
+              "evidence": {
+                "source_type": "ontology",
+                "source_file": "doid.owl/hp.owl",
+                "id": "N60.0",
+                "field": "xref",
+                "snippet": "ontology ICD mapping ICD10:N60.0",
+                "extra": {
+                  "system": "ICD10",
+                  "code": "N60.0"
+                }
+              }
+            },
+            "RXNORM": null,
+            "CPT4": {
+              "code": "86300",
+              "term": "Breast Carcinoma-Associated Antigen, Serum",
+              "score": 0.26666666666666666,
+              "evidence": {
+                "source_type": "csv/xlsx",
+                "source_file": "cpt-codes-mayo.csv",
+                "id": "2719:0",
+                "field": "term/code",
+                "snippet": "term=Breast Carcinoma-Associated Antigen, Serum | code=CPT4:86300",
+                "extra": {
+                  "system": "CPT4",
+                  "code": "86300",
+                  "mayo_test_id": "C2729",
+                  "panel_index": 1
+                }
+              }
+            },
+            "CPT": {
+              "code": "86300",
+              "term": "Breast Carcinoma-Associated Antigen, Serum",
+              "score": 0.26666666666666666,
+              "evidence": {
+                "source_type": "csv/xlsx",
+                "source_file": "cpt-codes-mayo.csv",
+                "id": "2719:0",
+                "field": "term/code",
+                "snippet": "term=Breast Carcinoma-Associated Antigen, Serum | code=CPT4:86300",
+                "extra": {
+                  "system": "CPT4",
+                  "code": "86300",
+                  "mayo_test_id": "C2729",
+                  "panel_index": 1
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "inclusion_concepts": [
+    "T1-T2 N0 Breast Cancer",
+    "Positive Sentinel Nodes",
+    "Women",
+    "Men",
+    "Adults",
+    "Age >= 18",
+    "Male",
+    "Female",
+    "malignant breast cancer",
+    "ICD-9: 174.x",
+    "ICD-9: 175.x",
+    "ICD-10: C50.x",
+    "T1-T2",
+    "less than 5 cm",
+    "positive sentinel lymph nodes",
+    "Hematoxylin and Eosin (H&E) staining",
+    "1-2 positive sentinel lymph nodes",
+    "Breast Conserving Surgery",
+    "Lumpectomy",
+    "Index Date",
+    "baseline assessments",
+    "90 Days",
+    "Comorbidities",
+    "Vitals",
+    "Labs",
+    "Treatment Window",
+    "90 Days",
+    "Symmetrical window",
+    "[T_0, T_0 + 90 days]",
+    "Symmetrical 90-day rule",
+    "Treatment arm assignment",
+    "Randomized controlled trial",
+    "Clinical trial",
+    "Treatment group",
+    "Axillary Lymph Node Dissection",
+    "CPT 38740",
+    "CPT 38745",
+    "Absence of ALND procedure codes",
+    "Overall Survival",
+    "Time from T0 to death from any cause",
+    "Breast Cancer",
+    "Specific Survival",
+    "Time from T0 to death",
+    "ICD-9: 174.x",
+    "ICD-10: C50.x",
+    "Axillary Recurrence",
+    "New malignancy code",
+    "ipsilateral axillary region",
+    "ALND procedure",
+    "locoregional recurrence",
+    "axillary recurrence",
+    "local recurrence",
+    "ipsilateral breast"
+  ],
+  "exclusion_concepts": [
+    "systemic antineoplastic therapy (ATC L01)",
+    "endocrine therapy (ATC L02)",
+    "Prior Malignancy",
+    "Asymmetrical assignment",
+    "Non-randomized assignment",
+    "Uncontrolled assignment"
+  ],
+  "temporal_constraints": [
+    "SLND",
+    "ALND",
+    "90-day baseline lookback prior to the Index Surgery",
+    "$T_0$",
+    "T_0 - 90 days",
+    "T_0",
+    "90 days prior to surgery",
+    "90 days prior to $T_0$",
+    "$T_0$",
+    "Treatment Window (90 Days)",
+    "Symmetrical window $[T_0, T_0 + 90\text{ days}]$",
+    "90 days",
+    "Treatment duration",
+    "within 90 days of the Index Date",
+    "within 90 days of the Index Date",
+    "T0",
+    "Time from T0",
+    "90-day treatment window",
+    "$> T_0 + 90\text{ days}$"
+  ],
+  "outcomes": [
+    "Comparative Effectiveness",
+    "Treatment arm assignment adherence",
+    "Death from any cause",
+    "Death specifically attributed to breast cancer",
+    "ICD-9: 196.3",
+    "locoregional recurrence"
+  ],
+  "concept_mappings": [
+    {
+      "criterion_type": "other",
+      "term": "T1-T2 N0 Breast Cancer",
+      "mapped_codes": {
+        "ICD10CM": null,
+        "ICD10": {
+          "code": "C24.1",
+          "term": "T1-T2 N0 Breast Cancer",
+          "score": 0.85,
+          "evidence": {
+            "source_type": "ontology",
+            "source_file": "doid.owl/hp.owl",
+            "id": "C24.1",
+            "field": "xref",
+            "snippet": "ontology ICD mapping ICD10:C24.1",
+            "extra": {
+              "system": "ICD10",
+              "code": "C24.1"
+            }
+          }
+        },
+        "RXNORM": null,
+        "CPT4": {
+          "code": "81432",
+          "term": "Hereditary Breast/Gynecologic Cancer Panel, Varies",
+          "score": 0.3222222222222222,
+          "evidence": {
+            "source_type": "csv/xlsx",
+            "source_file": "cpt-codes-mayo.csv",
+            "id": "3112:0",
+            "field": "term/code",
+            "snippet": "term=Hereditary Breast/Gynecologic Cancer Panel, Varies | code=CPT4:81432",
+            "extra": {
+              "system": "CPT4",
+              "code": "81432",
+              "mayo_test_id": "BRGYP",
+              "panel_index": 1
+            }
+          }
+        },
+        "CPT": {
+          "code": "81432",
+          "term": "Hereditary Breast/Gynecologic Cancer Panel, Varies",
+          "score": 0.3222222222222222,
+          "evidence": {
+            "source_type": "csv/xlsx",
+            "source_file": "cpt-codes-mayo.csv",
+            "id": "3112:0",
+            "field": "term/code",
+            "snippet": "term=Hereditary Breast/Gynecologic Cancer Panel, Varies | code=CPT4:81432",
+            "extra": {
+              "system": "CPT4",
+              "code": "81432",
+              "mayo_test_id": "BRGYP",
+              "panel_index": 1
+            }
+          }
+        }
+      }
+    },
+    {
+      "criterion_type": "other",
+      "term": "Positive Sentinel Nodes",
+      "mapped_codes": {
+        "ICD10CM": null,
+        "ICD10": {
+          "code": "D81.1",
+          "term": "Positive Sentinel Nodes",
+          "score": 0.85,
+          "evidence": {
+            "source_type": "ontology",
+            "source_file": "doid.owl/hp.owl",
+            "id": "D81.1",
+            "field": "xref",
+            "snippet": "ontology ICD mapping ICD10:D81.1",
+            "extra": {
+              "system": "ICD10",
+              "code": "D81.1"
+            }
+          }
+        },
+        "RXNORM": null,
+        "CPT4": null,
+        "CPT": null
+      }
+    },
+    {
+      "criterion_type": "other",
+      "term": "Women",
+      "mapped_codes": {
+        "ICD10CM": null,
+        "ICD10": null,
+        "RXNORM": null,
+        "CPT4": null,
+        "CPT": null
+      }
+    },
+    {
+      "criterion_type": "other",
+      "term": "Men",
+      "mapped_codes": {
+        "ICD10CM": null,
+        "ICD10": null,
+        "RXNORM": null,
+        "CPT4": null,
+        "CPT": null
+      }
+    },
+    {
+      "criterion_type": "other",
+      "term": "Comparative Effectiveness",
+      "mapped_codes": {
+        "ICD10CM": null,
+        "ICD10": null,
+        "RXNORM": null,
+        "CPT4": null,
+        "CPT": null
+      }
+    },
+    {
+      "criterion_type": "other",
+      "term": "Adults",
+      "mapped_codes": {
+        "ICD10CM": null,
+        "ICD10": null,
+        "RXNORM": null,
+        "CPT4": null,
+        "CPT": null
+      }
+    },
+    {
+      "criterion_type": "other",
+      "term": "Age >= 18",
+      "mapped_codes": {
+        "ICD10CM": null,
+        "ICD10": {
+          "code": "E23.0",
+          "term": "Age >= 18",
+          "score": 0.85,
+          "evidence": {
+            "source_type": "ontology",
+            "source_file": "doid.owl/hp.owl",
+            "id": "E23.0",
+            "field": "xref",
+            "snippet": "ontology ICD mapping ICD10:E23.0",
+            "extra": {
+              "system": "ICD10",
+              "code": "E23.0"
+            }
+          }
+        },
+        "RXNORM": null,
+        "CPT4": {
+          "code": "82542",
+          "term": "18-Hydroxycorticosterone, Serum",
+          "score": 0.35,
+          "evidence": {
+            "source_type": "csv/xlsx",
+            "source_file": "cpt-codes-mayo.csv",
+            "id": "1502:0",
+            "field": "term/code",
+            "snippet": "term=18-Hydroxycorticosterone, Serum | code=CPT4:82542",
+            "extra": {
+              "system": "CPT4",
+              "code": "82542",
+              "mayo_test_id": "FHC18",
+              "panel_index": 1
+            }
+          }
+        },
+        "CPT": {
+          "code": "82542",
+          "term": "18-Hydroxycorticosterone, Serum",
+          "score": 0.35,
+          "evidence": {
+            "source_type": "csv/xlsx",
+            "source_file": "cpt-codes-mayo.csv",
+            "id": "1502:0",
+            "field": "term/code",
+            "snippet": "term=18-Hydroxycorticosterone, Serum | code=CPT4:82542",
+            "extra": {
+              "system": "CPT4",
+              "code": "82542",
+              "mayo_test_id": "FHC18",
+              "panel_index": 1
+            }
+          }
+        }
+      }
+    },
+    {
+      "criterion_type": "other",
+      "term": "Male",
+      "mapped_codes": {
+        "ICD10CM": null,
+        "ICD10": {
+          "code": "N50.1",
+          "term": "Male",
+          "score": 0.85,
+          "evidence": {
+            "source_type": "ontology",
+            "source_file": "doid.owl/hp.owl",
+            "id": "N50.1",
+            "field": "xref",
+            "snippet": "ontology ICD mapping ICD10:N50.1",
+            "extra": {
+              "system": "ICD10",
+              "code": "N50.1"
+            }
+          }
+        },
+        "RXNORM": null,
+        "CPT4": null,
+        "CPT": null
+      }
+    },
+    {
+      "criterion_type": "other",
+      "term": "Female",
+      "mapped_codes": {
+        "ICD10CM": null,
+        "ICD10": {
+          "code": "C57",
+          "term": "Female",
+          "score": 0.85,
+          "evidence": {
+            "source_type": "ontology",
+            "source_file": "doid.owl/hp.owl",
+            "id": "C57",
+            "field": "xref",
+            "snippet": "ontology ICD mapping ICD10:C57",
+            "extra": {
+              "system": "ICD10",
+              "code": "C57"
+            }
+          }
+        },
+        "RXNORM": null,
+        "CPT4": null,
+        "CPT": null
+      }
+    },
+    {
+      "criterion_type": "inclusion",
+      "term": "malignant breast cancer",
+      "mapped_codes": {
+        "ICD10CM": null,
+        "ICD10": {
+          "code": "C24.1",
+          "term": "malignant breast cancer",
+          "score": 0.85,
+          "evidence": {
+            "source_type": "ontology",
+            "source_file": "doid.owl/hp.owl",
+            "id": "C24.1",
+            "field": "xref",
+            "snippet": "ontology ICD mapping ICD10:C24.1",
+            "extra": {
+              "system": "ICD10",
+              "code": "C24.1"
+            }
+          }
+        },
+        "RXNORM": null,
+        "CPT4": {
+          "code": "81432",
+          "term": "Hereditary Breast/Gynecologic Cancer Panel, Varies",
+          "score": 0.3857142857142857,
+          "evidence": {
+            "source_type": "csv/xlsx",
+            "source_file": "cpt-codes-mayo.csv",
+            "id": "3112:0",
+            "field": "term/code",
+            "snippet": "term=Hereditary Breast/Gynecologic Cancer Panel, Varies | code=CPT4:81432",
+            "extra": {
+              "system": "CPT4",
+              "code": "81432",
+              "mayo_test_id": "BRGYP",
+              "panel_index": 1
+            }
+          }
+        },
+        "CPT": {
+          "code": "81432",
+          "term": "Hereditary Breast/Gynecologic Cancer Panel, Varies",
+          "score": 0.3857142857142857,
+          "evidence": {
+            "source_type": "csv/xlsx",
+            "source_file": "cpt-codes-mayo.csv",
+            "id": "3112:0",
+            "field": "term/code",
+            "snippet": "term=Hereditary Breast/Gynecologic Cancer Panel, Varies | code=CPT4:81432",
+            "extra": {
+              "system": "CPT4",
+              "code": "81432",
+              "mayo_test_id": "BRGYP",
+              "panel_index": 1
+            }
+          }
+        }
+      }
+    },
+    {
+      "criterion_type": "inclusion",
+      "term": "ICD-9: 174.x",
+      "mapped_codes": {
+        "ICD10CM": null,
+        "ICD10": {
+          "code": "H90.3",
+          "term": "ICD-9: 174.x",
+          "score": 0.85,
+          "evidence": {
+            "source_type": "ontology",
+            "source_file": "doid.owl/hp.owl",
+            "id": "H90.3",
+            "field": "xref",
+            "snippet": "ontology ICD mapping ICD10:H90.3",
+            "extra": {
+              "system": "ICD10",
+              "code": "H90.3"
+            }
+          }
+        },
+        "RXNORM": null,
+        "CPT4": {
+          "code": "85335",
+          "term": "Factor X Inhibitor Screen, Plasma",
+          "score": 0.225,
+          "evidence": {
+            "source_type": "csv/xlsx",
+            "source_file": "cpt-codes-mayo.csv",
+            "id": "27:0",
+            "field": "term/code",
+            "snippet": "term=Factor X Inhibitor Screen, Plasma | code=CPT4:85335",
+            "extra": {
+              "system": "CPT4",
+              "code": "85335",
+              "mayo_test_id": "10_IS",
+              "panel_index": 1
+            }
+          }
+        },
+        "CPT": {
+          "code": "85335",
+          "term": "Factor X Inhibitor Screen, Plasma",
+          "score": 0.225,
+          "evidence": {
+            "source_type": "csv/xlsx",
+            "source_file": "cpt-codes-mayo.csv",
+            "id": "27:0",
+            "field": "term/code",
+            "snippet": "term=Factor X Inhibitor Screen, Plasma | code=CPT4:85335",
+            "extra": {
+              "system": "CPT4",
+              "code": "85335",
+              "mayo_test_id": "10_IS",
+              "panel_index": 1
+            }
+          }
+        }
+      }
+    },
+    {
+      "criterion_type": "inclusion",
+      "term": "ICD-9: 175.x",
+      "mapped_codes": {
+        "ICD10CM": null,
+        "ICD10": {
+          "code": "H90.3",
+          "term": "ICD-9: 175.x",
+          "score": 0.85,
+          "evidence": {
+            "source_type": "ontology",
+            "source_file": "doid.owl/hp.owl",
+            "id": "H90.3",
+            "field": "xref",
+            "snippet": "ontology ICD mapping ICD10:H90.3",
+            "extra": {
+              "system": "ICD10",
+              "code": "H90.3"
+            }
+          }
+        },
+        "RXNORM": null,
+        "CPT4": {
+          "code": "85335",
+          "term": "Factor X Inhibitor Screen, Plasma",
+          "score": 0.225,
+          "evidence": {
+            "source_type": "csv/xlsx",
+            "source_file": "cpt-codes-mayo.csv",
+            "id": "27:0",
+            "field": "term/code",
+            "snippet": "term=Factor X Inhibitor Screen, Plasma | code=CPT4:85335",
+            "extra": {
+              "system": "CPT4",
+              "code": "85335",
+              "mayo_test_id": "10_IS",
+              "panel_index": 1
+            }
+          }
+        },
+        "CPT": {
+          "code": "85335",
+          "term": "Factor X Inhibitor Screen, Plasma",
+          "score": 0.225,
+          "evidence": {
+            "source_type": "csv/xlsx",
+            "source_file": "cpt-codes-mayo.csv",
+            "id": "27:0",
+            "field": "term/code",
+            "snippet": "term=Factor X Inhibitor Screen, Plasma | code=CPT4:85335",
+            "extra": {
+              "system": "CPT4",
+              "code": "85335",
+              "mayo_test_id": "10_IS",
+              "panel_index": 1
+            }
+          }
+        }
+      }
+    },
+    {
+      "criterion_type": "inclusion",
+      "term": "ICD-10: C50.x",
+      "mapped_codes": {
+        "ICD10CM": null,
+        "ICD10": {
+          "code": "H90.3",
+          "term": "ICD-10: C50.x",
+          "score": 0.85,
+          "evidence": {
+            "source_type": "ontology",
+            "source_file": "doid.owl/hp.owl",
+            "id": "H90.3",
+            "field": "xref",
+            "snippet": "ontology ICD mapping ICD10:H90.3",
+            "extra": {
+              "system": "ICD10",
+              "code": "H90.3"
+            }
+          }
+        },
+        "RXNORM": {
+          "code": "2562816",
+          "term": "finerenone 10 MG Oral Tablet",
+          "score": 0.125,
+          "evidence": {
+            "source_type": "csv/xlsx",
+            "source_file": "rxnorm_omop.csv",
+            "id": "78400",
+            "field": "term/code",
+            "snippet": "term=finerenone 10 MG Oral Tablet | code=RXNORM:2562816",
+            "extra": {
+              "system": "RXNORM",
+              "code": "2562816",
+              "concept_id": "1537456",
+              "domain_id": "Drug",
+              "concept_class_id": "Clinical Drug"
+            }
+          }
+        },
+        "CPT4": {
+          "code": "85335",
+          "term": "Factor X Inhibitor Screen, Plasma",
+          "score": 0.225,
+          "evidence": {
+            "source_type": "csv/xlsx",
+            "source_file": "cpt-codes-mayo.csv",
+            "id": "27:0",
+            "field": "term/code",
+            "snippet": "term=Factor X Inhibitor Screen, Plasma | code=CPT4:85335",
+            "extra": {
+              "system": "CPT4",
+              "code": "85335",
+              "mayo_test_id": "10_IS",
+              "panel_index": 1
+            }
+          }
+        },
+        "CPT": {
+          "code": "85335",
+          "term": "Factor X Inhibitor Screen, Plasma",
+          "score": 0.225,
+          "evidence": {
+            "source_type": "csv/xlsx",
+            "source_file": "cpt-codes-mayo.csv",
+            "id": "27:0",
+            "field": "term/code",
+            "snippet": "term=Factor X Inhibitor Screen, Plasma | code=CPT4:85335",
+            "extra": {
+              "system": "CPT4",
+              "code": "85335",
+              "mayo_test_id": "10_IS",
+              "panel_index": 1
+            }
+          }
+        }
+      }
+    },
+    {
+      "criterion_type": "other",
+      "term": "T1-T2",
+      "mapped_codes": {
+        "ICD10CM": null,
+        "ICD10": null,
+        "RXNORM": null,
+        "CPT4": null,
+        "CPT": null
+      }
+    },
+    {
+      "criterion_type": "other",
+      "term": "less than 5 cm",
+      "mapped_codes": {
+        "ICD10CM": null,
+        "ICD10": {
+          "code": "Q87.1",
+          "term": "less than 5 cm",
+          "score": 0.85,
+          "evidence": {
+            "source_type": "ontology",
+            "source_file": "doid.owl/hp.owl",
+            "id": "Q87.1",
+            "field": "xref",
+            "snippet": "ontology ICD mapping ICD10:Q87.1",
+            "extra": {
+              "system": "ICD10",
+              "code": "Q87.1"
+            }
+          }
+        },
+        "RXNORM": {
+          "code": "2532331",
+          "term": "ponesimod 5 MG Oral Tablet",
+          "score": 0.125,
+          "evidence": {
+            "source_type": "csv/xlsx",
+            "source_file": "rxnorm_omop.csv",
+            "id": "77330",
+            "field": "term/code",
+            "snippet": "term=ponesimod 5 MG Oral Tablet | code=RXNORM:2532331",
+            "extra": {
+              "system": "RXNORM",
+              "code": "2532331",
+              "concept_id": "740150",
+              "domain_id": "Drug",
+              "concept_class_id": "Clinical Drug"
+            }
+          }
+        },
+        "CPT4": {
+          "code": "82542",
+          "term": "5-Methyltetrahydrofolate",
+          "score": 0.30000000000000004,
+          "evidence": {
+            "source_type": "csv/xlsx",
+            "source_file": "cpt-codes-mayo.csv",
+            "id": "516:0",
+            "field": "term/code",
+            "snippet": "term=5-Methyltetrahydrofolate | code=CPT4:82542",
+            "extra": {
+              "system": "CPT4",
+              "code": "82542",
+              "mayo_test_id": "F5M",
+              "panel_index": 1
+            }
+          }
+        },
+        "CPT": {
+          "code": "82542",
+          "term": "5-Methyltetrahydrofolate",
+          "score": 0.30000000000000004,
+          "evidence": {
+            "source_type": "csv/xlsx",
+            "source_file": "cpt-codes-mayo.csv",
+            "id": "516:0",
+            "field": "term/code",
+            "snippet": "term=5-Methyltetrahydrofolate | code=CPT4:82542",
+            "extra": {
+              "system": "CPT4",
+              "code": "82542",
+              "mayo_test_id": "F5M",
+              "panel_index": 1
+            }
+          }
+        }
+      }
+    },
+    {
+      "criterion_type": "inclusion",
+      "term": "positive sentinel lymph nodes",
+      "mapped_codes": {
+        "ICD10CM": null,
+        "ICD10": {
+          "code": "D81.1",
+          "term": "positive sentinel lymph nodes",
+          "score": 0.85,
+          "evidence": {
+            "source_type": "ontology",
+            "source_file": "doid.owl/hp.owl",
+            "id": "D81.1",
+            "field": "xref",
+            "snippet": "ontology ICD mapping ICD10:D81.1",
+            "extra": {
+              "system": "ICD10",
+              "code": "D81.1"
+            }
+          }
+        },
+        "RXNORM": null,
+        "CPT4": {
+          "code": "82308",
+          "term": "Calcitonin, Fine-Needle Aspiration Biopsy Needle Wash, Lymph Node",
+          "score": 0.19090909090909092,
+          "evidence": {
+            "source_type": "csv/xlsx",
+            "source_file": "cpt-codes-mayo.csv",
+            "id": "811:0",
+            "field": "term/code",
+            "snippet": "term=Calcitonin, Fine-Needle Aspiration Biopsy Needle Wash, Lymph Node | code=CPT4:82308",
+            "extra": {
+              "system": "CPT4",
+              "code": "82308",
+              "mayo_test_id": "CATLN",
+              "panel_index": 1
+            }
+          }
+        },
+        "CPT": {
+          "code": "82308",
+          "term": "Calcitonin, Fine-Needle Aspiration Biopsy Needle Wash, Lymph Node",
+          "score": 0.19090909090909092,
+          "evidence": {
+            "source_type": "csv/xlsx",
+            "source_file": "cpt-codes-mayo.csv",
+            "id": "811:0",
+            "field": "term/code",
+            "snippet": "term=Calcitonin, Fine-Needle Aspiration Biopsy Needle Wash, Lymph Node | code=CPT4:82308",
+            "extra": {
+              "system": "CPT4",
+              "code": "82308",
+              "mayo_test_id": "CATLN",
+              "panel_index": 1
+            }
+          }
+        }
+      }
+    },
+    {
+      "criterion_type": "inclusion",
+      "term": "Hematoxylin and Eosin (H&E) staining",
+      "mapped_codes": {
+        "ICD10CM": null,
+        "ICD10": {
+          "code": "D82.8",
+          "term": "Hematoxylin and Eosin (H&E) staining",
+          "score": 0.85,
+          "evidence": {
+            "source_type": "ontology",
+            "source_file": "doid.owl/hp.owl",
+            "id": "D82.8",
+            "field": "xref",
+            "snippet": "ontology ICD mapping ICD10:D82.8",
+            "extra": {
+              "system": "ICD10",
+              "code": "D82.8"
+            }
+          }
+        },
+        "RXNORM": null,
+        "CPT4": {
+          "code": "84446",
+          "term": "Vitamin A and Vitamin E, Serum",
+          "score": 0.3222222222222222,
+          "evidence": {
+            "source_type": "csv/xlsx",
+            "source_file": "cpt-codes-mayo.csv",
+            "id": "2662:0",
+            "field": "term/code",
+            "snippet": "term=Vitamin A and Vitamin E, Serum | code=CPT4:84446",
+            "extra": {
+              "system": "CPT4",
+              "code": "84446",
+              "mayo_test_id": "VITAE",
+              "mayo_panel": true,
+              "panel_index": 1
+            }
+          }
+        },
+        "CPT": {
+          "code": "84446",
+          "term": "Vitamin A and Vitamin E, Serum",
+          "score": 0.3222222222222222,
+          "evidence": {
+            "source_type": "csv/xlsx",
+            "source_file": "cpt-codes-mayo.csv",
+            "id": "2662:0",
+            "field": "term/code",
+            "snippet": "term=Vitamin A and Vitamin E, Serum | code=CPT4:84446",
+            "extra": {
+              "system": "CPT4",
+              "code": "84446",
+              "mayo_test_id": "VITAE",
+              "mayo_panel": true,
+              "panel_index": 1
+            }
+          }
+        }
+      }
+    },
+    {
+      "criterion_type": "inclusion",
+      "term": "1-2 positive sentinel lymph nodes",
+      "mapped_codes": {
+        "ICD10CM": null,
+        "ICD10": {
+          "code": "G71.1",
+          "term": "1-2 positive sentinel lymph nodes",
+          "score": 0.85,
+          "evidence": {
+            "source_type": "ontology",
+            "source_file": "doid.owl/hp.owl",
+            "id": "G71.1",
+            "field": "xref",
+            "snippet": "ontology ICD mapping ICD10:G71.1",
+            "extra": {
+              "system": "ICD10",
+              "code": "G71.1"
+            }
+          }
+        },
+        "RXNORM": {
+          "code": "2056895",
+          "term": "everolimus 1 MG Oral Tablet",
+          "score": 0.1,
+          "evidence": {
+            "source_type": "csv/xlsx",
+            "source_file": "rxnorm_omop.csv",
+            "id": "59478",
+            "field": "term/code",
+            "snippet": "term=everolimus 1 MG Oral Tablet | code=RXNORM:2056895",
+            "extra": {
+              "system": "RXNORM",
+              "code": "2056895",
+              "concept_id": "35200596",
+              "domain_id": "Drug",
+              "concept_class_id": "Clinical Drug"
+            }
+          }
+        },
+        "CPT4": {
+          "code": "83520",
+          "term": "Prothrombin Fragment 1+2 MoAb",
+          "score": 0.30000000000000004,
+          "evidence": {
+            "source_type": "csv/xlsx",
+            "source_file": "cpt-codes-mayo.csv",
+            "id": "1492:0",
+            "field": "term/code",
+            "snippet": "term=Prothrombin Fragment 1+2 MoAb | code=CPT4:83520",
+            "extra": {
+              "system": "CPT4",
+              "code": "83520",
+              "mayo_test_id": "FPF12",
+              "panel_index": 1
+            }
+          }
+        },
+        "CPT": {
+          "code": "83520",
+          "term": "Prothrombin Fragment 1+2 MoAb",
+          "score": 0.30000000000000004,
+          "evidence": {
+            "source_type": "csv/xlsx",
+            "source_file": "cpt-codes-mayo.csv",
+            "id": "1492:0",
+            "field": "term/code",
+            "snippet": "term=Prothrombin Fragment 1+2 MoAb | code=CPT4:83520",
+            "extra": {
+              "system": "CPT4",
+              "code": "83520",
+              "mayo_test_id": "FPF12",
+              "panel_index": 1
+            }
+          }
+        }
+      }
+    },
+    {
+      "criterion_type": "other",
+      "term": "Breast Conserving Surgery",
+      "mapped_codes": {
+        "ICD10CM": null,
+        "ICD10": {
+          "code": "N60.0",
+          "term": "Breast Conserving Surgery",
+          "score": 0.85,
+          "evidence": {
+            "source_type": "ontology",
+            "source_file": "doid.owl/hp.owl",
+            "id": "N60.0",
+            "field": "xref",
+            "snippet": "ontology ICD mapping ICD10:N60.0",
+            "extra": {
+              "system": "ICD10",
+              "code": "N60.0"
+            }
+          }
+        },
+        "RXNORM": null,
+        "CPT4": {
+          "code": "86300",
+          "term": "Breast Carcinoma-Associated Antigen, Serum",
+          "score": 0.24285714285714285,
+          "evidence": {
+            "source_type": "csv/xlsx",
+            "source_file": "cpt-codes-mayo.csv",
+            "id": "2719:0",
+            "field": "term/code",
+            "snippet": "term=Breast Carcinoma-Associated Antigen, Serum | code=CPT4:86300",
+            "extra": {
+              "system": "CPT4",
+              "code": "86300",
+              "mayo_test_id": "C2729",
+              "panel_index": 1
+            }
+          }
+        },
+        "CPT": {
+          "code": "86300",
+          "term": "Breast Carcinoma-Associated Antigen, Serum",
+          "score": 0.24285714285714285,
+          "evidence": {
+            "source_type": "csv/xlsx",
+            "source_file": "cpt-codes-mayo.csv",
+            "id": "2719:0",
+            "field": "term/code",
+            "snippet": "term=Breast Carcinoma-Associated Antigen, Serum | code=CPT4:86300",
+            "extra": {
+              "system": "CPT4",
+              "code": "86300",
+              "mayo_test_id": "C2729",
+              "panel_index": 1
+            }
+          }
+        }
+      }
+    },
+    {
+      "criterion_type": "other",
+      "term": "Lumpectomy",
+      "mapped_codes": {
+        "ICD10CM": null,
+        "ICD10": null,
+        "RXNORM": null,
+        "CPT4": null,
+        "CPT": null
+      }
+    },
+    {
+      "criterion_type": "other",
+      "term": "Index Date",
+      "mapped_codes": {
+        "ICD10CM": null,
+        "ICD10": null,
+        "RXNORM": null,
+        "CPT4": {
+          "code": "86343",
+          "term": "CU Index",
+          "score": 0.43333333333333335,
+          "evidence": {
+            "source_type": "csv/xlsx",
+            "source_file": "cpt-codes-mayo.csv",
+            "id": "564:0",
+            "field": "term/code",
+            "snippet": "term=CU Index | code=CPT4:86343",
+            "extra": {
+              "system": "CPT4",
+              "code": "86343",
+              "mayo_test_id": "FCUIX",
+              "panel_index": 1
+            }
+          }
+        },
+        "CPT": {
+          "code": "86343",
+          "term": "CU Index",
+          "score": 0.43333333333333335,
+          "evidence": {
+            "source_type": "csv/xlsx",
+            "source_file": "cpt-codes-mayo.csv",
+            "id": "564:0",
+            "field": "term/code",
+            "snippet": "term=CU Index | code=CPT4:86343",
+            "extra": {
+              "system": "CPT4",
+              "code": "86343",
+              "mayo_test_id": "FCUIX",
+              "panel_index": 1
+            }
+          }
+        }
+      }
+    },
+    {
+      "criterion_type": "other",
+      "term": "baseline assessments",
+      "mapped_codes": {
+        "ICD10CM": null,
+        "ICD10": null,
+        "RXNORM": null,
+        "CPT4": null,
+        "CPT": null
+      }
+    },
+    {
+      "criterion_type": "other",
+      "term": "90 Days",
+      "mapped_codes": {
+        "ICD10CM": null,
+        "ICD10": null,
+        "RXNORM": null,
+        "CPT4": null,
+        "CPT": null
+      }
+    },
+    {
+      "criterion_type": "other",
+      "term": "Comorbidities",
+      "mapped_codes": {
+        "ICD10CM": null,
+        "ICD10": null,
+        "RXNORM": null,
+        "CPT4": null,
+        "CPT": null
+      }
+    },
+    {
+      "criterion_type": "other",
+      "term": "Vitals",
+      "mapped_codes": {
+        "ICD10CM": null,
+        "ICD10": null,
+        "RXNORM": null,
+        "CPT4": null,
+        "CPT": null
+      }
+    },
+    {
+      "criterion_type": "other",
+      "term": "Labs",
+      "mapped_codes": {
+        "ICD10CM": null,
+        "ICD10": null,
+        "RXNORM": null,
+        "CPT4": null,
+        "CPT": null
+      }
+    },
+    {
+      "criterion_type": "exclusion",
+      "term": "systemic antineoplastic therapy (ATC L01)",
+      "mapped_codes": {
+        "ICD10CM": null,
+        "ICD10": {
+          "code": "E71.41",
+          "term": "systemic antineoplastic therapy (ATC L01)",
+          "score": 0.85,
+          "evidence": {
+            "source_type": "ontology",
+            "source_file": "doid.owl/hp.owl",
+            "id": "E71.41",
+            "field": "xref",
+            "snippet": "ontology ICD mapping ICD10:E71.41",
+            "extra": {
+              "system": "ICD10",
+              "code": "E71.41"
+            }
+          }
+        },
+        "RXNORM": null,
+        "CPT4": {
+          "code": "86039",
+          "term": "Systemic Sclerosis Criteria Panel, Serum",
+          "score": 0.2111111111111111,
+          "evidence": {
+            "source_type": "csv/xlsx",
+            "source_file": "cpt-codes-mayo.csv",
+            "id": "3742:0",
+            "field": "term/code",
+            "snippet": "term=Systemic Sclerosis Criteria Panel, Serum | code=CPT4:86039",
+            "extra": {
+              "system": "CPT4",
+              "code": "86039",
+              "mayo_test_id": "SSCP",
+              "mayo_panel": true,
+              "panel_index": 1
+            }
+          }
+        },
+        "CPT": {
+          "code": "86039",
+          "term": "Systemic Sclerosis Criteria Panel, Serum",
+          "score": 0.2111111111111111,
+          "evidence": {
+            "source_type": "csv/xlsx",
+            "source_file": "cpt-codes-mayo.csv",
+            "id": "3742:0",
+            "field": "term/code",
+            "snippet": "term=Systemic Sclerosis Criteria Panel, Serum | code=CPT4:86039",
+            "extra": {
+              "system": "CPT4",
+              "code": "86039",
+              "mayo_test_id": "SSCP",
+              "mayo_panel": true,
+              "panel_index": 1
+            }
+          }
+        }
+      }
+    },
+    {
+      "criterion_type": "exclusion",
+      "term": "endocrine therapy (ATC L02)",
+      "mapped_codes": {
+        "ICD10CM": null,
+        "ICD10": {
+          "code": "E31.22",
+          "term": "endocrine therapy (ATC L02)",
+          "score": 0.85,
+          "evidence": {
+            "source_type": "ontology",
+            "source_file": "doid.owl/hp.owl",
+            "id": "E31.22",
+            "field": "xref",
+            "snippet": "ontology ICD mapping ICD10:E31.22",
+            "extra": {
+              "system": "ICD10",
+              "code": "E31.22"
+            }
+          }
+        },
+        "RXNORM": null,
+        "CPT4": {
+          "code": "82384",
+          "term": "Catecholamine, Endocrine Study, Plasma",
+          "score": 0.24285714285714285,
+          "evidence": {
+            "source_type": "csv/xlsx",
+            "source_file": "cpt-codes-mayo.csv",
+            "id": "292:0",
+            "field": "term/code",
+            "snippet": "term=Catecholamine, Endocrine Study, Plasma | code=CPT4:82384",
+            "extra": {
+              "system": "CPT4",
+              "code": "82384",
+              "mayo_test_id": "CATPA",
+              "multiplier": 2,
+              "panel_index": 1
+            }
+          }
+        },
+        "CPT": {
+          "code": "82384",
+          "term": "Catecholamine, Endocrine Study, Plasma",
+          "score": 0.24285714285714285,
+          "evidence": {
+            "source_type": "csv/xlsx",
+            "source_file": "cpt-codes-mayo.csv",
+            "id": "292:0",
+            "field": "term/code",
+            "snippet": "term=Catecholamine, Endocrine Study, Plasma | code=CPT4:82384",
+            "extra": {
+              "system": "CPT4",
+              "code": "82384",
+              "mayo_test_id": "CATPA",
+              "multiplier": 2,
+              "panel_index": 1
+            }
+          }
+        }
+      }
+    },
+    {
+      "criterion_type": "exclusion",
+      "term": "Prior Malignancy",
+      "mapped_codes": {
+        "ICD10CM": null,
+        "ICD10": null,
+        "RXNORM": null,
+        "CPT4": {
+          "code": "88377",
+          "term": "Biliary Tract Malignancy, FISH, Varies",
+          "score": 0.26666666666666666,
+          "evidence": {
+            "source_type": "csv/xlsx",
+            "source_file": "cpt-codes-mayo.csv",
+            "id": "1380:0",
+            "field": "term/code",
+            "snippet": "term=Biliary Tract Malignancy, FISH, Varies | code=CPT4:88377",
+            "extra": {
+              "system": "CPT4",
+              "code": "88377",
+              "mayo_test_id": "BILAO",
+              "panel_index": 1
+            }
+          }
+        },
+        "CPT": {
+          "code": "88377",
+          "term": "Biliary Tract Malignancy, FISH, Varies",
+          "score": 0.26666666666666666,
+          "evidence": {
+            "source_type": "csv/xlsx",
+            "source_file": "cpt-codes-mayo.csv",
+            "id": "1380:0",
+            "field": "term/code",
+            "snippet": "term=Biliary Tract Malignancy, FISH, Varies | code=CPT4:88377",
+            "extra": {
+              "system": "CPT4",
+              "code": "88377",
+              "mayo_test_id": "BILAO",
+              "panel_index": 1
+            }
+          }
+        }
+      }
+    },
+    {
+      "criterion_type": "other",
+      "term": "Treatment Window",
+      "mapped_codes": {
+        "ICD10CM": null,
+        "ICD10": null,
+        "RXNORM": null,
+        "CPT4": {
+          "code": "81432",
+          "term": "Rapid Hereditary Breast Cancer Treatment Decision Panel, Varies",
+          "score": 0.2111111111111111,
+          "evidence": {
+            "source_type": "csv/xlsx",
+            "source_file": "cpt-codes-mayo.csv",
+            "id": "3538:0",
+            "field": "term/code",
+            "snippet": "term=Rapid Hereditary Breast Cancer Treatment Decision Panel, Varies | code=CPT4:81432",
+            "extra": {
+              "system": "CPT4",
+              "code": "81432",
+              "mayo_test_id": "BRTP",
+              "panel_index": 1
+            }
+          }
+        },
+        "CPT": {
+          "code": "81432",
+          "term": "Rapid Hereditary Breast Cancer Treatment Decision Panel, Varies",
+          "score": 0.2111111111111111,
+          "evidence": {
+            "source_type": "csv/xlsx",
+            "source_file": "cpt-codes-mayo.csv",
+            "id": "3538:0",
+            "field": "term/code",
+            "snippet": "term=Rapid Hereditary Breast Cancer Treatment Decision Panel, Varies | code=CPT4:81432",
+            "extra": {
+              "system": "CPT4",
+              "code": "81432",
+              "mayo_test_id": "BRTP",
+              "panel_index": 1
+            }
+          }
+        }
+      }
+    },
+    {
+      "criterion_type": "other",
+      "term": "90 Days",
+      "mapped_codes": {
+        "ICD10CM": null,
+        "ICD10": null,
+        "RXNORM": null,
+        "CPT4": null,
+        "CPT": null
+      }
+    },
+    {
+      "criterion_type": "other",
+      "term": "Symmetrical window",
+      "mapped_codes": {
+        "ICD10CM": null,
+        "ICD10": null,
+        "RXNORM": null,
+        "CPT4": null,
+        "CPT": null
+      }
+    },
+    {
+      "criterion_type": "other",
+      "term": "[T_0, T_0 + 90 days]",
+      "mapped_codes": {
+        "ICD10CM": null,
+        "ICD10": {
+          "code": "C91.5",
+          "term": "[T_0, T_0 + 90 days]",
+          "score": 0.85,
+          "evidence": {
+            "source_type": "ontology",
+            "source_file": "doid.owl/hp.owl",
+            "id": "C91.5",
+            "field": "xref",
+            "snippet": "ontology ICD mapping ICD10:C91.5",
+            "extra": {
+              "system": "ICD10",
+              "code": "C91.5"
+            }
+          }
+        },
+        "RXNORM": {
+          "code": "1607796",
+          "term": "deferasirox 90 MG Oral Tablet",
+          "score": 0.125,
+          "evidence": {
+            "source_type": "csv/xlsx",
+            "source_file": "rxnorm_omop.csv",
+            "id": "41409",
+            "field": "term/code",
+            "snippet": "term=deferasirox 90 MG Oral Tablet | code=RXNORM:1607796",
+            "extra": {
+              "system": "RXNORM",
+              "code": "1607796",
+              "concept_id": "46221241",
+              "domain_id": "Drug",
+              "concept_class_id": "Clinical Drug"
+            }
+          }
+        },
+        "CPT4": {
+          "code": "84484",
+          "term": "Troponin T, 5th Generation, Plasma",
+          "score": 0.225,
+          "evidence": {
+            "source_type": "csv/xlsx",
+            "source_file": "cpt-codes-mayo.csv",
+            "id": "1091:0",
+            "field": "term/code",
+            "snippet": "term=Troponin T, 5th Generation, Plasma | code=CPT4:84484",
+            "extra": {
+              "system": "CPT4",
+              "code": "84484",
+              "mayo_test_id": "TRPS",
+              "panel_index": 1
+            }
+          }
+        },
+        "CPT": {
+          "code": "84484",
+          "term": "Troponin T, 5th Generation, Plasma",
+          "score": 0.225,
+          "evidence": {
+            "source_type": "csv/xlsx",
+            "source_file": "cpt-codes-mayo.csv",
+            "id": "1091:0",
+            "field": "term/code",
+            "snippet": "term=Troponin T, 5th Generation, Plasma | code=CPT4:84484",
+            "extra": {
+              "system": "CPT4",
+              "code": "84484",
+              "mayo_test_id": "TRPS",
+              "panel_index": 1
+            }
+          }
+        }
+      }
+    },
+    {
+      "criterion_type": "other",
+      "term": "Symmetrical 90-day rule",
+      "mapped_codes": {
+        "ICD10CM": null,
+        "ICD10": {
+          "code": "G90.1",
+          "term": "Symmetrical 90-day rule",
+          "score": 0.85,
+          "evidence": {
+            "source_type": "ontology",
+            "source_file": "doid.owl/hp.owl",
+            "id": "G90.1",
+            "field": "xref",
+            "snippet": "ontology ICD mapping ICD10:G90.1",
+            "extra": {
+              "system": "ICD10",
+              "code": "G90.1"
+            }
+          }
+        },
+        "RXNORM": {
+          "code": "1607796",
+          "term": "deferasirox 90 MG Oral Tablet",
+          "score": 0.125,
+          "evidence": {
+            "source_type": "csv/xlsx",
+            "source_file": "rxnorm_omop.csv",
+            "id": "41409",
+            "field": "term/code",
+            "snippet": "term=deferasirox 90 MG Oral Tablet | code=RXNORM:1607796",
+            "extra": {
+              "system": "RXNORM",
+              "code": "1607796",
+              "concept_id": "46221241",
+              "domain_id": "Drug",
+              "concept_class_id": "Clinical Drug"
+            }
+          }
+        },
+        "CPT4": null,
+        "CPT": null
+      }
+    },
+    {
+      "criterion_type": "other",
+      "term": "Treatment arm assignment",
+      "mapped_codes": {
+        "ICD10CM": null,
+        "ICD10": null,
+        "RXNORM": null,
+        "CPT4": {
+          "code": "81432",
+          "term": "Rapid Hereditary Breast Cancer Treatment Decision Panel, Varies",
+          "score": 0.2,
+          "evidence": {
+            "source_type": "csv/xlsx",
+            "source_file": "cpt-codes-mayo.csv",
+            "id": "3538:0",
+            "field": "term/code",
+            "snippet": "term=Rapid Hereditary Breast Cancer Treatment Decision Panel, Varies | code=CPT4:81432",
+            "extra": {
+              "system": "CPT4",
+              "code": "81432",
+              "mayo_test_id": "BRTP",
+              "panel_index": 1
+            }
+          }
+        },
+        "CPT": {
+          "code": "81432",
+          "term": "Rapid Hereditary Breast Cancer Treatment Decision Panel, Varies",
+          "score": 0.2,
+          "evidence": {
+            "source_type": "csv/xlsx",
+            "source_file": "cpt-codes-mayo.csv",
+            "id": "3538:0",
+            "field": "term/code",
+            "snippet": "term=Rapid Hereditary Breast Cancer Treatment Decision Panel, Varies | code=CPT4:81432",
+            "extra": {
+              "system": "CPT4",
+              "code": "81432",
+              "mayo_test_id": "BRTP",
+              "panel_index": 1
+            }
+          }
+        }
+      }
+    },
+    {
+      "criterion_type": "other",
+      "term": "Randomized controlled trial",
+      "mapped_codes": {
+        "ICD10CM": null,
+        "ICD10": null,
+        "RXNORM": null,
+        "CPT4": {
+          "code": "80307",
+          "term": "Controlled Substance Monitoring Panel, Random, Urine",
+          "score": 0.225,
+          "evidence": {
+            "source_type": "csv/xlsx",
+            "source_file": "cpt-codes-mayo.csv",
+            "id": "3035:0",
+            "field": "term/code",
+            "snippet": "term=Controlled Substance Monitoring Panel, Random, Urine | code=CPT4:80307",
+            "extra": {
+              "system": "CPT4",
+              "code": "80307",
+              "mayo_test_id": "CSMPU",
+              "mayo_panel": true,
+              "panel_index": 1
+            }
+          }
+        },
+        "CPT": {
+          "code": "80307",
+          "term": "Controlled Substance Monitoring Panel, Random, Urine",
+          "score": 0.225,
+          "evidence": {
+            "source_type": "csv/xlsx",
+            "source_file": "cpt-codes-mayo.csv",
+            "id": "3035:0",
+            "field": "term/code",
+            "snippet": "term=Controlled Substance Monitoring Panel, Random, Urine | code=CPT4:80307",
+            "extra": {
+              "system": "CPT4",
+              "code": "80307",
+              "mayo_test_id": "CSMPU",
+              "mayo_panel": true,
+              "panel_index": 1
+            }
+          }
+        }
+      }
+    },
+    {
+      "criterion_type": "other",
+      "term": "Clinical trial",
+      "mapped_codes": {
+        "ICD10CM": null,
+        "ICD10": null,
+        "RXNORM": null,
+        "CPT4": null,
+        "CPT": null
+      }
+    },
+    {
+      "criterion_type": "other",
+      "term": "Treatment group",
+      "mapped_codes": {
+        "ICD10CM": null,
+        "ICD10": {
+          "code": "Q82.1",
+          "term": "Treatment group",
+          "score": 0.85,
+          "evidence": {
+            "source_type": "ontology",
+            "source_file": "doid.owl/hp.owl",
+            "id": "Q82.1",
+            "field": "xref",
+            "snippet": "ontology ICD mapping ICD10:Q82.1",
+            "extra": {
+              "system": "ICD10",
+              "code": "Q82.1"
+            }
+          }
+        },
+        "RXNORM": null,
+        "CPT4": {
+          "code": "80184",
+          "term": "Phenytoin, Total and Phenobarbital Group, Serum",
+          "score": 0.24285714285714285,
+          "evidence": {
+            "source_type": "csv/xlsx",
+            "source_file": "cpt-codes-mayo.csv",
+            "id": "408:0",
+            "field": "term/code",
+            "snippet": "term=Phenytoin, Total and Phenobarbital Group, Serum | code=CPT4:80184",
+            "extra": {
+              "system": "CPT4",
+              "code": "80184",
+              "mayo_test_id": "PNYG",
+              "mayo_panel": true,
+              "cpt_detail": "Phenobarbital",
+              "panel_index": 1
+            }
+          }
+        },
+        "CPT": {
+          "code": "80184",
+          "term": "Phenytoin, Total and Phenobarbital Group, Serum",
+          "score": 0.24285714285714285,
+          "evidence": {
+            "source_type": "csv/xlsx",
+            "source_file": "cpt-codes-mayo.csv",
+            "id": "408:0",
+            "field": "term/code",
+            "snippet": "term=Phenytoin, Total and Phenobarbital Group, Serum | code=CPT4:80184",
+            "extra": {
+              "system": "CPT4",
+              "code": "80184",
+              "mayo_test_id": "PNYG",
+              "mayo_panel": true,
+              "cpt_detail": "Phenobarbital",
+              "panel_index": 1
+            }
+          }
+        }
+      }
+    },
+    {
+      "criterion_type": "other",
+      "term": "Asymmetrical assignment",
+      "mapped_codes": {
+        "ICD10CM": null,
+        "ICD10": null,
+        "RXNORM": null,
+        "CPT4": null,
+        "CPT": null
+      }
+    },
+    {
+      "criterion_type": "other",
+      "term": "Non-randomized assignment",
+      "mapped_codes": {
+        "ICD10CM": null,
+        "ICD10": {
+          "code": "C85.9",
+          "term": "Non-randomized assignment",
+          "score": 0.85,
+          "evidence": {
+            "source_type": "ontology",
+            "source_file": "doid.owl/hp.owl",
+            "id": "C85.9",
+            "field": "xref",
+            "snippet": "ontology ICD mapping ICD10:C85.9",
+            "extra": {
+              "system": "ICD10",
+              "code": "C85.9"
+            }
+          }
+        },
+        "RXNORM": null,
+        "CPT4": {
+          "code": "88104",
+          "term": "Cytology Non-Gynecologic, Varies",
+          "score": 0.26666666666666666,
+          "evidence": {
+            "source_type": "csv/xlsx",
+            "source_file": "cpt-codes-mayo.csv",
+            "id": "1113:0",
+            "field": "term/code",
+            "snippet": "term=Cytology Non-Gynecologic, Varies | code=CPT4:88104",
+            "extra": {
+              "system": "CPT4",
+              "code": "88104",
+              "mayo_test_id": "CYTNG",
+              "mayo_panel": true,
+              "cpt_detail": "NDSPC (if appropriate)",
+              "panel_index": 1
+            }
+          }
+        },
+        "CPT": {
+          "code": "88104",
+          "term": "Cytology Non-Gynecologic, Varies",
+          "score": 0.26666666666666666,
+          "evidence": {
+            "source_type": "csv/xlsx",
+            "source_file": "cpt-codes-mayo.csv",
+            "id": "1113:0",
+            "field": "term/code",
+            "snippet": "term=Cytology Non-Gynecologic, Varies | code=CPT4:88104",
+            "extra": {
+              "system": "CPT4",
+              "code": "88104",
+              "mayo_test_id": "CYTNG",
+              "mayo_panel": true,
+              "cpt_detail": "NDSPC (if appropriate)",
+              "panel_index": 1
+            }
+          }
+        }
+      }
+    },
+    {
+      "criterion_type": "other",
+      "term": "Uncontrolled assignment",
+      "mapped_codes": {
+        "ICD10CM": null,
+        "ICD10": null,
+        "RXNORM": null,
+        "CPT4": null,
+        "CPT": null
+      }
+    },
+    {
+      "criterion_type": "other",
+      "term": "Treatment arm assignment adherence",
+      "mapped_codes": {
+        "ICD10CM": null,
+        "ICD10": null,
+        "RXNORM": null,
+        "CPT4": {
+          "code": "81432",
+          "term": "Rapid Hereditary Breast Cancer Treatment Decision Panel, Varies",
+          "score": 0.19090909090909092,
+          "evidence": {
+            "source_type": "csv/xlsx",
+            "source_file": "cpt-codes-mayo.csv",
+            "id": "3538:0",
+            "field": "term/code",
+            "snippet": "term=Rapid Hereditary Breast Cancer Treatment Decision Panel, Varies | code=CPT4:81432",
+            "extra": {
+              "system": "CPT4",
+              "code": "81432",
+              "mayo_test_id": "BRTP",
+              "panel_index": 1
+            }
+          }
+        },
+        "CPT": {
+          "code": "81432",
+          "term": "Rapid Hereditary Breast Cancer Treatment Decision Panel, Varies",
+          "score": 0.19090909090909092,
+          "evidence": {
+            "source_type": "csv/xlsx",
+            "source_file": "cpt-codes-mayo.csv",
+            "id": "3538:0",
+            "field": "term/code",
+            "snippet": "term=Rapid Hereditary Breast Cancer Treatment Decision Panel, Varies | code=CPT4:81432",
+            "extra": {
+              "system": "CPT4",
+              "code": "81432",
+              "mayo_test_id": "BRTP",
+              "panel_index": 1
+            }
+          }
+        }
+      }
+    },
+    {
+      "criterion_type": "other",
+      "term": "Axillary Lymph Node Dissection",
+      "mapped_codes": {
+        "ICD10CM": null,
+        "ICD10": {
+          "code": "C50.61",
+          "term": "Axillary Lymph Node Dissection",
+          "score": 0.85,
+          "evidence": {
+            "source_type": "ontology",
+            "source_file": "doid.owl/hp.owl",
+            "id": "C50.61",
+            "field": "xref",
+            "snippet": "ontology ICD mapping ICD10:C50.61",
+            "extra": {
+              "system": "ICD10",
+              "code": "C50.61"
+            }
+          }
+        },
+        "RXNORM": null,
+        "CPT4": {
+          "code": "82308",
+          "term": "Calcitonin, Fine-Needle Aspiration Biopsy Needle Wash, Lymph Node",
+          "score": 0.30000000000000004,
+          "evidence": {
+            "source_type": "csv/xlsx",
+            "source_file": "cpt-codes-mayo.csv",
+            "id": "811:0",
+            "field": "term/code",
+            "snippet": "term=Calcitonin, Fine-Needle Aspiration Biopsy Needle Wash, Lymph Node | code=CPT4:82308",
+            "extra": {
+              "system": "CPT4",
+              "code": "82308",
+              "mayo_test_id": "CATLN",
+              "panel_index": 1
+            }
+          }
+        },
+        "CPT": {
+          "code": "82308",
+          "term": "Calcitonin, Fine-Needle Aspiration Biopsy Needle Wash, Lymph Node",
+          "score": 0.30000000000000004,
+          "evidence": {
+            "source_type": "csv/xlsx",
+            "source_file": "cpt-codes-mayo.csv",
+            "id": "811:0",
+            "field": "term/code",
+            "snippet": "term=Calcitonin, Fine-Needle Aspiration Biopsy Needle Wash, Lymph Node | code=CPT4:82308",
+            "extra": {
+              "system": "CPT4",
+              "code": "82308",
+              "mayo_test_id": "CATLN",
+              "panel_index": 1
+            }
+          }
+        }
+      }
+    },
+    {
+      "criterion_type": "other",
+      "term": "CPT 38740",
+      "mapped_codes": {
+        "ICD10CM": null,
+        "ICD10": null,
+        "RXNORM": null,
+        "CPT4": null,
+        "CPT": null
+      }
+    },
+    {
+      "criterion_type": "other",
+      "term": "CPT 38745",
+      "mapped_codes": {
+        "ICD10CM": null,
+        "ICD10": null,
+        "RXNORM": null,
+        "CPT4": null,
+        "CPT": null
+      }
+    },
+    {
+      "criterion_type": "other",
+      "term": "Absence of ALND procedure codes",
+      "mapped_codes": {
+        "ICD10CM": null,
+        "ICD10": {
+          "code": "E88.9",
+          "term": "Absence of ALND procedure codes",
+          "score": 0.85,
+          "evidence": {
+            "source_type": "ontology",
+            "source_file": "doid.owl/hp.owl",
+            "id": "E88.9",
+            "field": "xref",
+            "snippet": "ontology ICD mapping ICD10:E88.9",
+            "extra": {
+              "system": "ICD10",
+              "code": "E88.9"
+            }
+          }
+        },
+        "RXNORM": null,
+        "CPT4": {
+          "code": "85597",
+          "term": "Platelet Neutralization Procedure, Plasma",
+          "score": 0.225,
+          "evidence": {
+            "source_type": "csv/xlsx",
+            "source_file": "cpt-codes-mayo.csv",
+            "id": "164:0",
+            "field": "term/code",
+            "snippet": "term=Platelet Neutralization Procedure, Plasma | code=CPT4:85597",
+            "extra": {
+              "system": "CPT4",
+              "code": "85597",
+              "mayo_test_id": "PNP",
+              "panel_index": 1
+            }
+          }
+        },
+        "CPT": {
+          "code": "85597",
+          "term": "Platelet Neutralization Procedure, Plasma",
+          "score": 0.225,
+          "evidence": {
+            "source_type": "csv/xlsx",
+            "source_file": "cpt-codes-mayo.csv",
+            "id": "164:0",
+            "field": "term/code",
+            "snippet": "term=Platelet Neutralization Procedure, Plasma | code=CPT4:85597",
+            "extra": {
+              "system": "CPT4",
+              "code": "85597",
+              "mayo_test_id": "PNP",
+              "panel_index": 1
+            }
+          }
+        }
+      }
+    },
+    {
+      "criterion_type": "other",
+      "term": "Overall Survival",
+      "mapped_codes": {
+        "ICD10CM": null,
+        "ICD10": null,
+        "RXNORM": null,
+        "CPT4": null,
+        "CPT": null
+      }
+    },
+    {
+      "criterion_type": "other",
+      "term": "Time from T0 to death from any cause",
+      "mapped_codes": {
+        "ICD10CM": null,
+        "ICD10": {
+          "code": "E71.1",
+          "term": "Time from T0 to death from any cause",
+          "score": 0.85,
+          "evidence": {
+            "source_type": "ontology",
+            "source_file": "doid.owl/hp.owl",
+            "id": "E71.1",
+            "field": "xref",
+            "snippet": "ontology ICD mapping ICD10:E71.1",
+            "extra": {
+              "system": "ICD10",
+              "code": "E71.1"
+            }
+          }
+        },
+        "RXNORM": null,
+        "CPT4": {
+          "code": "85610",
+          "term": "Prothrombin Time, Plasma",
+          "score": 0.2111111111111111,
+          "evidence": {
+            "source_type": "csv/xlsx",
+            "source_file": "cpt-codes-mayo.csv",
+            "id": "435:0",
+            "field": "term/code",
+            "snippet": "term=Prothrombin Time, Plasma | code=CPT4:85610",
+            "extra": {
+              "system": "CPT4",
+              "code": "85610",
+              "mayo_test_id": "PTTP",
+              "panel_index": 1
+            }
+          }
+        },
+        "CPT": {
+          "code": "85610",
+          "term": "Prothrombin Time, Plasma",
+          "score": 0.2111111111111111,
+          "evidence": {
+            "source_type": "csv/xlsx",
+            "source_file": "cpt-codes-mayo.csv",
+            "id": "435:0",
+            "field": "term/code",
+            "snippet": "term=Prothrombin Time, Plasma | code=CPT4:85610",
+            "extra": {
+              "system": "CPT4",
+              "code": "85610",
+              "mayo_test_id": "PTTP",
+              "panel_index": 1
+            }
+          }
+        }
+      }
+    },
+    {
+      "criterion_type": "other",
+      "term": "Death from any cause",
+      "mapped_codes": {
+        "ICD10CM": null,
+        "ICD10": null,
+        "RXNORM": null,
+        "CPT4": {
+          "code": "88037",
+          "term": "Sudden Cardiac Death Pathology Consultation",
+          "score": 0.225,
+          "evidence": {
+            "source_type": "csv/xlsx",
+            "source_file": "cpt-codes-mayo.csv",
+            "id": "2765:0",
+            "field": "term/code",
+            "snippet": "term=Sudden Cardiac Death Pathology Consultation | code=CPT4:88037",
+            "extra": {
+              "system": "CPT4",
+              "code": "88037",
+              "mayo_test_id": "SUDC",
+              "panel_index": 1
+            }
+          }
+        },
+        "CPT": {
+          "code": "88037",
+          "term": "Sudden Cardiac Death Pathology Consultation",
+          "score": 0.225,
+          "evidence": {
+            "source_type": "csv/xlsx",
+            "source_file": "cpt-codes-mayo.csv",
+            "id": "2765:0",
+            "field": "term/code",
+            "snippet": "term=Sudden Cardiac Death Pathology Consultation | code=CPT4:88037",
+            "extra": {
+              "system": "CPT4",
+              "code": "88037",
+              "mayo_test_id": "SUDC",
+              "panel_index": 1
+            }
+          }
+        }
+      }
+    },
+    {
+      "criterion_type": "other",
+      "term": "Breast Cancer",
+      "mapped_codes": {
+        "ICD10CM": null,
+        "ICD10": {
+          "code": "C50",
+          "term": "Breast Cancer",
+          "score": 0.85,
+          "evidence": {
+            "source_type": "ontology",
+            "source_file": "doid.owl/hp.owl",
+            "id": "C50",
+            "field": "xref",
+            "snippet": "ontology ICD mapping ICD10:C50",
+            "extra": {
+              "system": "ICD10",
+              "code": "C50"
+            }
+          }
+        },
+        "RXNORM": null,
+        "CPT4": {
+          "code": "81432",
+          "term": "Hereditary Breast/Gynecologic Cancer Panel, Varies",
+          "score": 0.43333333333333335,
+          "evidence": {
+            "source_type": "csv/xlsx",
+            "source_file": "cpt-codes-mayo.csv",
+            "id": "3112:0",
+            "field": "term/code",
+            "snippet": "term=Hereditary Breast/Gynecologic Cancer Panel, Varies | code=CPT4:81432",
+            "extra": {
+              "system": "CPT4",
+              "code": "81432",
+              "mayo_test_id": "BRGYP",
+              "panel_index": 1
+            }
+          }
+        },
+        "CPT": {
+          "code": "81432",
+          "term": "Hereditary Breast/Gynecologic Cancer Panel, Varies",
+          "score": 0.43333333333333335,
+          "evidence": {
+            "source_type": "csv/xlsx",
+            "source_file": "cpt-codes-mayo.csv",
+            "id": "3112:0",
+            "field": "term/code",
+            "snippet": "term=Hereditary Breast/Gynecologic Cancer Panel, Varies | code=CPT4:81432",
+            "extra": {
+              "system": "CPT4",
+              "code": "81432",
+              "mayo_test_id": "BRGYP",
+              "panel_index": 1
+            }
+          }
+        }
+      }
+    },
+    {
+      "criterion_type": "other",
+      "term": "Specific Survival",
+      "mapped_codes": {
+        "ICD10CM": null,
+        "ICD10": {
+          "code": "F40.2",
+          "term": "Specific Survival",
+          "score": 0.85,
+          "evidence": {
+            "source_type": "ontology",
+            "source_file": "doid.owl/hp.owl",
+            "id": "F40.2",
+            "field": "xref",
+            "snippet": "ontology ICD mapping ICD10:F40.2",
+            "extra": {
+              "system": "ICD10",
+              "code": "F40.2"
+            }
+          }
+        },
+        "RXNORM": null,
+        "CPT4": {
+          "code": "83520",
+          "term": "Neuron-Specific Enolase, Serum",
+          "score": 0.30000000000000004,
+          "evidence": {
+            "source_type": "csv/xlsx",
+            "source_file": "cpt-codes-mayo.csv",
+            "id": "1639:0",
+            "field": "term/code",
+            "snippet": "term=Neuron-Specific Enolase, Serum | code=CPT4:83520",
+            "extra": {
+              "system": "CPT4",
+              "code": "83520",
+              "mayo_test_id": "NSE",
+              "panel_index": 1
+            }
+          }
+        },
+        "CPT": {
+          "code": "83520",
+          "term": "Neuron-Specific Enolase, Serum",
+          "score": 0.30000000000000004,
+          "evidence": {
+            "source_type": "csv/xlsx",
+            "source_file": "cpt-codes-mayo.csv",
+            "id": "1639:0",
+            "field": "term/code",
+            "snippet": "term=Neuron-Specific Enolase, Serum | code=CPT4:83520",
+            "extra": {
+              "system": "CPT4",
+              "code": "83520",
+              "mayo_test_id": "NSE",
+              "panel_index": 1
+            }
+          }
+        }
+      }
+    },
+    {
+      "criterion_type": "other",
+      "term": "Time from T0 to death",
+      "mapped_codes": {
+        "ICD10CM": null,
+        "ICD10": {
+          "code": "E71.1",
+          "term": "Time from T0 to death",
+          "score": 0.85,
+          "evidence": {
+            "source_type": "ontology",
+            "source_file": "doid.owl/hp.owl",
+            "id": "E71.1",
+            "field": "xref",
+            "snippet": "ontology ICD mapping ICD10:E71.1",
+            "extra": {
+              "system": "ICD10",
+              "code": "E71.1"
+            }
+          }
+        },
+        "RXNORM": null,
+        "CPT4": {
+          "code": "85610",
+          "term": "Prothrombin Time, Plasma",
+          "score": 0.24285714285714285,
+          "evidence": {
+            "source_type": "csv/xlsx",
+            "source_file": "cpt-codes-mayo.csv",
+            "id": "435:0",
+            "field": "term/code",
+            "snippet": "term=Prothrombin Time, Plasma | code=CPT4:85610",
+            "extra": {
+              "system": "CPT4",
+              "code": "85610",
+              "mayo_test_id": "PTTP",
+              "panel_index": 1
+            }
+          }
+        },
+        "CPT": {
+          "code": "85610",
+          "term": "Prothrombin Time, Plasma",
+          "score": 0.24285714285714285,
+          "evidence": {
+            "source_type": "csv/xlsx",
+            "source_file": "cpt-codes-mayo.csv",
+            "id": "435:0",
+            "field": "term/code",
+            "snippet": "term=Prothrombin Time, Plasma | code=CPT4:85610",
+            "extra": {
+              "system": "CPT4",
+              "code": "85610",
+              "mayo_test_id": "PTTP",
+              "panel_index": 1
+            }
+          }
+        }
+      }
+    },
+    {
+      "criterion_type": "other",
+      "term": "ICD-9: 174.x",
+      "mapped_codes": {
+        "ICD10CM": null,
+        "ICD10": {
+          "code": "H90.3",
+          "term": "ICD-9: 174.x",
+          "score": 0.85,
+          "evidence": {
+            "source_type": "ontology",
+            "source_file": "doid.owl/hp.owl",
+            "id": "H90.3",
+            "field": "xref",
+            "snippet": "ontology ICD mapping ICD10:H90.3",
+            "extra": {
+              "system": "ICD10",
+              "code": "H90.3"
+            }
+          }
+        },
+        "RXNORM": null,
+        "CPT4": {
+          "code": "85335",
+          "term": "Factor X Inhibitor Screen, Plasma",
+          "score": 0.225,
+          "evidence": {
+            "source_type": "csv/xlsx",
+            "source_file": "cpt-codes-mayo.csv",
+            "id": "27:0",
+            "field": "term/code",
+            "snippet": "term=Factor X Inhibitor Screen, Plasma | code=CPT4:85335",
+            "extra": {
+              "system": "CPT4",
+              "code": "85335",
+              "mayo_test_id": "10_IS",
+              "panel_index": 1
+            }
+          }
+        },
+        "CPT": {
+          "code": "85335",
+          "term": "Factor X Inhibitor Screen, Plasma",
+          "score": 0.225,
+          "evidence": {
+            "source_type": "csv/xlsx",
+            "source_file": "cpt-codes-mayo.csv",
+            "id": "27:0",
+            "field": "term/code",
+            "snippet": "term=Factor X Inhibitor Screen, Plasma | code=CPT4:85335",
+            "extra": {
+              "system": "CPT4",
+              "code": "85335",
+              "mayo_test_id": "10_IS",
+              "panel_index": 1
+            }
+          }
+        }
+      }
+    },
+    {
+      "criterion_type": "other",
+      "term": "ICD-10: C50.x",
+      "mapped_codes": {
+        "ICD10CM": null,
+        "ICD10": {
+          "code": "H90.3",
+          "term": "ICD-10: C50.x",
+          "score": 0.85,
+          "evidence": {
+            "source_type": "ontology",
+            "source_file": "doid.owl/hp.owl",
+            "id": "H90.3",
+            "field": "xref",
+            "snippet": "ontology ICD mapping ICD10:H90.3",
+            "extra": {
+              "system": "ICD10",
+              "code": "H90.3"
+            }
+          }
+        },
+        "RXNORM": {
+          "code": "2562816",
+          "term": "finerenone 10 MG Oral Tablet",
+          "score": 0.125,
+          "evidence": {
+            "source_type": "csv/xlsx",
+            "source_file": "rxnorm_omop.csv",
+            "id": "78400",
+            "field": "term/code",
+            "snippet": "term=finerenone 10 MG Oral Tablet | code=RXNORM:2562816",
+            "extra": {
+              "system": "RXNORM",
+              "code": "2562816",
+              "concept_id": "1537456",
+              "domain_id": "Drug",
+              "concept_class_id": "Clinical Drug"
+            }
+          }
+        },
+        "CPT4": {
+          "code": "85335",
+          "term": "Factor X Inhibitor Screen, Plasma",
+          "score": 0.225,
+          "evidence": {
+            "source_type": "csv/xlsx",
+            "source_file": "cpt-codes-mayo.csv",
+            "id": "27:0",
+            "field": "term/code",
+            "snippet": "term=Factor X Inhibitor Screen, Plasma | code=CPT4:85335",
+            "extra": {
+              "system": "CPT4",
+              "code": "85335",
+              "mayo_test_id": "10_IS",
+              "panel_index": 1
+            }
+          }
+        },
+        "CPT": {
+          "code": "85335",
+          "term": "Factor X Inhibitor Screen, Plasma",
+          "score": 0.225,
+          "evidence": {
+            "source_type": "csv/xlsx",
+            "source_file": "cpt-codes-mayo.csv",
+            "id": "27:0",
+            "field": "term/code",
+            "snippet": "term=Factor X Inhibitor Screen, Plasma | code=CPT4:85335",
+            "extra": {
+              "system": "CPT4",
+              "code": "85335",
+              "mayo_test_id": "10_IS",
+              "panel_index": 1
+            }
+          }
+        }
+      }
+    },
+    {
+      "criterion_type": "other",
+      "term": "Death specifically attributed to breast cancer",
+      "mapped_codes": {
+        "ICD10CM": null,
+        "ICD10": {
+          "code": "E71.1",
+          "term": "Death specifically attributed to breast cancer",
+          "score": 0.85,
+          "evidence": {
+            "source_type": "ontology",
+            "source_file": "doid.owl/hp.owl",
+            "id": "E71.1",
+            "field": "xref",
+            "snippet": "ontology ICD mapping ICD10:E71.1",
+            "extra": {
+              "system": "ICD10",
+              "code": "E71.1"
+            }
+          }
+        },
+        "RXNORM": null,
+        "CPT4": {
+          "code": "81432",
+          "term": "Hereditary Breast/Gynecologic Cancer Panel, Varies",
+          "score": 0.30000000000000004,
+          "evidence": {
+            "source_type": "csv/xlsx",
+            "source_file": "cpt-codes-mayo.csv",
+            "id": "3112:0",
+            "field": "term/code",
+            "snippet": "term=Hereditary Breast/Gynecologic Cancer Panel, Varies | code=CPT4:81432",
+            "extra": {
+              "system": "CPT4",
+              "code": "81432",
+              "mayo_test_id": "BRGYP",
+              "panel_index": 1
+            }
+          }
+        },
+        "CPT": {
+          "code": "81432",
+          "term": "Hereditary Breast/Gynecologic Cancer Panel, Varies",
+          "score": 0.30000000000000004,
+          "evidence": {
+            "source_type": "csv/xlsx",
+            "source_file": "cpt-codes-mayo.csv",
+            "id": "3112:0",
+            "field": "term/code",
+            "snippet": "term=Hereditary Breast/Gynecologic Cancer Panel, Varies | code=CPT4:81432",
+            "extra": {
+              "system": "CPT4",
+              "code": "81432",
+              "mayo_test_id": "BRGYP",
+              "panel_index": 1
+            }
+          }
+        }
+      }
+    },
+    {
+      "criterion_type": "other",
+      "term": "Axillary Recurrence",
+      "mapped_codes": {
+        "ICD10CM": null,
+        "ICD10": {
+          "code": "C50.61",
+          "term": "Axillary Recurrence",
+          "score": 0.85,
+          "evidence": {
+            "source_type": "ontology",
+            "source_file": "doid.owl/hp.owl",
+            "id": "C50.61",
+            "field": "xref",
+            "snippet": "ontology ICD mapping ICD10:C50.61",
+            "extra": {
+              "system": "ICD10",
+              "code": "C50.61"
+            }
+          }
+        },
+        "RXNORM": null,
+        "CPT4": null,
+        "CPT": null
+      }
+    },
+    {
+      "criterion_type": "other",
+      "term": "New malignancy code",
+      "mapped_codes": {
+        "ICD10CM": null,
+        "ICD10": null,
+        "RXNORM": null,
+        "CPT4": {
+          "code": "88184",
+          "term": "Fetomaternal Bleed, New York, Blood",
+          "score": 0.24285714285714285,
+          "evidence": {
+            "source_type": "csv/xlsx",
+            "source_file": "cpt-codes-mayo.csv",
+            "id": "269:0",
+            "field": "term/code",
+            "snippet": "term=Fetomaternal Bleed, New York, Blood | code=CPT4:88184",
+            "extra": {
+              "system": "CPT4",
+              "code": "88184",
+              "mayo_test_id": "FMBNY",
+              "cpt_detail": "Flow cytometry; cell surface cytoplasmic",
+              "panel_index": 1
+            }
+          }
+        },
+        "CPT": {
+          "code": "88184",
+          "term": "Fetomaternal Bleed, New York, Blood",
+          "score": 0.24285714285714285,
+          "evidence": {
+            "source_type": "csv/xlsx",
+            "source_file": "cpt-codes-mayo.csv",
+            "id": "269:0",
+            "field": "term/code",
+            "snippet": "term=Fetomaternal Bleed, New York, Blood | code=CPT4:88184",
+            "extra": {
+              "system": "CPT4",
+              "code": "88184",
+              "mayo_test_id": "FMBNY",
+              "cpt_detail": "Flow cytometry; cell surface cytoplasmic",
+              "panel_index": 1
+            }
+          }
+        }
+      }
+    },
+    {
+      "criterion_type": "other",
+      "term": "ipsilateral axillary region",
+      "mapped_codes": {
+        "ICD10CM": null,
+        "ICD10": {
+          "code": "C50.61",
+          "term": "ipsilateral axillary region",
+          "score": 0.85,
+          "evidence": {
+            "source_type": "ontology",
+            "source_file": "doid.owl/hp.owl",
+            "id": "C50.61",
+            "field": "xref",
+            "snippet": "ontology ICD mapping ICD10:C50.61",
+            "extra": {
+              "system": "ICD10",
+              "code": "C50.61"
+            }
+          }
+        },
+        "RXNORM": null,
+        "CPT4": {
+          "code": "82785",
+          "term": "Respiratory Profile, Region 18, Alaska, Serum",
+          "score": 0.225,
+          "evidence": {
+            "source_type": "csv/xlsx",
+            "source_file": "cpt-codes-mayo.csv",
+            "id": "853:0",
+            "field": "term/code",
+            "snippet": "term=Respiratory Profile, Region 18, Alaska, Serum | code=CPT4:82785",
+            "extra": {
+              "system": "CPT4",
+              "code": "82785",
+              "mayo_test_id": "RPR18",
+              "mayo_panel": true,
+              "cpt_detail": "IgE",
+              "panel_index": 1
+            }
+          }
+        },
+        "CPT": {
+          "code": "82785",
+          "term": "Respiratory Profile, Region 18, Alaska, Serum",
+          "score": 0.225,
+          "evidence": {
+            "source_type": "csv/xlsx",
+            "source_file": "cpt-codes-mayo.csv",
+            "id": "853:0",
+            "field": "term/code",
+            "snippet": "term=Respiratory Profile, Region 18, Alaska, Serum | code=CPT4:82785",
+            "extra": {
+              "system": "CPT4",
+              "code": "82785",
+              "mayo_test_id": "RPR18",
+              "mayo_panel": true,
+              "cpt_detail": "IgE",
+              "panel_index": 1
+            }
+          }
+        }
+      }
+    },
+    {
+      "criterion_type": "other",
+      "term": "ALND procedure",
+      "mapped_codes": {
+        "ICD10CM": null,
+        "ICD10": null,
+        "RXNORM": null,
+        "CPT4": {
+          "code": "85597",
+          "term": "Platelet Neutralization Procedure, Plasma",
+          "score": 0.30000000000000004,
+          "evidence": {
+            "source_type": "csv/xlsx",
+            "source_file": "cpt-codes-mayo.csv",
+            "id": "164:0",
+            "field": "term/code",
+            "snippet": "term=Platelet Neutralization Procedure, Plasma | code=CPT4:85597",
+            "extra": {
+              "system": "CPT4",
+              "code": "85597",
+              "mayo_test_id": "PNP",
+              "panel_index": 1
+            }
+          }
+        },
+        "CPT": {
+          "code": "85597",
+          "term": "Platelet Neutralization Procedure, Plasma",
+          "score": 0.30000000000000004,
+          "evidence": {
+            "source_type": "csv/xlsx",
+            "source_file": "cpt-codes-mayo.csv",
+            "id": "164:0",
+            "field": "term/code",
+            "snippet": "term=Platelet Neutralization Procedure, Plasma | code=CPT4:85597",
+            "extra": {
+              "system": "CPT4",
+              "code": "85597",
+              "mayo_test_id": "PNP",
+              "panel_index": 1
+            }
+          }
+        }
+      }
+    },
+    {
+      "criterion_type": "other",
+      "term": "ICD-9: 196.3",
+      "mapped_codes": {
+        "ICD10CM": null,
+        "ICD10": {
+          "code": "Q04.3",
+          "term": "ICD-9: 196.3",
+          "score": 0.85,
+          "evidence": {
+            "source_type": "ontology",
+            "source_file": "doid.owl/hp.owl",
+            "id": "Q04.3",
+            "field": "xref",
+            "snippet": "ontology ICD mapping ICD10:Q04.3",
+            "extra": {
+              "system": "ICD10",
+              "code": "Q04.3"
+            }
+          }
+        },
+        "RXNORM": {
+          "code": "1661327",
+          "term": "3-dimethylaminopropylamine",
+          "score": 0.2,
+          "evidence": {
+            "source_type": "csv/xlsx",
+            "source_file": "rxnorm_omop.csv",
+            "id": "43489",
+            "field": "term/code",
+            "snippet": "term=3-dimethylaminopropylamine | code=RXNORM:1661327",
+            "extra": {
+              "system": "RXNORM",
+              "code": "1661327",
+              "concept_id": "46276135",
+              "domain_id": "Drug",
+              "concept_class_id": "Ingredient"
+            }
+          }
+        },
+        "CPT4": {
+          "code": "82777",
+          "term": "Galectin-3, Serum",
+          "score": 0.26666666666666666,
+          "evidence": {
+            "source_type": "csv/xlsx",
+            "source_file": "cpt-codes-mayo.csv",
+            "id": "2182:0",
+            "field": "term/code",
+            "snippet": "term=Galectin-3, Serum | code=CPT4:82777",
+            "extra": {
+              "system": "CPT4",
+              "code": "82777",
+              "mayo_test_id": "GAL3",
+              "panel_index": 1
+            }
+          }
+        },
+        "CPT": {
+          "code": "82777",
+          "term": "Galectin-3, Serum",
+          "score": 0.26666666666666666,
+          "evidence": {
+            "source_type": "csv/xlsx",
+            "source_file": "cpt-codes-mayo.csv",
+            "id": "2182:0",
+            "field": "term/code",
+            "snippet": "term=Galectin-3, Serum | code=CPT4:82777",
+            "extra": {
+              "system": "CPT4",
+              "code": "82777",
+              "mayo_test_id": "GAL3",
+              "panel_index": 1
+            }
+          }
+        }
+      }
+    },
+    {
+      "criterion_type": "outcome",
+      "term": "locoregional recurrence",
+      "mapped_codes": {
+        "ICD10CM": null,
+        "ICD10": null,
+        "RXNORM": null,
+        "CPT4": null,
+        "CPT": null
+      }
+    },
+    {
+      "criterion_type": "outcome",
+      "term": "axillary recurrence",
+      "mapped_codes": {
+        "ICD10CM": null,
+        "ICD10": {
+          "code": "C50.61",
+          "term": "axillary recurrence",
+          "score": 0.85,
+          "evidence": {
+            "source_type": "ontology",
+            "source_file": "doid.owl/hp.owl",
+            "id": "C50.61",
+            "field": "xref",
+            "snippet": "ontology ICD mapping ICD10:C50.61",
+            "extra": {
+              "system": "ICD10",
+              "code": "C50.61"
+            }
+          }
+        },
+        "RXNORM": null,
+        "CPT4": null,
+        "CPT": null
+      }
+    },
+    {
+      "criterion_type": "outcome",
+      "term": "local recurrence",
+      "mapped_codes": {
+        "ICD10CM": null,
+        "ICD10": null,
+        "RXNORM": null,
+        "CPT4": null,
+        "CPT": null
+      }
+    },
+    {
+      "criterion_type": "outcome",
+      "term": "ipsilateral breast",
+      "mapped_codes": {
+        "ICD10CM": null,
+        "ICD10": {
+          "code": "N60.0",
+          "term": "ipsilateral breast",
+          "score": 0.85,
+          "evidence": {
+            "source_type": "ontology",
+            "source_file": "doid.owl/hp.owl",
+            "id": "N60.0",
+            "field": "xref",
+            "snippet": "ontology ICD mapping ICD10:N60.0",
+            "extra": {
+              "system": "ICD10",
+              "code": "N60.0"
+            }
+          }
+        },
+        "RXNORM": null,
+        "CPT4": {
+          "code": "86300",
+          "term": "Breast Carcinoma-Associated Antigen, Serum",
+          "score": 0.26666666666666666,
+          "evidence": {
+            "source_type": "csv/xlsx",
+            "source_file": "cpt-codes-mayo.csv",
+            "id": "2719:0",
+            "field": "term/code",
+            "snippet": "term=Breast Carcinoma-Associated Antigen, Serum | code=CPT4:86300",
+            "extra": {
+              "system": "CPT4",
+              "code": "86300",
+              "mayo_test_id": "C2729",
+              "panel_index": 1
+            }
+          }
+        },
+        "CPT": {
+          "code": "86300",
+          "term": "Breast Carcinoma-Associated Antigen, Serum",
+          "score": 0.26666666666666666,
+          "evidence": {
+            "source_type": "csv/xlsx",
+            "source_file": "cpt-codes-mayo.csv",
+            "id": "2719:0",
+            "field": "term/code",
+            "snippet": "term=Breast Carcinoma-Associated Antigen, Serum | code=CPT4:86300",
+            "extra": {
+              "system": "CPT4",
+              "code": "86300",
+              "mayo_test_id": "C2729",
+              "panel_index": 1
+            }
+          }
+        }
+      }
+    }
+  ],
+  "composite_concepts": []
+}
